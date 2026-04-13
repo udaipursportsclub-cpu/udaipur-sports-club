@@ -1,19 +1,11 @@
 /**
  * FILE: src/app/events/[id]/page.tsx
  *
- * What this does:
- * This is the individual event page — the page you see when you click
- * on a specific event from the events list.
+ * The individual event page. Shows all event details, the RSVP button,
+ * the contribution amount (for paid events), and the attendees list.
  *
- * It shows:
- * - Event title, sport, date, time, location
- * - Description (if any)
- * - How many spots are left (with a visual progress bar)
- * - List of people who have RSVPed
- * - An RSVP button (or Cancel RSVP if already signed up)
- *
- * [id] in the filename means it's dynamic — the URL could be
- * /events/abc123 or /events/xyz789 and this page handles both.
+ * If the logged-in user is the HOST, they also see a "Mark as Paid"
+ * button next to each attendee's name.
  */
 
 import { createClient } from "@/lib/supabase/server";
@@ -21,6 +13,7 @@ import { getSportEmoji } from "@/lib/types";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import RSVPButton from "./rsvp-button";
+import MarkPaidButton from "./mark-paid-button";
 
 export default async function EventPage({
   params,
@@ -29,19 +22,16 @@ export default async function EventPage({
 }) {
   const supabase = await createClient();
 
-  // Check who's logged in (if anyone)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Check who's logged in
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // Fetch the event details from the database
+  // Fetch the event
   const { data: event } = await supabase
     .from("events")
     .select("*")
     .eq("id", params.id)
     .single();
 
-  // If the event doesn't exist, show a 404 page
   if (!event) notFound();
 
   // Fetch all RSVPs for this event
@@ -57,27 +47,30 @@ export default async function EventPage({
   const isFull = spotsLeft <= 0;
   const fillPercent = Math.min((rsvpCount / event.capacity) * 100, 100);
 
-  // Check if the logged-in user has already RSVPed
-  const hasRSVPed = user
-    ? rsvpList.some((r) => r.user_id === user.id)
-    : false;
+  // Is this a free event?
+  const isFree = !event.total_cost || event.total_cost === 0;
 
-  // Format date nicely — e.g. "Thu, 1 May 2025"
+  // Per-person contribution (fixed at creation: total ÷ capacity)
+  const perPerson = isFree ? 0 : Math.ceil(event.total_cost / event.capacity);
+
+  // Is the logged-in user the host?
+  const isHost = user?.id === event.host_id;
+
+  // Find this user's RSVP (if any)
+  const myRSVP = user ? rsvpList.find((r) => r.user_id === user.id) : null;
+  const hasRSVPed = !!myRSVP;
+
+  // Format date
   const formattedDate = new Date(event.date).toLocaleDateString("en-IN", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+    weekday: "long", day: "numeric", month: "long", year: "numeric",
   });
 
-  // Format time — e.g. "7:00 AM"
+  // Format time
   const [hours, minutes] = event.time.split(":");
   const timeDate = new Date();
   timeDate.setHours(parseInt(hours), parseInt(minutes));
   const formattedTime = timeDate.toLocaleTimeString("en-IN", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
+    hour: "numeric", minute: "2-digit", hour12: true,
   });
 
   return (
@@ -85,107 +78,93 @@ export default async function EventPage({
       className="min-h-screen bg-[#F9F7F4]"
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
-      {/* ── TOP NAVIGATION ──────────────────────────────────────────── */}
+      {/* ── TOP NAV ──────────────────────────────────────────────── */}
       <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <Link
-          href="/"
-          className="text-sm font-bold tracking-[0.25em] uppercase text-slate-900 hover:text-amber-500 transition-colors"
-        >
+        <Link href="/" className="text-sm font-bold tracking-[0.25em] uppercase text-slate-900 hover:text-amber-500 transition-colors">
           USC
         </Link>
-        <Link
-          href="/events"
-          className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
-        >
+        <Link href="/events" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
           ← All Events
         </Link>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">
 
-        {/* ── EVENT HEADER ────────────────────────────────────────────── */}
+        {/* ── EVENT HEADER ─────────────────────────────────────────── */}
         <div className="mb-8">
-
-          {/* Sport badge */}
           <div className="flex items-center gap-3 mb-4">
             <span className="text-4xl">{getSportEmoji(event.sport)}</span>
-            <span className="text-xs font-bold tracking-widest uppercase text-slate-400">
-              {event.sport}
-            </span>
+            <span className="text-xs font-bold tracking-widest uppercase text-slate-400">{event.sport}</span>
           </div>
 
-          {/* Event title */}
           <h1 className="text-3xl font-extrabold text-slate-900 mb-6 leading-tight">
             {event.title}
           </h1>
 
-          {/* Event details */}
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-sm text-slate-600">
-              <span className="text-lg">📅</span>
-              <span>{formattedDate}</span>
+              <span>📅</span><span>{formattedDate}</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-slate-600">
-              <span className="text-lg">⏰</span>
-              <span>{formattedTime}</span>
+              <span>⏰</span><span>{formattedTime}</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-slate-600">
-              <span className="text-lg">📍</span>
-              <span>{event.location}</span>
+              <span>📍</span><span>{event.location}</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-slate-600">
-              <span className="text-lg">👤</span>
+              <span>👤</span>
               <span>Hosted by <strong>{event.host_name}</strong></span>
             </div>
           </div>
         </div>
 
-        {/* ── DESCRIPTION ─────────────────────────────────────────────── */}
+        {/* ── CONTRIBUTION AMOUNT (paid events only) ───────────────── */}
+        {!isFree && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+            <p className="text-xs font-bold tracking-widest uppercase text-amber-600 mb-1">
+              Contribution
+            </p>
+            <p className="text-3xl font-extrabold text-amber-600">
+              ₹{perPerson}
+              <span className="text-base font-medium text-amber-400 ml-2">per person</span>
+            </p>
+            <p className="text-xs text-amber-500 mt-2">
+              Total event cost ₹{event.total_cost} ÷ {event.capacity} players.
+              Pay directly to host via UPI.
+            </p>
+          </div>
+        )}
+
+        {/* ── DESCRIPTION ──────────────────────────────────────────── */}
         {event.description && (
           <div className="bg-white rounded-2xl border border-stone-200 p-6 mb-6">
             <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-3">
               About this event
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {event.description}
-            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">{event.description}</p>
           </div>
         )}
 
-        {/* ── CAPACITY ────────────────────────────────────────────────── */}
+        {/* ── CAPACITY BAR ─────────────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-stone-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400">
-              Spots
-            </h2>
-            <span
-              className={`text-xs font-bold px-3 py-1 rounded-full ${
-                isFull
-                  ? "bg-red-50 text-red-500"
-                  : spotsLeft <= 5
-                  ? "bg-orange-50 text-orange-500"
-                  : "bg-green-50 text-green-600"
-              }`}
-            >
+            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400">Spots</h2>
+            <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+              isFull ? "bg-red-50 text-red-500" : spotsLeft <= 5 ? "bg-orange-50 text-orange-500" : "bg-green-50 text-green-600"
+            }`}>
               {isFull ? "Full" : `${spotsLeft} spots left`}
             </span>
           </div>
-
-          {/* Progress bar — shows how full the event is */}
           <div className="w-full bg-stone-100 rounded-full h-2 mb-2">
             <div
-              className={`h-2 rounded-full transition-all ${
-                isFull ? "bg-red-400" : "bg-amber-400"
-              }`}
+              className={`h-2 rounded-full transition-all ${isFull ? "bg-red-400" : "bg-amber-400"}`}
               style={{ width: `${fillPercent}%` }}
             />
           </div>
-          <p className="text-xs text-slate-400">
-            {rsvpCount} of {event.capacity} players joined
-          </p>
+          <p className="text-xs text-slate-400">{rsvpCount} of {event.capacity} players joined</p>
         </div>
 
-        {/* ── RSVP BUTTON ─────────────────────────────────────────────── */}
+        {/* ── RSVP BUTTON ──────────────────────────────────────────── */}
         <div className="mb-8">
           <RSVPButton
             eventId={event.id}
@@ -194,38 +173,65 @@ export default async function EventPage({
             userEmail={user?.email ?? ""}
             hasRSVPed={hasRSVPed}
             isFull={isFull}
+            isFree={isFree}
+            perPersonAmount={perPerson}
+            upiId={event.upi_id ?? null}
+            hostId={event.host_id}
+            paymentStatus={myRSVP?.payment_status ?? null}
           />
         </div>
 
-        {/* ── ATTENDEES LIST ───────────────────────────────────────────── */}
+        {/* ── ATTENDEES LIST ────────────────────────────────────────── */}
         {rsvpList.length > 0 && (
           <div className="bg-white rounded-2xl border border-stone-200 p-6">
             <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
               Who&apos;s coming ({rsvpCount})
             </h2>
             <div className="space-y-3">
-              {rsvpList.map((rsvp, index) => (
-                <div key={rsvp.id} className="flex items-center gap-3">
-                  {/* Avatar circle with first letter of name */}
-                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-sm font-bold flex-shrink-0">
-                    {rsvp.user_name.charAt(0)}
+              {rsvpList.map((rsvp) => (
+                <div key={rsvp.id} className="flex items-center justify-between">
+
+                  {/* Left: avatar + name */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-sm font-bold flex-shrink-0">
+                      {rsvp.user_name.charAt(0)}
+                    </div>
+                    <div>
+                      <span className="text-sm text-slate-700 font-medium">
+                        {rsvp.user_name}
+                        {user?.id === rsvp.user_id && (
+                          <span className="text-slate-400 font-normal ml-1">(you)</span>
+                        )}
+                      </span>
+                      {/* Payment status label for non-free events */}
+                      {!isFree && (
+                        <p className={`text-xs mt-0.5 ${
+                          rsvp.payment_status === "paid" ? "text-green-500" : "text-amber-500"
+                        }`}>
+                          {rsvp.payment_status === "paid" ? "✓ Paid" : "⏳ Payment pending"}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-sm text-slate-700">
-                    {rsvp.user_name}
-                    {/* Show "(you)" next to the logged-in user's name */}
-                    {user?.id === rsvp.user_id && (
-                      <span className="text-slate-400 ml-1">(you)</span>
-                    )}
-                  </span>
-                  {/* Show a star next to the first person (the host) */}
-                  {index === 0 && event.host_id === rsvp.user_id && (
-                    <span className="text-xs text-amber-500 font-semibold">
-                      Host
-                    </span>
+
+                  {/* Right: "Mark as Paid" button — only visible to host */}
+                  {isHost && !isFree && rsvp.user_id !== event.host_id && (
+                    <MarkPaidButton
+                      rsvpId={rsvp.id}
+                      paymentStatus={rsvp.payment_status}
+                    />
                   )}
+
                 </div>
               ))}
             </div>
+
+            {/* Host tip — only shown to the host */}
+            {isHost && !isFree && (
+              <p className="text-xs text-slate-300 mt-6 border-t border-stone-100 pt-4">
+                Tap &quot;Mark paid&quot; next to each player once you receive their payment.
+              </p>
+            )}
           </div>
         )}
 

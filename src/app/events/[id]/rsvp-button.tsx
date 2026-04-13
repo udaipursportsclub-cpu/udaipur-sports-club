@@ -2,14 +2,16 @@
  * FILE: src/app/events/[id]/rsvp-button.tsx
  *
  * What this does:
- * This is the RSVP button on an event page.
- * It handles three situations:
- *   1. User is not logged in — shows "Sign in to RSVP"
- *   2. User already RSVPed — shows "Cancel RSVP"
- *   3. Event is full — shows "Event Full"
- *   4. Normal — shows "RSVP Now"
+ * The RSVP button on an event page — handles both free and paid events.
  *
- * "use client" because it responds to button clicks.
+ * For FREE events:
+ *   - "RSVP Now" → instantly confirmed
+ *
+ * For PAID events:
+ *   - "RSVP & Pay ₹50 via UPI" → opens UPI app pre-filled with amount + host's UPI ID
+ *   - After tapping, user is marked as RSVP'd (payment pending until host confirms)
+ *
+ * Host sees a "Mark as Paid" button next to each attendee.
  */
 
 "use client";
@@ -19,26 +21,31 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
-  eventId: string;       // Which event this button is for
-  userId: string | null; // The logged-in user's ID (null if not logged in)
-  userName: string;      // The logged-in user's name
-  userEmail: string;     // The logged-in user's email
-  hasRSVPed: boolean;    // Has this user already RSVPed?
-  isFull: boolean;       // Is the event at capacity?
+  eventId: string;
+  userId: string | null;
+  userName: string;
+  userEmail: string;
+  hasRSVPed: boolean;
+  isFull: boolean;
+  isFree: boolean;           // Is this a free event?
+  perPersonAmount: number;   // How much each person pays (0 if free)
+  upiId: string | null;      // Host's UPI ID
+  hostId: string;            // Host's user ID
+  paymentStatus: string | null; // "pending", "paid", or "free"
 };
 
 export default function RSVPButton({
-  eventId,
-  userId,
-  userName,
-  userEmail,
-  hasRSVPed,
-  isFull,
+  eventId, userId, userName, userEmail,
+  hasRSVPed, isFull, isFree,
+  perPersonAmount, upiId, hostId,
+  paymentStatus,
 }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // Not logged in — send to login page
+  const isHost = userId === hostId;
+
+  // Not logged in
   if (!userId) {
     return (
       <a
@@ -53,63 +60,93 @@ export default function RSVPButton({
   // Event is full and user hasn't RSVPed
   if (isFull && !hasRSVPed) {
     return (
-      <button
-        disabled
-        className="w-full bg-stone-100 text-slate-400 font-bold text-sm py-4 rounded-xl cursor-not-allowed"
-      >
+      <button disabled className="w-full bg-stone-100 text-slate-400 font-bold text-sm py-4 rounded-xl cursor-not-allowed">
         Event Full
       </button>
     );
   }
 
-  /**
-   * handleRSVP()
-   * If the user hasn't RSVPed → add their RSVP
-   * If they have → remove it (cancel)
-   */
   async function handleRSVP() {
     setLoading(true);
     const supabase = createClient();
 
     if (hasRSVPed) {
-      // Cancel RSVP — delete from database
-      await supabase
-        .from("rsvps")
-        .delete()
-        .eq("event_id", eventId)
-        .eq("user_id", userId!);
+      // Cancel RSVP
+      await supabase.from("rsvps").delete().eq("event_id", eventId).eq("user_id", userId!);
     } else {
-      // Add RSVP — insert into database
+      // Add RSVP — mark as "free" or "pending" depending on event type
       await supabase.from("rsvps").insert({
-        event_id:   eventId,
-        user_id:    userId,
-        user_name:  userName,
-        user_email: userEmail,
+        event_id:       eventId,
+        user_id:        userId,
+        user_name:      userName,
+        user_email:     userEmail,
+        payment_status: isFree ? "free" : "pending",
       });
+
+      // For paid events — open UPI app right after RSVP
+      if (!isFree && upiId) {
+        const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(userName)}&am=${perPersonAmount}&cu=INR&tn=${encodeURIComponent("USC Event Contribution")}`;
+        window.location.href = upiUrl;
+      }
     }
 
     setLoading(false);
-    // Refresh the page to show the updated RSVP count and button state
     router.refresh();
   }
 
+  // Already RSVPed — show status + cancel option
+  if (hasRSVPed) {
+    return (
+      <div className="space-y-3">
+        {/* Payment status badge for paid events */}
+        {!isFree && (
+          <div className={`w-full text-center text-sm font-semibold py-3 rounded-xl ${
+            paymentStatus === "paid"
+              ? "bg-green-50 text-green-600 border border-green-200"
+              : "bg-amber-50 text-amber-600 border border-amber-200"
+          }`}>
+            {paymentStatus === "paid"
+              ? "✓ Payment confirmed by host"
+              : `⏳ Payment pending — ₹${perPersonAmount} to ${upiId}`}
+          </div>
+        )}
+
+        {/* Pay again button (if pending) */}
+        {!isFree && paymentStatus !== "paid" && upiId && (
+          <a
+            href={`upi://pay?pa=${encodeURIComponent(upiId)}&am=${perPersonAmount}&cu=INR&tn=${encodeURIComponent("USC Event Contribution")}`}
+            className="block w-full text-center bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm py-3 rounded-xl transition-colors"
+          >
+            Pay ₹{perPersonAmount} via UPI →
+          </a>
+        )}
+
+        {/* Cancel RSVP */}
+        {!isHost && (
+          <button
+            onClick={handleRSVP}
+            disabled={loading}
+            className="w-full bg-red-50 hover:bg-red-100 text-red-500 border border-red-200 font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+          >
+            {loading ? "Please wait..." : "Cancel RSVP"}
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // Normal RSVP button (not yet RSVPed)
   return (
     <button
       onClick={handleRSVP}
       disabled={loading}
-      className={`w-full font-bold text-sm py-4 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
-        hasRSVPed
-          ? // Already RSVPed → show red "Cancel" button
-            "bg-red-50 hover:bg-red-100 text-red-500 border border-red-200"
-          : // Not RSVPed → show amber "RSVP Now" button
-            "bg-amber-500 hover:bg-amber-400 text-white"
-      }`}
+      className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-white font-bold text-sm py-4 rounded-xl transition-colors"
     >
       {loading
         ? "Please wait..."
-        : hasRSVPed
-        ? "Cancel RSVP"
-        : "RSVP Now →"}
+        : isFree
+        ? "RSVP Now →"
+        : `RSVP & Pay ₹${perPersonAmount} via UPI →`}
     </button>
   );
 }

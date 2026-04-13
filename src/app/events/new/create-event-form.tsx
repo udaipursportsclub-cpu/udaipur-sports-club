@@ -41,6 +41,8 @@ export default function CreateEventForm({ userId, userName }: Props) {
     time: "",
     location: "",
     capacity: 20,
+    total_cost: 0,   // 0 means free event
+    upi_id: "",      // host's UPI ID — only needed if cost > 0
   });
 
   // Update a single field in the form when the user types
@@ -77,6 +79,8 @@ export default function CreateEventForm({ userId, userName }: Props) {
         time:        form.time,
         location:    form.location.trim(),
         capacity:    Number(form.capacity),
+        total_cost:  Number(form.total_cost),
+        upi_id:      form.total_cost > 0 ? form.upi_id.trim() : null,
         host_id:     userId,
         host_name:   userName,
         status:      "upcoming",
@@ -207,6 +211,51 @@ export default function CreateEventForm({ userId, userName }: Props) {
           Maximum number of players allowed to join
         </p>
       </div>
+
+      {/* ── COST ────────────────────────────────────────────────── */}
+      {/* 0 = free event. Any amount = paid event with UPI collection */}
+      <div>
+        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+          Total Event Cost (₹){" "}
+          <span className="normal-case text-slate-300">(0 = free)</span>
+        </label>
+        <input
+          type="number"
+          name="total_cost"
+          value={form.total_cost}
+          onChange={handleChange}
+          min={0}
+          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+        />
+        {/* Show the per-person breakdown live as they type */}
+        {Number(form.total_cost) > 0 && Number(form.capacity) > 0 && (
+          <p className="text-xs text-amber-600 font-semibold mt-1">
+            ₹{Math.ceil(Number(form.total_cost) / Number(form.capacity))} per person
+            {" "}({form.capacity} players × ₹{Math.ceil(Number(form.total_cost) / Number(form.capacity))} = ₹{Number(form.capacity) * Math.ceil(Number(form.total_cost) / Number(form.capacity))})
+          </p>
+        )}
+      </div>
+
+      {/* ── UPI ID (only shown for paid events) ─────────────────── */}
+      {Number(form.total_cost) > 0 && (
+        <div>
+          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+            Your UPI ID *
+          </label>
+          <input
+            type="text"
+            name="upi_id"
+            value={form.upi_id}
+            onChange={handleChange}
+            required={Number(form.total_cost) > 0}
+            placeholder="e.g. yourname@upi or 9876543210@paytm"
+            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          />
+          <p className="text-xs text-slate-400 mt-1">
+            Players will pay directly to this UPI ID
+          </p>
+        </div>
+      )}
 
       {/* ── DESCRIPTION (optional) ──────────────────────────────── */}
       <div>
