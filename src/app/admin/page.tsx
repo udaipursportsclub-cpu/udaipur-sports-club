@@ -15,7 +15,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import GenerateCodeButton from "./generate-code-button";
-import RevokeHostButton from "./revoke-host-button";
+import ChangeRoleButton from "./change-role-button";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -49,11 +49,10 @@ export default async function AdminPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  // Fetch all hosts
+  // Fetch ALL users (so Avi can manage everyone's role)
   const { data: hosts } = await supabase
     .from("profiles")
     .select("*")
-    .in("role", ["host", "admin"])
     .order("created_at", { ascending: false });
 
   // Platform stats
@@ -144,35 +143,38 @@ export default async function AdminPage() {
         {/* ── HOSTS ──────────────────────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
           <div className="px-6 py-5 border-b border-stone-100">
-            <h2 className="font-extrabold text-slate-900">Hosts & Admins</h2>
+            <h2 className="font-extrabold text-slate-900">All Members</h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              People who can create events on USC.
+              Change anyone&apos;s role using the dropdown. Changes take effect instantly.
             </p>
           </div>
 
           {!hosts || hosts.length === 0 ? (
-            <div className="px-6 py-10 text-center text-slate-400 text-sm">No hosts yet.</div>
+            <div className="px-6 py-10 text-center text-slate-400 text-sm">No members yet.</div>
           ) : (
             <div className="divide-y divide-stone-100">
               {hosts.map((h) => (
                 <div key={h.id} className="flex items-center justify-between px-6 py-4">
+                  {/* Left: avatar + name */}
                   <div className="flex items-center gap-3">
-                    {/* Avatar circle */}
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                      h.role === "admin" ? "bg-red-400" : "bg-amber-400"
+                      h.role === "admin"  ? "bg-red-400"   :
+                      h.role === "proxy"  ? "bg-blue-400"  :
+                      h.role === "host"   ? "bg-amber-400" : "bg-slate-300"
                     }`}>
                       {(h.full_name ?? "?").charAt(0)}
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{h.full_name ?? "Unknown"}</p>
-                      <p className="text-xs text-slate-400 capitalize">{h.role}</p>
-                    </div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {h.full_name ?? "Unknown"}
+                    </p>
                   </div>
 
-                  {/* Revoke button — only for hosts, not admins */}
-                  {h.role === "host" && (
-                    <RevokeHostButton profileId={h.id} name={h.full_name ?? "this host"} />
-                  )}
+                  {/* Right: role dropdown */}
+                  <ChangeRoleButton
+                    profileId={h.id}
+                    currentRole={h.role}
+                    name={h.full_name ?? "this user"}
+                  />
                 </div>
               ))}
             </div>
