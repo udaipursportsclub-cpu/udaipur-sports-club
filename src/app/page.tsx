@@ -101,6 +101,22 @@ export default function Home() {
           A home for every sport in the City of Lakes.
         </p>
 
+        {/* CTA buttons — Browse Events + Sign In */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 mt-10">
+          <a
+            href="/events"
+            className="bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-colors"
+          >
+            Browse Events →
+          </a>
+          <a
+            href="/login"
+            className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+          >
+            Sign in
+          </a>
+        </div>
+
       </section>
 
 
