@@ -23,10 +23,19 @@ export default async function NewEventPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    // Not logged in — send to login page
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
+
+  // Check if user is a host or admin — only they can create events
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isHost = profile?.role === "host" || profile?.role === "admin";
+
+  // Not a host — send them to the challenge page to earn host status
+  if (!isHost) redirect("/challenge");
 
   const userName = user.user_metadata?.full_name ?? "Host";
 

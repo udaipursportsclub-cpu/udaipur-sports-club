@@ -24,10 +24,20 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
-  const userName  = user.user_metadata?.full_name ?? "Athlete";
+  const userName   = user.user_metadata?.full_name ?? "Athlete";
   const userAvatar = user.user_metadata?.avatar_url ?? null;
-  const userEmail = user.email ?? "";
-  const firstName = userName.split(" ")[0];
+  const userEmail  = user.email ?? "";
+  const firstName  = userName.split(" ")[0];
+
+  // Get this user's role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const role   = profile?.role ?? "member";
+  const isHost = role === "host" || role === "admin";
 
   // Count how many events this user has created
   const { count: eventsCreated } = await supabase
@@ -95,28 +105,41 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 gap-4 mb-10">
 
           {/* Browse Events */}
-          <Link
-            href="/events"
-            className="bg-white border border-stone-200 hover:border-amber-300 hover:shadow-sm rounded-2xl p-6 transition-all group"
-          >
+          <Link href="/events"
+            className="bg-white border border-stone-200 hover:border-amber-300 hover:shadow-sm rounded-2xl p-6 transition-all group">
             <span className="text-2xl mb-3 block">🏅</span>
-            <p className="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
-              Browse Events
-            </p>
+            <p className="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">Browse Events</p>
             <p className="text-xs text-slate-400 mt-1">Find and join upcoming events</p>
           </Link>
 
-          {/* Create Event */}
-          <Link
-            href="/events/new"
-            className="bg-amber-500 hover:bg-amber-400 rounded-2xl p-6 transition-all group"
-          >
-            <span className="text-2xl mb-3 block">➕</span>
-            <p className="text-sm font-bold text-white">Create Event</p>
-            <p className="text-xs text-amber-100 mt-1">Host a new sports event</p>
-          </Link>
+          {/* Create Event (hosts) OR Become a Host CTA (members) */}
+          {isHost ? (
+            <Link href="/events/new"
+              className="bg-amber-500 hover:bg-amber-400 rounded-2xl p-6 transition-all group">
+              <span className="text-2xl mb-3 block">➕</span>
+              <p className="text-sm font-bold text-white">Create Event</p>
+              <p className="text-xs text-amber-100 mt-1">Host a new sports event</p>
+            </Link>
+          ) : (
+            <Link href="/challenge"
+              className="bg-slate-900 hover:bg-slate-700 rounded-2xl p-6 transition-all group">
+              <span className="text-2xl mb-3 block">⚡</span>
+              <p className="text-sm font-bold text-white">Become a Host</p>
+              <p className="text-xs text-slate-400 mt-1">Enter a challenge code</p>
+            </Link>
+          )}
 
         </div>
+
+        {/* Admin panel link — only for admins */}
+        {role === "admin" && (
+          <div className="mb-6">
+            <Link href="/admin"
+              className="flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-700 transition-colors">
+              <span>🔑</span> Open Admin Panel
+            </Link>
+          </div>
+        )}
 
         {/* ── STATS ─────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-4">
