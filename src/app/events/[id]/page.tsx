@@ -11,9 +11,53 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSportEmoji } from "@/lib/types";
 import { notFound } from "next/navigation";
+import { type Metadata } from "next";
 import Link from "next/link";
 import RSVPButton from "./rsvp-button";
 import MarkPaidButton from "./mark-paid-button";
+import ShareButton from "./share-button";
+
+/**
+ * generateMetadata — runs on the server before the page loads.
+ * This sets the OG (Open Graph) tags so that when anyone shares
+ * the event URL on WhatsApp, iMessage, Twitter, etc., it shows
+ * a rich preview with the beautiful event card image.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data: event } = await supabase
+    .from("events")
+    .select("title, sport, location, date")
+    .eq("id", params.id)
+    .single();
+
+  if (!event) return { title: "Event | USC" };
+
+  const formattedDate = new Date(event.date).toLocaleDateString("en-IN", {
+    day: "numeric", month: "long", year: "numeric",
+  });
+
+  return {
+    title: `${event.title} | Udaipur Sports Club`,
+    description: `${event.sport} event at ${event.location} on ${formattedDate}. Join us!`,
+    openGraph: {
+      title:       event.title,
+      description: `${event.sport} · ${event.location} · ${formattedDate}`,
+      // This tells WhatsApp/iMessage/Twitter to show our beautiful card image
+      images: [`/api/og/event/${params.id}`],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title:       event.title,
+      description: `${event.sport} · ${event.location} · ${formattedDate}`,
+      images:      [`/api/og/event/${params.id}`],
+    },
+  };
+}
 
 export default async function EventPage({
   params,
@@ -164,8 +208,8 @@ export default async function EventPage({
           <p className="text-xs text-slate-400">{rsvpCount} of {event.capacity} players joined</p>
         </div>
 
-        {/* ── RSVP BUTTON ──────────────────────────────────────────── */}
-        <div className="mb-8">
+        {/* ── RSVP BUTTON + SHARE BUTTON ───────────────────────────── */}
+        <div className="mb-8 space-y-3">
           <RSVPButton
             eventId={event.id}
             userId={user?.id ?? null}
@@ -178,6 +222,13 @@ export default async function EventPage({
             upiId={event.upi_id ?? null}
             hostId={event.host_id}
             paymentStatus={myRSVP?.payment_status ?? null}
+          />
+
+          {/* Share button — always visible below the RSVP button */}
+          <ShareButton
+            eventId={event.id}
+            eventTitle={event.title}
+            eventUrl={`https://usc-platform-beta.vercel.app/events/${event.id}`}
           />
         </div>
 
