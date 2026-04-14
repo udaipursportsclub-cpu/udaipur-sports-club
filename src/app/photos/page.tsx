@@ -68,7 +68,7 @@ export default async function MyPhotosPage() {
           </div>
           <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
         </Link>
-        <Link href="/dashboard" className="text-xs text-white/20 hover:text-white/70 transition-colors">
+        <Link href="/dashboard" className="text-xs text-white/40 hover:text-white/70 transition-colors">
           &larr; Dashboard
         </Link>
       </nav>
@@ -76,7 +76,7 @@ export default async function MyPhotosPage() {
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
         <div>
           <h1 className="text-2xl font-extrabold text-white">My Photos</h1>
-          <p className="text-sm text-white/20 mt-1">
+          <p className="text-sm text-white/40 mt-1">
             Every event photo you appear in — found using face recognition.
           </p>
         </div>

@@ -15,6 +15,7 @@ import { type Metadata } from "next";
 import Link from "next/link";
 import NavLogo from "@/components/NavLogo";
 import RSVPButton           from "./rsvp-button";
+import BookingModal         from "./booking-modal";
 import WaitlistButton       from "./waitlist-button";
 import MarkPaidButton       from "./mark-paid-button";
 import ShareButton          from "./share-button";
@@ -73,6 +74,14 @@ export default async function EventPage({
 
   // Check who's logged in
   const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch user's profile (for phone number)
+  let userPhone = "";
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles").select("phone").eq("id", user.id).single();
+    userPhone = profile?.phone ?? "";
+  }
 
   // Fetch the event
   const { data: event } = await supabase
@@ -166,7 +175,7 @@ export default async function EventPage({
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-4xl">{getSportEmoji(event.sport)}</span>
-            <span className="text-xs font-bold tracking-widest uppercase text-white/20">{event.sport}</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-white/40">{event.sport}</span>
           </div>
 
           <h1 className="text-3xl font-extrabold text-white mb-6 leading-tight">
@@ -210,7 +219,7 @@ export default async function EventPage({
         {/* ── DESCRIPTION ──────────────────────────────────────────── */}
         {event.description && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">
               About this event
             </h2>
             <p className="text-sm text-white/60 leading-relaxed">{event.description}</p>
@@ -220,7 +229,7 @@ export default async function EventPage({
         {/* ── CAPACITY BAR ─────────────────────────────────────────── */}
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">Spots</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">Spots</h2>
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${
               isFull ? "bg-red-400/10 text-red-400" : spotsLeft <= 5 ? "bg-orange-400/10 text-orange-400" : "bg-green-400/10 text-green-400"
             }`}>
@@ -233,7 +242,7 @@ export default async function EventPage({
               style={{ width: `${fillPercent}%` }}
             />
           </div>
-          <p className="text-xs text-white/20">{rsvpCount} of {event.capacity} players joined</p>
+          <p className="text-xs text-white/40">{rsvpCount} of {event.capacity} players joined</p>
         </div>
 
         {/* ── ACTION BUTTONS ───────────────────────────────────────── */}
@@ -260,19 +269,39 @@ export default async function EventPage({
           {/* Normal RSVP flow — only for upcoming events */}
           {!isCompleted && (
             <>
-              <RSVPButton
-                eventId={event.id}
-                userId={user?.id ?? null}
-                userName={user?.user_metadata?.full_name ?? ""}
-                userEmail={user?.email ?? ""}
-                hasRSVPed={hasRSVPed}
-                isFull={isFull}
-                isFree={isFree}
-                perPersonAmount={perPerson}
-                upiId={event.upi_id ?? null}
-                hostId={event.host_id}
-                paymentStatus={myRSVP?.payment_status ?? null}
-              />
+              {/* Already RSVPed — show status + cancel via old RSVPButton */}
+              {hasRSVPed ? (
+                <RSVPButton
+                  eventId={event.id}
+                  userId={user?.id ?? null}
+                  userName={user?.user_metadata?.full_name ?? ""}
+                  userEmail={user?.email ?? ""}
+                  hasRSVPed={hasRSVPed}
+                  isFull={isFull}
+                  isFree={isFree}
+                  perPersonAmount={perPerson}
+                  upiId={event.upi_id ?? null}
+                  hostId={event.host_id}
+                  paymentStatus={myRSVP?.payment_status ?? null}
+                />
+              ) : !isFull ? (
+                /* Not yet RSVPed + spots available — show booking modal */
+                <BookingModal
+                  eventId={event.id}
+                  eventTitle={event.title}
+                  date={formattedDate}
+                  time={formattedTime}
+                  location={event.location}
+                  spotsLeft={spotsLeft}
+                  isFree={isFree}
+                  perPerson={perPerson}
+                  upiId={event.upi_id ?? null}
+                  userId={user?.id ?? null}
+                  userName={user?.user_metadata?.full_name ?? ""}
+                  userEmail={user?.email ?? ""}
+                  userPhone={userPhone}
+                />
+              ) : null}
 
               {/* Waitlist — shown when event is full and user hasn't RSVPed */}
               {isFull && !hasRSVPed && !isHost && (
@@ -331,7 +360,7 @@ export default async function EventPage({
         {/* ── ATTENDEES LIST ────────────────────────────────────────── */}
         {rsvpList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Who&apos;s coming ({rsvpCount})
             </h2>
             <div className="space-y-3">
@@ -347,7 +376,7 @@ export default async function EventPage({
                       <span className="text-sm text-white/70 font-medium">
                         {rsvp.user_name}
                         {user?.id === rsvp.user_id && (
-                          <span className="text-white/20 font-normal ml-1">(you)</span>
+                          <span className="text-white/40 font-normal ml-1">(you)</span>
                         )}
                       </span>
                       {/* Payment status label for non-free events */}
@@ -375,7 +404,7 @@ export default async function EventPage({
 
             {/* Host tip — only shown to the host */}
             {isHost && !isFree && (
-              <p className="text-xs text-white/15 mt-6 border-t border-white/5 pt-4">
+              <p className="text-xs text-white/30 mt-6 border-t border-white/5 pt-4">
                 Tap &quot;Mark paid&quot; next to each player once you receive their payment.
               </p>
             )}
@@ -385,7 +414,7 @@ export default async function EventPage({
         {/* ── WAITLIST ─────────────────────────────────────────────── */}
         {waitlistList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mt-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Waitlist ({waitlistList.length})
             </h2>
             <div className="space-y-3">
@@ -398,7 +427,7 @@ export default async function EventPage({
                     <span className="text-sm text-white/60">
                       {w.user_name}
                       {user?.id === w.user_id && (
-                        <span className="text-white/20 ml-1">(you)</span>
+                        <span className="text-white/40 ml-1">(you)</span>
                       )}
                     </span>
                   </div>

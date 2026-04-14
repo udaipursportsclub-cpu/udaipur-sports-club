@@ -87,7 +87,7 @@ export default function SettingsForm({
 
       {/* ── Profile Info ───────────────────────────────────────────── */}
       <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 space-y-4">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">Profile</h2>
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">Profile</h2>
 
         <div>
           <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Display Name</label>
@@ -101,7 +101,7 @@ export default function SettingsForm({
 
         <div>
           <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
-            Phone <span className="normal-case text-white/15">(optional)</span>
+            Phone <span className="normal-case text-white/30">(optional)</span>
           </label>
           <input
             value={phone}
@@ -114,8 +114,8 @@ export default function SettingsForm({
 
       {/* ── Notification Email ─────────────────────────────────────── */}
       <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-1">Email Notifications</h2>
-        <p className="text-xs text-white/20 mb-4">
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-1">Email Notifications</h2>
+        <p className="text-xs text-white/40 mb-4">
           We&apos;ll send new event alerts here. Leave blank to use your login email.
         </p>
         <input
@@ -130,8 +130,8 @@ export default function SettingsForm({
       {/* ── Change Password (email accounts only) ─────────────────── */}
       {isEmailProvider && (
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-1">Change Password</h2>
-          <p className="text-xs text-white/20 mb-4">Leave blank to keep your current password.</p>
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-1">Change Password</h2>
+          <p className="text-xs text-white/40 mb-4">Leave blank to keep your current password.</p>
           <input
             type="password"
             value={newPassword}

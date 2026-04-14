@@ -92,7 +92,7 @@ export default function ClaimForm() {
         {loading ? "Claiming..." : "Claim Host Status →"}
       </button>
 
-      <p className="text-center text-xs text-white/20">
+      <p className="text-center text-xs text-white/40">
         Don&apos;t have a code? Ask Avi for one.
       </p>
 

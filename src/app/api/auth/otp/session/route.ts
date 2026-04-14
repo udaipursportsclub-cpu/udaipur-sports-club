@@ -62,7 +62,8 @@ export async function POST(request: Request) {
     } = linkData;
 
     // Build the verify URL that Supabase expects
-    const verifyUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/verify?token=${hashed_token}&type=magiclink&redirect_to=${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/dashboard`;
+    const redirectTo = encodeURIComponent(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/dashboard`);
+    const verifyUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/verify?token=${hashed_token}&type=magiclink&redirect_to=${redirectTo}`;
 
     return NextResponse.json({
       success: true,

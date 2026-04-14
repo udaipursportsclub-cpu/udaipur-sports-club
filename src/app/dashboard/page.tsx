@@ -111,7 +111,7 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-extrabold text-white mb-1">
             Welcome back, {firstName}!
           </h1>
-          <p className="text-white/20 text-sm">{userEmail}</p>
+          <p className="text-white/40 text-sm">{userEmail}</p>
         </div>
 
         {/* ── QUICK ACTIONS ─────────────────────────────────────────── */}
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
             className="bg-white/[0.03] border border-white/5 hover:border-amber-400/30 rounded-2xl p-6 transition-all group">
             <span className="text-2xl mb-3 block">🏅</span>
             <p className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">Browse Events</p>
-            <p className="text-xs text-white/20 mt-1">Find and join upcoming events</p>
+            <p className="text-xs text-white/40 mt-1">Find and join upcoming events</p>
           </Link>
 
           {/* Create Event (hosts) OR Become a Host CTA (members) */}
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
               className="bg-slate-900 hover:bg-slate-700 rounded-2xl p-6 transition-all group">
               <span className="text-2xl mb-3 block">⚡</span>
               <p className="text-sm font-bold text-white">Become a Host</p>
-              <p className="text-xs text-white/20 mt-1">Enter a challenge code</p>
+              <p className="text-xs text-white/40 mt-1">Enter a challenge code</p>
             </Link>
           )}
 
@@ -152,9 +152,9 @@ export default async function DashboardPage() {
           </div>
           <div>
             <p className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">My Profile</p>
-            <p className="text-xs text-white/20">Your stats, sports history & achievements</p>
+            <p className="text-xs text-white/40">Your stats, sports history & achievements</p>
           </div>
-          <span className="ml-auto text-white/15 group-hover:text-amber-400 transition-colors">→</span>
+          <span className="ml-auto text-white/30 group-hover:text-amber-400 transition-colors">→</span>
         </Link>
 
         {/* ── VIRAL LINKS ───────────────────────────────────────────── */}
@@ -166,7 +166,7 @@ export default async function DashboardPage() {
             <span className="text-xl">📸</span>
             <div>
               <p className="text-xs font-bold text-white">My Photos</p>
-              <p className="text-xs text-white/20">Find me</p>
+              <p className="text-xs text-white/40">Find me</p>
             </div>
           </Link>
 
@@ -188,7 +188,7 @@ export default async function DashboardPage() {
             <span className="text-xl">🔗</span>
             <div>
               <p className="text-xs font-bold text-white">Invite</p>
-              <p className="text-xs text-white/20">Share link</p>
+              <p className="text-xs text-white/40">Share link</p>
             </div>
           </Link>
         </div>
@@ -199,15 +199,15 @@ export default async function DashboardPage() {
             <Link href="/admin" className="flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-700 transition-colors">
               <span>🔑</span> Admin Panel
             </Link>
-            <span className="text-white/15">·</span>
-            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/20 hover:text-white/70 transition-colors">
+            <span className="text-white/30">·</span>
+            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/40 hover:text-white/70 transition-colors">
               ⚙️ Settings
             </Link>
           </div>
         )}
         {role !== "admin" && (
           <div className="mb-6">
-            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/20 hover:text-white/70 transition-colors">
+            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/40 hover:text-white/70 transition-colors">
               ⚙️ Settings
             </Link>
           </div>
@@ -216,11 +216,11 @@ export default async function DashboardPage() {
         {/* ── STATS ─────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-2">Events Created</p>
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Events Created</p>
             <p className="text-3xl font-extrabold text-white">{eventsCreated ?? 0}</p>
           </div>
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-2">Events Joined</p>
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Events Joined</p>
             <p className="text-3xl font-extrabold text-white">{eventsJoined ?? 0}</p>
           </div>
         </div>
@@ -229,7 +229,7 @@ export default async function DashboardPage() {
         {upcomingJoined.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-              <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">My Upcoming Events</h2>
+              <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">My Upcoming Events</h2>
               <Link href="/events" className="text-xs font-semibold text-amber-500 hover:text-amber-400">See all →</Link>
             </div>
             <div className="divide-y divide-white/5">
@@ -249,7 +249,7 @@ export default async function DashboardPage() {
                     <span className="text-xl flex-shrink-0">{SPORT_EMOJIS[ev.sport] ?? "🏅"}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-white truncate">{ev.title}</p>
-                      <p className="text-xs text-white/20 mt-0.5">{formattedDate} · {ev.location}</p>
+                      <p className="text-xs text-white/40 mt-0.5">{formattedDate} · {ev.location}</p>
                     </div>
                     <span className="text-amber-400 text-xs flex-shrink-0">→</span>
                   </Link>

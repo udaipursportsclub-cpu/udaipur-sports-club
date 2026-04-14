@@ -36,7 +36,7 @@ export default async function SettingsPage() {
             Account
           </span>
           <h1 className="text-2xl font-extrabold text-white">Settings</h1>
-          <p className="text-white/20 text-sm mt-1">{user.email}</p>
+          <p className="text-white/40 text-sm mt-1">{user.email}</p>
         </div>
 
         <SettingsForm

@@ -44,7 +44,7 @@ export default function MobileNav() {
               key={item.href}
               href={item.href}
               className={`relative flex-1 flex flex-col items-center justify-center py-2.5 gap-1 transition-colors ${
-                isActive ? "text-amber-400" : "text-white/30 hover:text-white/50"
+                isActive ? "text-amber-400" : "text-white/50 hover:text-white/50"
               }`}
             >
               {isActive && (
@@ -52,7 +52,7 @@ export default function MobileNav() {
               )}
               <span className="text-xl leading-none">{item.icon}</span>
               <span className={`text-[10px] font-bold tracking-wide ${
-                isActive ? "text-amber-400" : "text-white/30"
+                isActive ? "text-amber-400" : "text-white/50"
               }`}>
                 {item.label}
               </span>

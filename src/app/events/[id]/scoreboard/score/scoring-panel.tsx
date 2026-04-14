@@ -374,7 +374,7 @@ export default function ScoringPanel({
 
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 space-y-4">
           <div>
-            <label className="block text-xs font-bold tracking-widest uppercase text-white/30 mb-2">
+            <label className="block text-xs font-bold tracking-widest uppercase text-white/50 mb-2">
               Batting Team
             </label>
             <input
@@ -391,7 +391,7 @@ export default function ScoringPanel({
             />
           </div>
           <div>
-            <label className="block text-xs font-bold tracking-widest uppercase text-white/30 mb-2">
+            <label className="block text-xs font-bold tracking-widest uppercase text-white/50 mb-2">
               Bowling Team
             </label>
             <input
@@ -409,7 +409,7 @@ export default function ScoringPanel({
           </div>
 
           <div className="border-t border-white/5 pt-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/30 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/50 mb-3">
               Opening Batsmen
             </p>
             <div className="space-y-3">
@@ -441,7 +441,7 @@ export default function ScoringPanel({
           </div>
 
           <div className="border-t border-white/5 pt-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/30 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/50 mb-3">
               Opening Bowler
             </p>
             <input
@@ -481,7 +481,7 @@ export default function ScoringPanel({
           <span className="text-xs font-bold tracking-widest uppercase text-amber-400">
             {innings.batting_team}
           </span>
-          <span className="text-xs text-white/30">
+          <span className="text-xs text-white/50">
             Innings {innings.innings_number}
           </span>
         </div>
@@ -514,7 +514,7 @@ export default function ScoringPanel({
               </div>
               <span className="text-sm text-white/70 tabular-nums font-bold">
                 {b!.runs}
-                <span className="text-white/30 font-normal">
+                <span className="text-white/50 font-normal">
                   ({b!.balls_faced})
                 </span>
               </span>
@@ -523,7 +523,7 @@ export default function ScoringPanel({
         </div>
         {currentBowler && (
           <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
-            <span className="text-xs text-white/30">
+            <span className="text-xs text-white/50">
               {currentBowler.player_name}
             </span>
             <span className="text-xs text-white/40 tabular-nums">
@@ -537,7 +537,7 @@ export default function ScoringPanel({
       {/* ── This Over Balls ────────────────────────────────────────── */}
       {overBalls.length > 0 && (
         <div className="flex items-center gap-2 px-1 flex-wrap">
-          <span className="text-xs text-white/20 mr-1">This over:</span>
+          <span className="text-xs text-white/40 mr-1">This over:</span>
           {overBalls.map((ball) => {
             let label = String(ball.runs);
             let colorClass = "bg-white/10 text-white/60";
@@ -559,7 +559,7 @@ export default function ScoringPanel({
               colorClass = "bg-purple-500/20 text-purple-400";
             } else if (ball.runs === 0) {
               label = "\u2022";
-              colorClass = "bg-white/5 text-white/30";
+              colorClass = "bg-white/5 text-white/50";
             }
 
             return (
@@ -576,7 +576,7 @@ export default function ScoringPanel({
 
       {/* ── Run Buttons ────────────────────────────────────────────── */}
       <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4 space-y-3">
-        <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-1">
+        <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-1">
           Runs
         </p>
         <div className="grid grid-cols-6 gap-2">
@@ -729,7 +729,7 @@ export default function ScoringPanel({
             {/* Show previous bowlers for quick selection */}
             {bowling.length > 0 && (
               <div>
-                <p className="text-xs text-white/20 mb-2">Previous bowlers:</p>
+                <p className="text-xs text-white/40 mb-2">Previous bowlers:</p>
                 <div className="flex flex-wrap gap-2">
                   {bowling
                     .filter(
@@ -769,7 +769,7 @@ export default function ScoringPanel({
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-white/30 mb-1">
+                <label className="block text-xs text-white/50 mb-1">
                   Batting Team
                 </label>
                 <input
@@ -786,7 +786,7 @@ export default function ScoringPanel({
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/30 mb-1">
+                <label className="block text-xs text-white/50 mb-1">
                   Bowling Team
                 </label>
                 <input
@@ -803,7 +803,7 @@ export default function ScoringPanel({
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/30 mb-1">
+                <label className="block text-xs text-white/50 mb-1">
                   Striker
                 </label>
                 <input
@@ -820,7 +820,7 @@ export default function ScoringPanel({
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/30 mb-1">
+                <label className="block text-xs text-white/50 mb-1">
                   Non-Striker
                 </label>
                 <input
@@ -837,7 +837,7 @@ export default function ScoringPanel({
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/30 mb-1">
+                <label className="block text-xs text-white/50 mb-1">
                   Opening Bowler
                 </label>
                 <input
@@ -971,7 +971,7 @@ function WicketModal({
         {/* Who is out? (for run outs) */}
         {canSelectBatsmanOut && (
           <div>
-            <label className="block text-xs text-white/30 mb-2">
+            <label className="block text-xs text-white/50 mb-2">
               Who is out?
             </label>
             <div className="flex gap-2">
@@ -995,7 +995,7 @@ function WicketModal({
         {/* Fielder name */}
         {needsFielder && (
           <div>
-            <label className="block text-xs text-white/30 mb-1">
+            <label className="block text-xs text-white/50 mb-1">
               {wicketType === "caught"
                 ? "Caught by"
                 : wicketType === "stumped"
@@ -1015,7 +1015,7 @@ function WicketModal({
 
         {/* New batsman */}
         <div>
-          <label className="block text-xs text-white/30 mb-1">
+          <label className="block text-xs text-white/50 mb-1">
             New Batsman
           </label>
           <input

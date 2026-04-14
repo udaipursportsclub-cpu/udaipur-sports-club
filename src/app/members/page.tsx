@@ -110,7 +110,7 @@ export default async function MembersPage() {
                       </span>
                     </div>
                     {topSports.length > 0 && (
-                      <p className="text-xs text-white/20 mt-0.5">
+                      <p className="text-xs text-white/40 mt-0.5">
                         {topSports.map((s) => getSportEmoji(s)).join(" ")} {topSports.join(", ")}
                       </p>
                     )}
@@ -120,7 +120,7 @@ export default async function MembersPage() {
                   {stats.count > 0 && (
                     <div className="text-right flex-shrink-0">
                       <p className="text-base font-extrabold text-amber-500">{stats.count}</p>
-                      <p className="text-xs text-white/20">games</p>
+                      <p className="text-xs text-white/40">games</p>
                     </div>
                   )}
                 </Link>

@@ -124,7 +124,7 @@ export default function PhotoGallery({
       <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-12 text-center">
         <p className="text-4xl mb-3">📷</p>
         <p className="text-lg font-bold text-white">No photos yet</p>
-        <p className="text-sm text-white/20 mt-1">
+        <p className="text-sm text-white/40 mt-1">
           The host will upload event photos here after the game.
         </p>
       </div>
@@ -157,7 +157,7 @@ export default function PhotoGallery({
             </span>
             <button
               onClick={() => { setFilterOn(false); setMatchedIds(new Set()); }}
-              className="text-xs text-white/20 hover:text-white/70 underline"
+              className="text-xs text-white/40 hover:text-white/70 underline"
             >
               Show all
             </button>
@@ -177,7 +177,7 @@ export default function PhotoGallery({
           }}
         />
 
-        <span className="text-xs text-white/20 ml-auto">
+        <span className="text-xs text-white/40 ml-auto">
           {photos.length} photo{photos.length !== 1 ? "s" : ""}
         </span>
       </div>

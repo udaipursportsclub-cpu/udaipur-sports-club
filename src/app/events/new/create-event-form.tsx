@@ -196,7 +196,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           max={500}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
         />
-        <p className="text-xs text-white/20 mt-1">
+        <p className="text-xs text-white/40 mt-1">
           Maximum number of players allowed to join
         </p>
       </div>
@@ -206,7 +206,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       <div>
         <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Total Event Cost (₹){" "}
-          <span className="normal-case text-white/15">(0 = free)</span>
+          <span className="normal-case text-white/30">(0 = free)</span>
         </label>
         <input
           type="number"
@@ -240,7 +240,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
             placeholder="e.g. yourname@upi or 9876543210@paytm"
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition"
           />
-          <p className="text-xs text-white/20 mt-1">
+          <p className="text-xs text-white/40 mt-1">
             Players will pay directly to this UPI ID
           </p>
         </div>
@@ -250,7 +250,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="block text-xs font-bold tracking-widest uppercase text-white/40">
-            Description <span className="normal-case text-white/15">(optional)</span>
+            Description <span className="normal-case text-white/30">(optional)</span>
           </label>
           <button
             type="button"

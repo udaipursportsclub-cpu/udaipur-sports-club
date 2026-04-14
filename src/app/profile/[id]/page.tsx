@@ -134,13 +134,13 @@ export default async function ProfilePage({
                   {profile.full_name ?? "Unknown"}
                 </h1>
                 {isOwnProfile && (
-                  <span className="text-xs text-white/20">(you)</span>
+                  <span className="text-xs text-white/40">(you)</span>
                 )}
               </div>
               <span className={`inline-block text-xs font-semibold border px-2.5 py-0.5 rounded-full mt-1.5 ${ROLE_COLORS[profile.role] ?? ROLE_COLORS.member}`}>
                 {ROLE_LABELS[profile.role] ?? "Member"}
               </span>
-              <p className="text-xs text-white/20 mt-1.5">Member since {memberSince}</p>
+              <p className="text-xs text-white/40 mt-1.5">Member since {memberSince}</p>
             </div>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default async function ProfilePage({
           ].map((s) => (
             <div key={s.label} className="bg-white/[0.03] rounded-2xl border border-white/5 p-5 text-center">
               <p className={`text-3xl font-extrabold ${s.color}`}>{s.value}</p>
-              <p className="text-xs font-bold tracking-widest uppercase text-white/20 mt-1 leading-tight">
+              <p className="text-xs font-bold tracking-widest uppercase text-white/40 mt-1 leading-tight">
                 {s.label}
               </p>
             </div>
@@ -182,10 +182,10 @@ export default async function ProfilePage({
         {/* ── ACHIEVEMENT BADGES ───────────────────────────────────── */}
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">
               Badges
             </h2>
-            <span className="text-xs text-white/20">
+            <span className="text-xs text-white/40">
               {unlockedAchievements.length} / {achievements.length} unlocked
             </span>
           </div>
@@ -201,7 +201,7 @@ export default async function ProfilePage({
                 }`}
               >
                 <span className="text-2xl">{a.emoji}</span>
-                <span className={`text-xs font-bold leading-tight ${a.unlocked ? "text-white/70" : "text-white/20"}`}>
+                <span className={`text-xs font-bold leading-tight ${a.unlocked ? "text-white/70" : "text-white/40"}`}>
                   {a.name}
                 </span>
               </div>
@@ -212,7 +212,7 @@ export default async function ProfilePage({
         {/* ── SPORTS BREAKDOWN ─────────────────────────────────────── */}
         {topSports.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-5">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-5">
               Sports Played
             </h2>
             <div className="space-y-3">
@@ -224,7 +224,7 @@ export default async function ProfilePage({
                       <span className="text-sm font-semibold text-white/70">
                         {getSportEmoji(sport)} {sport}
                       </span>
-                      <span className="text-xs text-white/20">
+                      <span className="text-xs text-white/40">
                         {count} {count === 1 ? "game" : "games"}
                       </span>
                     </div>
@@ -245,7 +245,7 @@ export default async function ProfilePage({
         {joined.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
             <div className="px-6 py-5 border-b border-white/5">
-              <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">
                 Recent Events
               </h2>
             </div>
@@ -274,7 +274,7 @@ export default async function ProfilePage({
                       <p className="text-sm font-semibold text-white truncate">
                         {ev.title}
                       </p>
-                      <p className="text-xs text-white/20 mt-0.5">{formattedDate}</p>
+                      <p className="text-xs text-white/40 mt-0.5">{formattedDate}</p>
                     </div>
                     {ev.status === "completed" && (
                       <span className="text-xs font-semibold text-green-400 bg-green-400/10 border border-green-400/20 px-2 py-0.5 rounded-full flex-shrink-0">
@@ -292,7 +292,7 @@ export default async function ProfilePage({
         {hosted.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
             <div className="px-6 py-5 border-b border-white/5">
-              <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">
                 Events Hosted
               </h2>
             </div>
@@ -310,7 +310,7 @@ export default async function ProfilePage({
                     <span className="text-2xl flex-shrink-0">{getSportEmoji(ev.sport)}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-white truncate">{ev.title}</p>
-                      <p className="text-xs text-white/20 mt-0.5">{formattedDate}</p>
+                      <p className="text-xs text-white/40 mt-0.5">{formattedDate}</p>
                     </div>
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 border ${
                       ev.status === "completed"
@@ -328,7 +328,7 @@ export default async function ProfilePage({
 
         {/* Empty state */}
         {joined.length === 0 && hosted.length === 0 && (
-          <div className="text-center py-16 text-white/20">
+          <div className="text-center py-16 text-white/40">
             <p className="text-4xl mb-4">🏅</p>
             <p className="text-sm">No events yet — get out and play!</p>
             {isOwnProfile && (

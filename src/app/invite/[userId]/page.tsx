@@ -145,7 +145,7 @@ export default async function InvitePage({
           </Link>
         )}
 
-        <p className="text-white/20 text-xs mt-6">
+        <p className="text-white/40 text-xs mt-6">
           Udaipur Sports Club · City of Lakes
         </p>
 

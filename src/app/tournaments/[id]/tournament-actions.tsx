@@ -132,7 +132,7 @@ export default function TournamentActions({
             <p className="text-xs text-red-400">{teamError}</p>
           )}
           <div>
-            <label className="block text-[10px] font-bold tracking-widest uppercase text-white/30 mb-1">
+            <label className="block text-[10px] font-bold tracking-widest uppercase text-white/50 mb-1">
               Team Name *
             </label>
             <input
@@ -145,8 +145,8 @@ export default function TournamentActions({
             />
           </div>
           <div>
-            <label className="block text-[10px] font-bold tracking-widest uppercase text-white/30 mb-1">
-              Players <span className="normal-case text-white/15">(one per line, first = captain)</span>
+            <label className="block text-[10px] font-bold tracking-widest uppercase text-white/50 mb-1">
+              Players <span className="normal-case text-white/30">(one per line, first = captain)</span>
             </label>
             <textarea
               value={playerNames}
@@ -167,7 +167,7 @@ export default function TournamentActions({
             <button
               type="button"
               onClick={() => setShowAddTeam(false)}
-              className="text-xs font-bold text-white/30 hover:text-white/50 px-4 py-2 transition-colors"
+              className="text-xs font-bold text-white/50 hover:text-white/50 px-4 py-2 transition-colors"
             >
               Cancel
             </button>

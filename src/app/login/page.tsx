@@ -163,7 +163,7 @@ export default function LoginPage() {
       <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-blue-500/5 blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-sm relative">
-        <a href="/" className="flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition-colors mb-8">
+        <a href="/" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white/60 transition-colors mb-8">
           &larr; Back to home
         </a>
 
@@ -172,7 +172,7 @@ export default function LoginPage() {
             <span className="text-white font-black text-sm">U</span>
           </div>
           <h1 className="text-2xl font-black text-white mb-1">Join the Club</h1>
-          <p className="text-white/30 text-sm">Udaipur Sports Club</p>
+          <p className="text-white/50 text-sm">Udaipur Sports Club</p>
         </div>
 
         {/* Tab switcher — 3 tabs */}
@@ -180,7 +180,7 @@ export default function LoginPage() {
           <button
             onClick={() => { setTab("google"); setError(null); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "google" ? "bg-white/10 text-white" : "text-white/30 hover:text-white/50"
+              tab === "google" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
             }`}
           >
             Google
@@ -188,7 +188,7 @@ export default function LoginPage() {
           <button
             onClick={() => { setTab("phone"); setError(null); resetPhoneOtp(); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "phone" ? "bg-white/10 text-white" : "text-white/30 hover:text-white/50"
+              tab === "phone" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
             }`}
           >
             Phone OTP
@@ -196,7 +196,7 @@ export default function LoginPage() {
           <button
             onClick={() => { setTab("email"); setError(null); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "email" ? "bg-white/10 text-white" : "text-white/30 hover:text-white/50"
+              tab === "email" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
             }`}
           >
             Email
@@ -247,7 +247,7 @@ export default function LoginPage() {
                 /* Step 1: Enter phone number */
                 <form onSubmit={handleSendOtp} className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">
+                    <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">
                       Phone Number
                     </label>
                     <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ export default function LoginPage() {
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition tracking-wider"
                       />
                     </div>
-                    <p className="text-[10px] text-white/20 mt-2">
+                    <p className="text-[10px] text-white/40 mt-2">
                       We&apos;ll send a login code via WhatsApp
                     </p>
                   </div>
@@ -278,10 +278,10 @@ export default function LoginPage() {
                 /* Step 2: Enter OTP code */
                 <form onSubmit={handleVerifyOtp} className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">
+                    <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">
                       Enter 6-digit code
                     </label>
-                    <p className="text-white/30 text-xs mb-4">
+                    <p className="text-white/50 text-xs mb-4">
                       Sent to +91 {phone}
                     </p>
 
@@ -314,7 +314,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={resetPhoneOtp}
-                    className="w-full text-white/30 hover:text-white/60 text-xs py-2 transition"
+                    className="w-full text-white/50 hover:text-white/60 text-xs py-2 transition"
                   >
                     Change number / Resend
                   </button>
@@ -330,12 +330,12 @@ export default function LoginPage() {
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-4 py-3 rounded-xl">{error}</div>
               )}
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">Email</label>
+                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">Email</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@email.com"
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">Password</label>
+                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">Password</label>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="--------"
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
               </div>
@@ -347,7 +347,7 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="text-center text-[10px] text-white/15 mt-6">By signing in you agree to our Terms of Service.</p>
+        <p className="text-center text-[10px] text-white/30 mt-6">By signing in you agree to our Terms of Service.</p>
       </div>
     </main>
   );

@@ -209,7 +209,7 @@ export default async function ScoreboardPage({
                 <span className="ml-2 inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               )}
             </p>
-            <p className="text-xs text-white/30">
+            <p className="text-xs text-white/50">
               vs {currentInnings.bowling_team}
             </p>
           </div>
@@ -222,7 +222,7 @@ export default async function ScoreboardPage({
             </span>
           </div>
           {currentInnings.extras && currentInnings.extras.total > 0 && (
-            <p className="text-xs text-white/30 mt-2">
+            <p className="text-xs text-white/50 mt-2">
               Extras: {currentInnings.extras.total} (
               {currentInnings.extras.wides > 0
                 ? `w ${currentInnings.extras.wides} `
@@ -253,7 +253,7 @@ export default async function ScoreboardPage({
         {/* ── CURRENT BATSMEN ──────────────────────────────────────── */}
         {(striker || nonStriker) && currentInnings.status === "in_progress" && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">
               At the Crease
             </p>
             <div className="space-y-2">
@@ -279,11 +279,11 @@ export default async function ScoreboardPage({
                   <div className="flex items-center gap-4 text-sm tabular-nums">
                     <span className="text-white font-bold">
                       {b!.runs}
-                      <span className="text-white/30 font-normal">
+                      <span className="text-white/50 font-normal">
                         ({b!.balls_faced})
                       </span>
                     </span>
-                    <span className="text-white/30 text-xs">
+                    <span className="text-white/50 text-xs">
                       SR {b!.strike_rate}
                     </span>
                     {b!.fours > 0 && (
@@ -306,7 +306,7 @@ export default async function ScoreboardPage({
         {/* ── CURRENT BOWLER ───────────────────────────────────────── */}
         {currentBowler && currentInnings.status === "in_progress" && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-2">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
               Bowling
             </p>
             <div className="flex items-center justify-between">
@@ -318,7 +318,7 @@ export default async function ScoreboardPage({
                   {formatOvers(currentBowler.overs)}-{currentBowler.maidens}-
                   {currentBowler.runs_conceded}-{currentBowler.wickets}
                 </span>
-                <span className="text-white/30 text-xs">
+                <span className="text-white/50 text-xs">
                   Econ {currentBowler.economy}
                 </span>
               </div>
@@ -329,7 +329,7 @@ export default async function ScoreboardPage({
         {/* ── BALL-BY-BALL CURRENT OVER ────────────────────────────── */}
         {currentOverBalls.length > 0 && currentInnings.status === "in_progress" && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">
               This Over
             </p>
             <div className="flex items-center gap-2 flex-wrap">
@@ -354,7 +354,7 @@ export default async function ScoreboardPage({
                   colorClass = "bg-purple-500/20 text-purple-400 ring-1 ring-purple-400/30";
                 } else if (ball.runs === 0) {
                   label = "\u2022";
-                  colorClass = "bg-white/5 text-white/30";
+                  colorClass = "bg-white/5 text-white/50";
                 }
 
                 return (
@@ -373,14 +373,14 @@ export default async function ScoreboardPage({
         {/* ── BATTING SCORECARD ────────────────────────────────────── */}
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
           <div className="px-4 py-3 border-b border-white/5">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40">
               Batting
             </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-white/30 text-xs border-b border-white/5">
+                <tr className="text-white/50 text-xs border-b border-white/5">
                   <th className="text-left px-4 py-2 font-medium">Batter</th>
                   <th className="text-right px-2 py-2 font-medium">R</th>
                   <th className="text-right px-2 py-2 font-medium">B</th>
@@ -453,14 +453,14 @@ export default async function ScoreboardPage({
         {/* ── BOWLING SCORECARD ────────────────────────────────────── */}
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
           <div className="px-4 py-3 border-b border-white/5">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40">
               Bowling
             </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-white/30 text-xs border-b border-white/5">
+                <tr className="text-white/50 text-xs border-b border-white/5">
                   <th className="text-left px-4 py-2 font-medium">Bowler</th>
                   <th className="text-right px-2 py-2 font-medium">O</th>
                   <th className="text-right px-2 py-2 font-medium">M</th>
@@ -503,7 +503,7 @@ export default async function ScoreboardPage({
         {/* ── FALL OF WICKETS ──────────────────────────────────────── */}
         {fallOfWickets.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">
               Fall of Wickets
             </p>
             <div className="flex flex-wrap gap-3">
@@ -524,7 +524,7 @@ export default async function ScoreboardPage({
         {/* ── OVER-BY-OVER HISTORY ─────────────────────────────────── */}
         {ballsList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-4">
-            <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
+            <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">
               Over History
             </p>
             <div className="space-y-2">
@@ -553,7 +553,7 @@ export default async function ScoreboardPage({
                         key={overNum}
                         className="flex items-center gap-3"
                       >
-                        <span className="text-xs text-white/30 font-mono w-10 shrink-0">
+                        <span className="text-xs text-white/50 font-mono w-10 shrink-0">
                           Ov {Number(overNum) + 1}
                         </span>
                         <div className="flex items-center gap-1.5 flex-wrap flex-1">
@@ -578,7 +578,7 @@ export default async function ScoreboardPage({
                               cls = "text-purple-400 font-bold";
                             } else if (ball.runs === 0) {
                               label = "\u2022";
-                              cls = "text-white/20";
+                              cls = "text-white/40";
                             }
 
                             return (
@@ -591,7 +591,7 @@ export default async function ScoreboardPage({
                             );
                           })}
                         </div>
-                        <span className="text-xs text-white/30 font-mono tabular-nums w-8 text-right shrink-0">
+                        <span className="text-xs text-white/50 font-mono tabular-nums w-8 text-right shrink-0">
                           {overRuns}r
                         </span>
                       </div>

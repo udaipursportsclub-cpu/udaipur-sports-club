@@ -13,7 +13,7 @@ export default function NotFound() {
     >
       <p className="text-6xl mb-6">🏅</p>
       <h1 className="text-3xl font-extrabold text-white mb-2">Page not found</h1>
-      <p className="text-white/20 text-sm mb-8 text-center">
+      <p className="text-white/40 text-sm mb-8 text-center">
         This page doesn&apos;t exist — maybe the event was cancelled or the link is wrong.
       </p>
       <Link

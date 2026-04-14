@@ -110,7 +110,7 @@ export default function PhotoUploader({ eventId }: { eventId: string }) {
   return (
     <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
       <h2 className="font-extrabold text-white mb-1">Upload Photos</h2>
-      <p className="text-xs text-white/20 mb-4">
+      <p className="text-xs text-white/40 mb-4">
         Upload event photos — faces are automatically detected so members can find themselves.
       </p>
 
@@ -139,7 +139,7 @@ export default function PhotoUploader({ eventId }: { eventId: string }) {
             <p className="text-sm font-semibold text-white/70">
               Drop photos here or click to upload
             </p>
-            <p className="text-xs text-white/20 mt-1">JPG, PNG, HEIC — up to 20 photos at once</p>
+            <p className="text-xs text-white/40 mt-1">JPG, PNG, HEIC — up to 20 photos at once</p>
           </div>
         )}
       </div>

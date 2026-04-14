@@ -48,7 +48,7 @@ export default async function TournamentsPage() {
 
   function statusColor(status: string) {
     if (status === "active")    return "bg-green-400/10 text-green-400";
-    if (status === "completed") return "bg-white/5 text-white/30";
+    if (status === "completed") return "bg-white/5 text-white/50";
     return "bg-amber-400/10 text-amber-400"; // draft
   }
 
@@ -75,10 +75,10 @@ export default async function TournamentsPage() {
               {getSportEmoji(t.sport)}
             </div>
             <div>
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 block">
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 block">
                 {t.sport}
               </span>
-              <span className="text-[10px] font-semibold text-white/15">
+              <span className="text-[10px] font-semibold text-white/30">
                 {formatLabel(t.format)}
               </span>
             </div>
@@ -96,7 +96,7 @@ export default async function TournamentsPage() {
         {/* Details */}
         <div className="space-y-1.5 mb-4">
           {t.start_date && (
-            <p className="text-xs text-white/30">
+            <p className="text-xs text-white/50">
               📅 {formatDate(t.start_date)}{t.end_date ? ` — ${formatDate(t.end_date)}` : ""}
             </p>
           )}
@@ -111,10 +111,10 @@ export default async function TournamentsPage() {
 
         {/* Bottom */}
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
-          <span className="text-[10px] font-bold text-white/15">{t.host_name}</span>
+          <span className="text-[10px] font-bold text-white/30">{t.host_name}</span>
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-black text-white/40">{teamCount}</span>
-            <span className="text-[10px] text-white/15">/{t.max_teams} teams</span>
+            <span className="text-[10px] text-white/30">/{t.max_teams} teams</span>
           </div>
         </div>
       </Link>
@@ -155,7 +155,7 @@ export default async function TournamentsPage() {
         <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
           Tournaments
         </h1>
-        <p className="text-white/30 text-sm">
+        <p className="text-white/50 text-sm">
           Compete in knockout brackets and league formats.
         </p>
       </div>
@@ -164,7 +164,7 @@ export default async function TournamentsPage() {
       <div className="max-w-5xl mx-auto px-6 pb-8">
         {active.length > 0 && (
           <>
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Active & Upcoming
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -179,7 +179,7 @@ export default async function TournamentsPage() {
       <div className="max-w-5xl mx-auto px-6 pb-20">
         {past.length > 0 && (
           <>
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4 mt-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4 mt-6">
               Past Tournaments
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -193,7 +193,7 @@ export default async function TournamentsPage() {
           <div className="text-center py-24">
             <p className="text-5xl mb-6">🏆</p>
             <h2 className="text-xl font-bold text-white mb-2">No tournaments yet</h2>
-            <p className="text-white/30 text-sm mb-8">Be the first to create one.</p>
+            <p className="text-white/50 text-sm mb-8">Be the first to create one.</p>
             {isHost ? (
               <Link
                 href="/tournaments/new"
@@ -202,7 +202,7 @@ export default async function TournamentsPage() {
                 Create Tournament
               </Link>
             ) : user ? (
-              <p className="text-white/20 text-sm">Only hosts can create tournaments.</p>
+              <p className="text-white/40 text-sm">Only hosts can create tournaments.</p>
             ) : (
               <Link
                 href="/login"

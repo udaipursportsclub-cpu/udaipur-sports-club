@@ -87,7 +87,7 @@ export default async function LeaderboardPage() {
         <div className="text-center">
           <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-amber-400/60 mb-3">Hall of Fame</p>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-2">Leaderboard</h1>
-          <p className="text-white/30 text-sm">Every game counts. Every player ranked.</p>
+          <p className="text-white/50 text-sm">Every game counts. Every player ranked.</p>
         </div>
 
         {/* My rank card */}
@@ -97,7 +97,7 @@ export default async function LeaderboardPage() {
             <div className="flex items-center gap-4 relative">
               <div className="text-center">
                 <p className="text-3xl font-black text-white">#{myRank}</p>
-                <p className="text-[10px] text-white/20 font-bold uppercase">Your Rank</p>
+                <p className="text-[10px] text-white/40 font-bold uppercase">Your Rank</p>
               </div>
               <div className="w-px h-12 bg-white/10" />
               <div className="flex-1">
@@ -105,14 +105,14 @@ export default async function LeaderboardPage() {
                   <span className={`text-sm font-black ${myPlayer.level.color}`}>
                     {myPlayer.level.emoji} {myPlayer.level.name}
                   </span>
-                  <span className="text-xs text-white/20">·</span>
+                  <span className="text-xs text-white/40">·</span>
                   <span className="text-xs font-bold text-white/40">{myPlayer.xp} XP</span>
                 </div>
                 {myNext && (
                   <div className="mt-2">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-white/20">Next: {myNext.level.emoji} {myNext.level.name}</span>
-                      <span className="text-[10px] text-white/20">{myNext.xpNeeded} XP to go</span>
+                      <span className="text-[10px] text-white/40">Next: {myNext.level.emoji} {myNext.level.name}</span>
+                      <span className="text-[10px] text-white/40">{myNext.xpNeeded} XP to go</span>
                     </div>
                     <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                       <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all" style={{ width: `${myNext.progress}%` }} />
@@ -137,7 +137,7 @@ export default async function LeaderboardPage() {
                   <span className="text-lg w-6 text-center">{i === 0 ? "👑" : ["⚡","🔥","💪","🎯"][i-1]}</span>
                   <span className="text-sm font-bold text-white/80 flex-1 truncate">{p.name}</span>
                   <span className="text-sm font-black text-red-400">{p.count}</span>
-                  <span className="text-[10px] text-white/20">games</span>
+                  <span className="text-[10px] text-white/40">games</span>
                 </Link>
               ))}
             </div>
@@ -147,13 +147,13 @@ export default async function LeaderboardPage() {
         {/* All-time rankings */}
         <div className="rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
           <div className="px-5 py-4 border-b border-white/5">
-            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/30">All-Time Rankings</h2>
+            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/50">All-Time Rankings</h2>
           </div>
 
           {players.length === 0 ? (
             <div className="px-6 py-16 text-center">
               <p className="text-4xl mb-3">🏟️</p>
-              <p className="text-white/30 text-sm">No games played yet — be the first legend</p>
+              <p className="text-white/50 text-sm">No games played yet — be the first legend</p>
             </div>
           ) : (
             <div className="divide-y divide-white/5">
@@ -171,7 +171,7 @@ export default async function LeaderboardPage() {
                       {i === 0 ? <span className="text-xl">👑</span> :
                        i === 1 ? <span className="text-xl">⚡</span> :
                        i === 2 ? <span className="text-xl">🔥</span> :
-                       <span className="text-xs font-bold text-white/20">#{i + 1}</span>}
+                       <span className="text-xs font-bold text-white/40">#{i + 1}</span>}
                     </div>
 
                     {/* Avatar */}
@@ -192,15 +192,15 @@ export default async function LeaderboardPage() {
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className={`text-[10px] font-bold ${p.level.color}`}>{p.level.emoji} {p.level.name}</span>
-                        <span className="text-[10px] text-white/15">·</span>
-                        <span className="text-[10px] text-white/20">{uniqueSports} sport{uniqueSports !== 1 ? "s" : ""}</span>
+                        <span className="text-[10px] text-white/30">·</span>
+                        <span className="text-[10px] text-white/40">{uniqueSports} sport{uniqueSports !== 1 ? "s" : ""}</span>
                       </div>
                     </div>
 
                     {/* XP */}
                     <div className="text-right flex-shrink-0">
                       <p className="text-sm font-black text-white/60">{p.xp}</p>
-                      <p className="text-[10px] text-white/15">XP</p>
+                      <p className="text-[10px] text-white/30">XP</p>
                     </div>
                   </Link>
                 );
@@ -212,7 +212,7 @@ export default async function LeaderboardPage() {
         {/* Sport breakdown */}
         {topSports.length > 0 && (
           <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-6">
-            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/30 mb-5">Most Played</h2>
+            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/50 mb-5">Most Played</h2>
             <div className="space-y-4">
               {topSports.map(([sport, count]) => {
                 const pct = totalGames > 0 ? Math.round((count / totalGames) * 100) : 0;
@@ -220,7 +220,7 @@ export default async function LeaderboardPage() {
                   <div key={sport}>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="text-sm font-bold text-white/60">{getSportEmoji(sport)} {sport}</span>
-                      <span className="text-xs text-white/20">{count} · {pct}%</span>
+                      <span className="text-xs text-white/40">{count} · {pct}%</span>
                     </div>
                     <div className="w-full bg-white/5 rounded-full h-1.5">
                       <div className="h-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${pct}%` }} />

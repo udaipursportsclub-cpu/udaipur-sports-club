@@ -156,7 +156,7 @@ export default function CreateTournamentForm() {
       {/* Entry Fee */}
       <div>
         <label className={labelClass}>
-          Entry Fee per Team (₹) <span className="normal-case text-white/15">(0 = free)</span>
+          Entry Fee per Team (₹) <span className="normal-case text-white/30">(0 = free)</span>
         </label>
         <input
           type="number" name="entry_fee" value={form.entry_fee} onChange={handleChange}
@@ -174,13 +174,13 @@ export default function CreateTournamentForm() {
             placeholder="e.g. yourname@upi"
             className={inputClass}
           />
-          <p className="text-xs text-white/20 mt-1">Teams will pay to this UPI ID</p>
+          <p className="text-xs text-white/40 mt-1">Teams will pay to this UPI ID</p>
         </div>
       )}
 
       {/* Description */}
       <div>
-        <label className={labelClass}>Description <span className="normal-case text-white/15">(optional)</span></label>
+        <label className={labelClass}>Description <span className="normal-case text-white/30">(optional)</span></label>
         <textarea
           name="description" value={form.description} onChange={handleChange}
           rows={3} placeholder="Tournament details, venue info, prizes, etc."
@@ -190,7 +190,7 @@ export default function CreateTournamentForm() {
 
       {/* Rules */}
       <div>
-        <label className={labelClass}>Rules <span className="normal-case text-white/15">(optional)</span></label>
+        <label className={labelClass}>Rules <span className="normal-case text-white/30">(optional)</span></label>
         <textarea
           name="rules" value={form.rules} onChange={handleChange}
           rows={3} placeholder="Match duration, scoring rules, tie-breaker rules, etc."

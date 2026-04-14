@@ -83,7 +83,7 @@ export default async function EventsPage({
           {activeSport !== "All" && <input type="hidden" name="sport" value={activeSport} />}
           {activeTab !== "upcoming" && <input type="hidden" name="tab" value={activeTab} />}
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm">🔍</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">🔍</span>
             <input
               name="q"
               defaultValue={searchQuery}
@@ -131,7 +131,7 @@ export default async function EventsPage({
             <h2 className="text-xl font-bold text-white mb-2">
               {activeSport !== "All" ? `No ${activeSport} events yet` : "No events yet"}
             </h2>
-            <p className="text-white/30 text-sm mb-8">Be the first to create one.</p>
+            <p className="text-white/50 text-sm mb-8">Be the first to create one.</p>
             <Link
               href={user ? "/events/new" : "/login"}
               className="inline-block bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm px-8 py-3.5 rounded-full transition-all"
@@ -166,7 +166,7 @@ export default async function EventsPage({
                       <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl">
                         {getSportEmoji(event.sport)}
                       </div>
-                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/20">
+                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">
                         {event.sport}
                       </span>
                     </div>
@@ -176,7 +176,7 @@ export default async function EventsPage({
                       </span>
                     )}
                     {isFull && (
-                      <span className="text-[10px] font-bold text-white/20 bg-white/5 px-2 py-1 rounded-full">
+                      <span className="text-[10px] font-bold text-white/40 bg-white/5 px-2 py-1 rounded-full">
                         Waitlist
                       </span>
                     )}
@@ -189,10 +189,10 @@ export default async function EventsPage({
 
                   {/* Details */}
                   <div className="space-y-1.5 mb-4">
-                    <p className="text-xs text-white/30">
+                    <p className="text-xs text-white/50">
                       📅 {formatDate(event.date)} · {formatTime(event.time)}
                     </p>
-                    <p className="text-xs text-white/30 truncate">
+                    <p className="text-xs text-white/50 truncate">
                       📍 {event.location}
                     </p>
                     {!isFree && (
@@ -206,10 +206,10 @@ export default async function EventsPage({
 
                   {/* Bottom */}
                   <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                    <span className="text-[10px] font-bold text-white/15">{event.host_name}</span>
+                    <span className="text-[10px] font-bold text-white/30">{event.host_name}</span>
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm font-black text-white/40">{rsvpCount}</span>
-                      <span className="text-[10px] text-white/15">/{event.capacity}</span>
+                      <span className="text-[10px] text-white/30">/{event.capacity}</span>
                     </div>
                   </div>
                 </Link>

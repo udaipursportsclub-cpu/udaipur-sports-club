@@ -166,7 +166,7 @@ export default async function Home() {
             <span className="text-white">Flex.</span>
           </h1>
 
-          <p className="text-white/30 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium">
+          <p className="text-white/50 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium">
             Udaipur&apos;s first sports community.
             Every game counts. Every player ranked.
             Your city, your court, your legacy.
@@ -195,7 +195,7 @@ export default async function Home() {
                 <span className="text-2xl">{s.icon}</span>
                 <div>
                   <p className="text-2xl font-black text-white">{s.value}</p>
-                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/20">{s.label}</p>
+                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">{s.label}</p>
                 </div>
               </div>
             ))}
@@ -221,7 +221,7 @@ export default async function Home() {
               </div>
               <div className="text-right">
                 <p className="text-3xl font-black text-amber-400">{weekChampion.count}</p>
-                <p className="text-[10px] font-bold tracking-wider uppercase text-white/20">games</p>
+                <p className="text-[10px] font-bold tracking-wider uppercase text-white/40">games</p>
               </div>
             </div>
           </Link>
@@ -232,7 +232,7 @@ export default async function Home() {
       {upcomingEvents && upcomingEvents.length > 0 && (
         <section className="max-w-6xl mx-auto px-6 py-10">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/30">Upcoming Games</h2>
+            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/50">Upcoming Games</h2>
             <Link href="/events" className="text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors">
               View all →
             </Link>
@@ -268,19 +268,19 @@ export default async function Home() {
                         {ev.title}
                       </p>
                       <div className="flex items-center gap-3 mt-1.5">
-                        <span className="text-xs text-white/30">{formattedDate} · {formattedTime}</span>
-                        <span className="text-xs text-white/20">·</span>
-                        <span className="text-xs text-white/30">{ev.location}</span>
+                        <span className="text-xs text-white/50">{formattedDate} · {formattedTime}</span>
+                        <span className="text-xs text-white/40">·</span>
+                        <span className="text-xs text-white/50">{ev.location}</span>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-[10px] font-bold text-white/20">{ev.host_name}</span>
+                        <span className="text-[10px] font-bold text-white/40">{ev.host_name}</span>
                         {spotsLeft <= 3 && spotsLeft > 0 && (
                           <span className="text-[10px] font-bold text-red-400 animate-pulse">
                             {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left
                           </span>
                         )}
                         {spotsLeft <= 0 && (
-                          <span className="text-[10px] font-bold text-white/20">Full — waitlist open</span>
+                          <span className="text-[10px] font-bold text-white/40">Full — waitlist open</span>
                         )}
                       </div>
                     </div>
@@ -288,7 +288,7 @@ export default async function Home() {
                     {/* Spots indicator */}
                     <div className="text-right flex-shrink-0">
                       <p className="text-lg font-black text-white">{rsvpCount}</p>
-                      <p className="text-[10px] text-white/20">/{ev.capacity}</p>
+                      <p className="text-[10px] text-white/40">/{ev.capacity}</p>
                     </div>
                   </div>
                 </Link>
@@ -308,11 +308,11 @@ export default async function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
             </span>
-            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/30">Live Feed</h2>
+            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/50">Live Feed</h2>
           </div>
           {(!recentActivity || recentActivity.length === 0) ? (
             <div className="px-5 py-12 text-center">
-              <p className="text-white/20 text-sm">No activity yet — be the first to make a move</p>
+              <p className="text-white/40 text-sm">No activity yet — be the first to make a move</p>
             </div>
           ) : (
             <div className="divide-y divide-white/5">
@@ -331,7 +331,7 @@ export default async function Home() {
                         <span className="text-amber-400/70">{ev?.title ?? sport}</span>
                       </p>
                     </div>
-                    <span className="text-[10px] text-white/15 flex-shrink-0">{timeAgo(a.created_at)}</span>
+                    <span className="text-[10px] text-white/30 flex-shrink-0">{timeAgo(a.created_at)}</span>
                   </div>
                 );
               })}
@@ -342,11 +342,11 @@ export default async function Home() {
         {/* Rankings — 2 cols */}
         <div className="md:col-span-2 rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
           <div className="px-5 py-4 border-b border-white/5">
-            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/30">Top Players</h2>
+            <h2 className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/50">Top Players</h2>
           </div>
           {top5.length === 0 ? (
             <div className="px-5 py-12 text-center">
-              <p className="text-white/20 text-sm">Leaderboard is empty — go play!</p>
+              <p className="text-white/40 text-sm">Leaderboard is empty — go play!</p>
             </div>
           ) : (
             <div className="divide-y divide-white/5">
@@ -379,7 +379,7 @@ export default async function Home() {
       {/* ── SPORTS WE PLAY ────────────────────────────────────────── */}
       {sports.length > 0 && (
         <section className="max-w-6xl mx-auto px-6 pb-12">
-          <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/20 mb-4">Sports on USC</p>
+          <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/40 mb-4">Sports on USC</p>
           <div className="flex flex-wrap gap-2">
             {sports.map(s => (
               <Link
@@ -398,12 +398,12 @@ export default async function Home() {
       {/* ── BOTTOM CTA ────────────────────────────────────────────── */}
       <section className="border-t border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-16 text-center">
-          <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/20 mb-4">Ready?</p>
+          <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-white/40 mb-4">Ready?</p>
           <h2 className="text-3xl md:text-5xl font-black text-white mb-3">
             Your city. Your game. Your{" "}
             <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">legacy.</span>
           </h2>
-          <p className="text-white/30 text-sm mb-8 max-w-md mx-auto">
+          <p className="text-white/50 text-sm mb-8 max-w-md mx-auto">
             Join Udaipur&apos;s fastest-growing sports community. Every game earns XP. Every player gets ranked.
           </p>
           <Link

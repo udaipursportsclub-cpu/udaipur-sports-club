@@ -66,7 +66,7 @@ export default async function EventPhotosPage({ params }: { params: { id: string
           </div>
           <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
         </Link>
-        <Link href={`/events/${params.id}`} className="text-xs text-white/20 hover:text-white/70 transition-colors">
+        <Link href={`/events/${params.id}`} className="text-xs text-white/40 hover:text-white/70 transition-colors">
           &larr; Back to event
         </Link>
       </nav>
@@ -75,7 +75,7 @@ export default async function EventPhotosPage({ params }: { params: { id: string
         {/* Header */}
         <div>
           <h1 className="text-2xl font-extrabold text-white">{event.title}</h1>
-          <p className="text-sm text-white/20 mt-1">{formattedDate} &middot; Event Photos</p>
+          <p className="text-sm text-white/40 mt-1">{formattedDate} &middot; Event Photos</p>
         </div>
 
         {/* Upload section — only for hosts/admins */}

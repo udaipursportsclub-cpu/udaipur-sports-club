@@ -78,7 +78,7 @@ export default function MatchResultClient({
           min={0}
           className="w-14 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white text-center focus:border-amber-400/50 focus:outline-none transition"
         />
-        <span className="text-xs text-white/20">-</span>
+        <span className="text-xs text-white/40">-</span>
         {/* Score B */}
         <input
           type="number"

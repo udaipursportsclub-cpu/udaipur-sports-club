@@ -77,7 +77,7 @@ export default async function ChallengePage() {
 
             {/* What being a host means */}
             <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-8">
-              <p className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+              <p className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
                 As a host you can
               </p>
               <div className="space-y-3">

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-expo-app@latest metro-erp-app --template blank)",
+      "Bash(npx expo:*)",
+      "Bash(node -e ':*)",
+      "Bash(npx eas-cli:*)",
+      "Bash(node setup-otp-table.js)",
+      "Bash(find src:*)",
+      "Bash(xargs sed:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/charul/Documents/metro-erp-app"
+    ]
+  }
+}

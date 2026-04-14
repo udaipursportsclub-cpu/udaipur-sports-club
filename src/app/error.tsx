@@ -32,7 +32,7 @@ export default function GlobalError({
         <h1 className="text-2xl font-black text-white mb-3">
           Something went wrong
         </h1>
-        <p className="text-white/30 text-sm leading-relaxed mb-8">
+        <p className="text-white/50 text-sm leading-relaxed mb-8">
           The app hit an unexpected error. Try refreshing.
         </p>
         <div className="flex gap-3 justify-center">

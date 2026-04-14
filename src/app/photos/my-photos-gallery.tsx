@@ -113,7 +113,7 @@ export default function MyPhotosGallery({
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h2 className="font-extrabold text-white">Find yourself in event photos</h2>
-            <p className="text-xs text-white/20 mt-0.5">
+            <p className="text-xs text-white/40 mt-0.5">
               Take a selfie — we&apos;ll scan all event photos to find you.
             </p>
           </div>
@@ -159,14 +159,14 @@ export default function MyPhotosGallery({
         <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-12 text-center">
           <p className="text-4xl mb-3">📸</p>
           <p className="text-lg font-bold text-white">No matched photos yet</p>
-          <p className="text-sm text-white/20 mt-1 max-w-md mx-auto">
+          <p className="text-sm text-white/40 mt-1 max-w-md mx-auto">
             Tap &quot;Find me&quot; above to scan event photos. Once your face is matched,
             all your photos will appear here automatically.
           </p>
         </div>
       ) : (
         <div>
-          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
             Your photos ({matchedPhotos.length})
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -197,7 +197,7 @@ export default function MyPhotosGallery({
       {/* Events with photos */}
       {eventsWithPhotos.length > 0 && (
         <div>
-          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
             Events with photos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -209,11 +209,11 @@ export default function MyPhotosGallery({
               >
                 <div>
                   <p className="text-sm font-bold text-white">{ev.title}</p>
-                  <p className="text-xs text-white/20">
+                  <p className="text-xs text-white/40">
                     {new Date(ev.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                   </p>
                 </div>
-                <span className="text-white/20 group-hover:text-amber-400 transition-colors">&rarr;</span>
+                <span className="text-white/40 group-hover:text-amber-400 transition-colors">&rarr;</span>
               </Link>
             ))}
           </div>

@@ -122,7 +122,7 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
         <div>
           <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
-            Total Cost (₹) <span className="normal-case text-white/15">(0 = free)</span>
+            Total Cost (₹) <span className="normal-case text-white/30">(0 = free)</span>
           </label>
           <input type="number" name="total_cost" value={form.total_cost} onChange={handleChange} min={0}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
@@ -144,7 +144,7 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
         <div>
           <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
-            Description <span className="normal-case text-white/15">(optional)</span>
+            Description <span className="normal-case text-white/30">(optional)</span>
           </label>
           <textarea name="description" value={form.description} onChange={handleChange} rows={3}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition resize-none" />

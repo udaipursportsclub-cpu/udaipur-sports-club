@@ -68,7 +68,7 @@ export default async function TournamentPage({
 
   function statusLabel(status: string) {
     if (status === "active")    return { text: "Live", color: "bg-green-400/10 text-green-400 border-green-400/20" };
-    if (status === "completed") return { text: "Completed", color: "bg-white/5 text-white/30 border-white/5" };
+    if (status === "completed") return { text: "Completed", color: "bg-white/5 text-white/50 border-white/5" };
     return { text: "Draft", color: "bg-amber-400/10 text-amber-400 border-amber-400/20" };
   }
 
@@ -147,7 +147,7 @@ export default async function TournamentPage({
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-4xl">{getSportEmoji(tournament.sport)}</span>
-            <span className="text-xs font-bold tracking-widest uppercase text-white/20">{tournament.sport}</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-white/40">{tournament.sport}</span>
             <span className={`text-[10px] font-bold px-3 py-1 rounded-full border ${status.color}`}>
               {status.text}
             </span>
@@ -193,7 +193,7 @@ export default async function TournamentPage({
         {/* ── DESCRIPTION ────────────────────────────────────────── */}
         {tournament.description && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">About</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">About</h2>
             <p className="text-sm text-white/60 leading-relaxed">{tournament.description}</p>
           </div>
         )}
@@ -201,7 +201,7 @@ export default async function TournamentPage({
         {/* ── RULES ──────────────────────────────────────────────── */}
         {tournament.rules && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">Rules</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-3">Rules</h2>
             <p className="text-sm text-white/60 leading-relaxed whitespace-pre-line">{tournament.rules}</p>
           </div>
         )}
@@ -220,7 +220,7 @@ export default async function TournamentPage({
         {/* ── TEAMS ──────────────────────────────────────────────── */}
         {teamList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Teams ({teamList.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -253,11 +253,11 @@ export default async function TournamentPage({
         {/* ── LEAGUE STANDINGS TABLE ─────────────────────────────── */}
         {isLeague && standings.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">Standings</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">Standings</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-[10px] font-bold tracking-widest uppercase text-white/20 border-b border-white/5">
+                  <tr className="text-[10px] font-bold tracking-widest uppercase text-white/40 border-b border-white/5">
                     <th className="text-left py-2 pr-4">#</th>
                     <th className="text-left py-2 pr-4">Team</th>
                     <th className="text-center py-2 px-2">P</th>
@@ -272,11 +272,11 @@ export default async function TournamentPage({
                 <tbody>
                   {standings.map((s, i) => (
                     <tr key={s.teamId} className="border-b border-white/[0.03] last:border-0">
-                      <td className="py-2.5 pr-4 text-white/30 font-bold">{i + 1}</td>
+                      <td className="py-2.5 pr-4 text-white/50 font-bold">{i + 1}</td>
                       <td className="py-2.5 pr-4 text-white font-semibold">{s.name}</td>
                       <td className="text-center py-2.5 px-2 text-white/40">{s.played}</td>
                       <td className="text-center py-2.5 px-2 text-green-400">{s.won}</td>
-                      <td className="text-center py-2.5 px-2 text-white/30">{s.drawn}</td>
+                      <td className="text-center py-2.5 px-2 text-white/50">{s.drawn}</td>
                       <td className="text-center py-2.5 px-2 text-red-400">{s.lost}</td>
                       <td className="text-center py-2.5 px-2 text-white/40">{s.gf}</td>
                       <td className="text-center py-2.5 px-2 text-white/40">{s.ga}</td>
@@ -292,11 +292,11 @@ export default async function TournamentPage({
         {/* ── KNOCKOUT BRACKET ───────────────────────────────────── */}
         {isKnockout && matchList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">Bracket</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">Bracket</h2>
             <div className="flex gap-8 overflow-x-auto pb-4">
               {roundNumbers.map(round => (
                 <div key={round} className="min-w-[200px] flex-shrink-0">
-                  <p className="text-[10px] font-bold tracking-widest uppercase text-white/30 mb-3 text-center">
+                  <p className="text-[10px] font-bold tracking-widest uppercase text-white/50 mb-3 text-center">
                     {roundLabel(round, roundNumbers.length)}
                   </p>
                   <div className="space-y-3 flex flex-col justify-around h-full">
@@ -339,7 +339,7 @@ export default async function TournamentPage({
         {/* ── MATCH LIST (all formats) ───────────────────────────── */}
         {matchList.length > 0 && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Matches ({matchList.length})
             </h2>
             <div className="space-y-2">
@@ -350,7 +350,7 @@ export default async function TournamentPage({
                 return (
                   <div key={match.id} className="flex items-center justify-between bg-white/[0.02] rounded-xl px-4 py-3 border border-white/[0.03]">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span className="text-[10px] font-bold text-white/20 w-8 flex-shrink-0">
+                      <span className="text-[10px] font-bold text-white/40 w-8 flex-shrink-0">
                         R{match.round}
                       </span>
                       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -360,11 +360,11 @@ export default async function TournamentPage({
                           {teamA}
                         </span>
                         {isComplete ? (
-                          <span className="text-xs font-bold text-white/30 flex-shrink-0">
+                          <span className="text-xs font-bold text-white/50 flex-shrink-0">
                             {match.score_a ?? 0} - {match.score_b ?? 0}
                           </span>
                         ) : (
-                          <span className="text-[10px] text-white/20 flex-shrink-0">vs</span>
+                          <span className="text-[10px] text-white/40 flex-shrink-0">vs</span>
                         )}
                         <span className={`text-xs font-semibold truncate ${
                           isComplete && match.winner_id === match.team_b_id ? "text-green-400" : "text-white/60"
@@ -374,7 +374,7 @@ export default async function TournamentPage({
                       </div>
                     </div>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ml-2 ${
-                      isComplete ? "bg-green-400/10 text-green-400" : "bg-white/5 text-white/20"
+                      isComplete ? "bg-green-400/10 text-green-400" : "bg-white/5 text-white/40"
                     }`}>
                       {isComplete ? "Done" : "Upcoming"}
                     </span>
@@ -388,7 +388,7 @@ export default async function TournamentPage({
         {/* ── HOST: RECORD RESULTS ───────────────────────────────── */}
         {isHost && matchList.some(m => m.status !== "completed" && m.team_a_id && m.team_b_id) && (
           <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Record Results
             </h2>
             <div className="space-y-3">
@@ -438,7 +438,7 @@ function MatchResultForm({
         <span className="font-semibold text-white/60">{teamA}</span>
         {" "}vs{" "}
         <span className="font-semibold text-white/60">{teamB}</span>
-        <span className="text-white/20 ml-2">R{match.round} M{match.match_number}</span>
+        <span className="text-white/40 ml-2">R{match.round} M{match.match_number}</span>
       </p>
       <MatchResultClient
         matchId={match.id}

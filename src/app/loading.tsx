@@ -12,7 +12,7 @@ export default function GlobalLoading() {
     >
       <div className="flex flex-col items-center gap-4">
         <div className="w-10 h-10 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
-        <p className="text-xs font-bold tracking-[0.2em] uppercase text-white/20">
+        <p className="text-xs font-bold tracking-[0.2em] uppercase text-white/40">
           Loading
         </p>
       </div>
