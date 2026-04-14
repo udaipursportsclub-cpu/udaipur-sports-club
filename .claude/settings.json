@@ -10,7 +10,8 @@
       "Bash(xargs sed:*)"
     ],
     "additionalDirectories": [
-      "/Users/charul/Documents/metro-erp-app"
+      "/Users/charul/Documents/metro-erp-app",
+      "/Users/charul/Documents/usc-platform/src/app/api/events/[id]"
     ]
   }
 }

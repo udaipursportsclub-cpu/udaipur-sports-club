@@ -4,6 +4,10 @@
  * Professional booking/RSVP modal that slides up from the bottom on mobile.
  * Shows event details, contact fields, spot selector, price breakdown,
  * and payment method picker (for paid events).
+ *
+ * Supports two modes:
+ *  - Logged-in user: pre-fills name/phone/email, submits via Supabase client
+ *  - Guest (no account): shows empty form, submits via /api/events/[id]/guest-rsvp
  */
 
 "use client";
@@ -49,6 +53,8 @@ export default function BookingModal({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const isGuest = !userId;
+
   // Form state
   const [name, setName] = useState(userName);
   const [phone, setPhone] = useState(userPhone);
@@ -78,20 +84,51 @@ export default function BookingModal({
     if (!phone.trim()) return alert("Please enter your phone number.");
     if (!email.trim()) return alert("Please enter your email.");
 
+    // Phone validation for guests (10-digit Indian number)
+    if (isGuest) {
+      const cleanPhone = phone.replace(/[\s\-\+]/g, "");
+      const phoneDigits = cleanPhone.replace(/^(91|0)/, "");
+      if (!/^\d{10}$/.test(phoneDigits)) {
+        return alert("Please enter a valid 10-digit phone number.");
+      }
+    }
+
     setLoading(true);
 
     try {
-      const supabase = createClient();
-
-      // Insert RSVP row(s) — one row per spot
-      for (let i = 0; i < spots; i++) {
-        await supabase.from("rsvps").insert({
-          event_id:       eventId,
-          user_id:        userId,
-          user_name:      name.trim(),
-          user_email:     email.trim(),
-          payment_status: isFree ? "free" : "pending",
+      if (isGuest) {
+        // Guest booking — call the guest RSVP API
+        const res = await fetch(`/api/events/${eventId}/guest-rsvp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userName: name.trim(),
+            userEmail: email.trim(),
+            userPhone: phone.trim(),
+            spots,
+          }),
         });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || "Something went wrong. Please try again.");
+          setLoading(false);
+          return;
+        }
+      } else {
+        // Logged-in user — insert via Supabase client
+        const supabase = createClient();
+
+        for (let i = 0; i < spots; i++) {
+          await supabase.from("rsvps").insert({
+            event_id:       eventId,
+            user_id:        userId,
+            user_name:      name.trim(),
+            user_email:     email.trim(),
+            payment_status: isFree ? "free" : "pending",
+          });
+        }
       }
 
       // For paid events with UPI selected — open UPI deep link
@@ -109,18 +146,6 @@ export default function BookingModal({
     }
   }
 
-  // Not logged in — redirect to login
-  if (!userId) {
-    return (
-      <a
-        href="/login"
-        className="block w-full text-center bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm py-4 rounded-xl transition-colors"
-      >
-        Sign in to Book
-      </a>
-    );
-  }
-
   return (
     <>
       {/* Trigger button */}
@@ -130,6 +155,13 @@ export default function BookingModal({
       >
         {isFree ? "Join Event" : `Book Now — ₹${perPerson}/person`} →
       </button>
+
+      {/* "No account needed" hint for guests */}
+      {isGuest && (
+        <p className="text-center text-xs text-white/40 mt-2">
+          No account needed. Book any event as a guest.
+        </p>
+      )}
 
       {/* Backdrop + Modal */}
       {open && (
@@ -159,6 +191,11 @@ export default function BookingModal({
                 <p className="text-sm text-white/40 mt-1">
                   {date} · {time} · {location}
                 </p>
+                {isGuest && (
+                  <p className="text-xs text-amber-400/70 mt-2">
+                    Booking as guest — no account required
+                  </p>
+                )}
               </div>
 
               <div className="border-t border-white/5" />
@@ -181,7 +218,7 @@ export default function BookingModal({
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-                      Phone
+                      Phone {isGuest && <span className="text-amber-400">*</span>}
                     </label>
                     <input
                       type="tel"
@@ -193,7 +230,7 @@ export default function BookingModal({
                   </div>
                   <div>
                     <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-                      Email
+                      Email {isGuest && <span className="text-amber-400">*</span>}
                     </label>
                     <input
                       type="email"

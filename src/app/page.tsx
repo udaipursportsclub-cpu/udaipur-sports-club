@@ -48,7 +48,7 @@ export default async function Home() {
   // Upcoming events
   const { data: upcomingEvents } = await admin
     .from("events")
-    .select("id, title, sport, date, time, location, capacity, host_name")
+    .select("id, title, sport, date, time, location, capacity, host_name, total_cost")
     .eq("status", "upcoming")
     .order("date", { ascending: true })
     .limit(4);
@@ -185,23 +185,82 @@ export default async function Home() {
           </div>
 
           {/* Stats bar */}
-          <div className="flex flex-wrap items-center gap-8 mt-16 pt-8 border-t border-white/5">
+          <div className="flex flex-wrap items-center gap-10 mt-16 pt-8 border-t border-white/5">
             {[
-              { value: memberCount ?? 0, label: "Athletes", icon: "👥" },
-              { value: eventCount ?? 0,  label: "Events", icon: "🏟️" },
-              { value: gameCount ?? 0,   label: "Games Played", icon: "🔥" },
+              { value: memberCount ?? 0, label: "Athletes" },
+              { value: eventCount ?? 0,  label: "Events" },
+              { value: gameCount ?? 0,   label: "Games Played" },
             ].map(s => (
-              <div key={s.label} className="flex items-center gap-3">
-                <span className="text-2xl">{s.icon}</span>
-                <div>
-                  <p className="text-2xl font-black text-white">{s.value}</p>
-                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">{s.label}</p>
-                </div>
+              <div key={s.label}>
+                <p className="text-3xl font-black text-white">{s.value}</p>
+                <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* ── NEXT GAME — featured event ────────────────────────── */}
+      {upcomingEvents && upcomingEvents.length > 0 && (() => {
+        const next = upcomingEvents[0];
+        const nextRsvps = eventRsvpCounts[next.id] ?? 0;
+        const nextSpotsLeft = next.capacity - nextRsvps;
+        const nextIsFree = !next.total_cost || next.total_cost === 0;
+        const nextPerPerson = nextIsFree ? 0 : Math.ceil((next.total_cost ?? 0) / next.capacity);
+        const nextDate = new Date(next.date).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+        const [nh, nm] = next.time.split(":");
+        const ntd = new Date(); ntd.setHours(parseInt(nh), parseInt(nm));
+        const nextTime = ntd.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true });
+        return (
+          <section className="max-w-6xl mx-auto px-6 pt-10 pb-4">
+            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-amber-400/60 mb-3">Next Game</p>
+            <Link
+              href={`/events/${next.id}`}
+              className="block relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.01] hover:border-amber-400/30 transition-all group"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
+                {/* Sport emoji */}
+                <div className="w-16 h-16 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-3xl flex-shrink-0">
+                  {getSportEmoji(next.sport)}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-amber-400 transition-colors mb-2">
+                    {next.title}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/50">
+                    <span>{nextDate} · {nextTime}</span>
+                    <span>{next.location}</span>
+                  </div>
+                  {nextSpotsLeft > 0 && nextSpotsLeft <= 5 && (
+                    <p className="text-xs font-bold text-red-400 mt-2 animate-pulse">
+                      Only {nextSpotsLeft} spot{nextSpotsLeft !== 1 ? "s" : ""} left
+                    </p>
+                  )}
+                  {nextSpotsLeft <= 0 && (
+                    <p className="text-xs font-bold text-white/40 mt-2">Full — waitlist open</p>
+                  )}
+                </div>
+
+                {/* Price + CTA */}
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  {nextIsFree ? (
+                    <span className="text-xs font-bold text-green-400 bg-green-400/10 px-3 py-1 rounded-full">Free</span>
+                  ) : (
+                    <span className="text-xl font-black text-amber-400">₹{nextPerPerson}<span className="text-xs font-bold text-white/40">/person</span></span>
+                  )}
+                  <span className="text-xs font-bold text-white/40">{nextRsvps}/{next.capacity} joined</span>
+                  <span className="mt-1 bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-xs px-5 py-2.5 rounded-full group-hover:shadow-lg group-hover:shadow-amber-500/25 transition-all">
+                    Book Now →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </section>
+        );
+      })()}
 
       {/* ── WEEK CHAMPION ──────────────────────────────────────── */}
       {weekChampion && weekChampion.count > 0 && (
@@ -404,7 +463,7 @@ export default async function Home() {
             <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">legacy.</span>
           </h2>
           <p className="text-white/50 text-sm mb-8 max-w-md mx-auto">
-            Join Udaipur&apos;s fastest-growing sports community. Every game earns XP. Every player gets ranked.
+            Join {memberCount ?? 0} athletes already playing on Udaipur&apos;s sports platform. Every game earns XP. Every player gets ranked.
           </p>
           <Link
             href={user ? "/events" : "/login"}

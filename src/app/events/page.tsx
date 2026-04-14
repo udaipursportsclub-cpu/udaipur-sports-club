@@ -127,16 +127,23 @@ export default async function EventsPage({
 
         {!error && (!events || events.length === 0) && (
           <div className="text-center py-24">
-            <p className="text-5xl mb-6">{activeSport !== "All" ? getSportEmoji(activeSport) : "🏟️"}</p>
-            <h2 className="text-xl font-bold text-white mb-2">
-              {activeSport !== "All" ? `No ${activeSport} events yet` : "No events yet"}
+            <div className="w-24 h-24 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center mx-auto mb-6">
+              <span className="text-5xl">{activeSport !== "All" ? getSportEmoji(activeSport) : "🏟️"}</span>
+            </div>
+            <h2 className="text-2xl font-black text-white mb-2">
+              {activeSport !== "All" ? `No ${activeSport} games yet` : "No games on the board"}
             </h2>
-            <p className="text-white/50 text-sm mb-8">Be the first to create one.</p>
+            <p className="text-white/40 text-sm mb-2 max-w-sm mx-auto">
+              {activeSport !== "All"
+                ? `Be the legend who kicks off ${activeSport} in Udaipur.`
+                : "The court is empty. The field is waiting. Someone has to go first."}
+            </p>
+            <p className="text-white/25 text-xs mb-8">It takes 30 seconds to create a game.</p>
             <Link
               href={user ? "/events/new" : "/login"}
-              className="inline-block bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm px-8 py-3.5 rounded-full transition-all"
+              className="inline-block bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm px-8 py-3.5 rounded-full hover:shadow-lg hover:shadow-amber-500/25 transition-all"
             >
-              {user ? "Create Event" : "Sign in to create"}
+              {user ? "Create a Game" : "Sign in to create"}
             </Link>
           </div>
         )}
@@ -160,57 +167,73 @@ export default async function EventsPage({
                   {/* Fill indicator */}
                   <div className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${fillPct}%` }} />
 
-                  {/* Sport + badge */}
+                  {/* Sport + badges */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/10 flex items-center justify-center text-2xl">
                         {getSportEmoji(event.sport)}
                       </div>
                       <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">
                         {event.sport}
                       </span>
                     </div>
-                    {!isFull && spotsLeft <= 3 && (
-                      <span className="text-[10px] font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded-full animate-pulse">
-                        {spotsLeft} left
-                      </span>
-                    )}
-                    {isFull && (
-                      <span className="text-[10px] font-bold text-white/40 bg-white/5 px-2 py-1 rounded-full">
-                        Waitlist
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {isFree && (
+                        <span className="text-[10px] font-bold text-green-400 bg-green-400/10 px-2.5 py-1 rounded-full">
+                          Free
+                        </span>
+                      )}
+                      {!isFull && spotsLeft <= 3 && (
+                        <span className="text-[10px] font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded-full animate-pulse">
+                          {spotsLeft} left
+                        </span>
+                      )}
+                      {isFull && (
+                        <span className="text-[10px] font-bold text-white/40 bg-white/5 px-2 py-1 rounded-full">
+                          Waitlist
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-base font-bold text-white group-hover:text-amber-400 transition-colors leading-tight mb-3">
+                  <h2 className="text-lg font-black text-white group-hover:text-amber-400 transition-colors leading-tight mb-3">
                     {event.title}
                   </h2>
+
+                  {/* Price — prominent for paid events */}
+                  {!isFree && (
+                    <p className="text-lg font-black text-amber-400 mb-2">
+                      ₹{perPerson}<span className="text-xs font-bold text-white/40">/person</span>
+                    </p>
+                  )}
 
                   {/* Details */}
                   <div className="space-y-1.5 mb-4">
                     <p className="text-xs text-white/50">
-                      📅 {formatDate(event.date)} · {formatTime(event.time)}
+                      {formatDate(event.date)} · {formatTime(event.time)}
                     </p>
                     <p className="text-xs text-white/50 truncate">
-                      📍 {event.location}
+                      {event.location}
                     </p>
-                    {!isFree && (
-                      <p className="text-xs font-bold text-amber-400/70">
-                        ₹{perPerson}/person
-                      </p>
-                    )}
                   </div>
 
                   <div className="flex-1" />
 
+                  {/* RSVP bar + social proof */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-bold text-white/50">{rsvpCount} joined</span>
+                      <span className="text-xs text-white/30">{rsvpCount}/{event.capacity}</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all" style={{ width: `${fillPct}%` }} />
+                    </div>
+                  </div>
+
                   {/* Bottom */}
                   <div className="flex items-center justify-between pt-3 border-t border-white/5">
                     <span className="text-[10px] font-bold text-white/30">{event.host_name}</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-black text-white/40">{rsvpCount}</span>
-                      <span className="text-[10px] text-white/30">/{event.capacity}</span>
-                    </div>
                   </div>
                 </Link>
               );

@@ -9,7 +9,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect }     from "next/navigation";
 import Link             from "next/link";
-import NavLogo          from "@/components/NavLogo";
+
 
 const SQL_SETUP = `-- ─────────────────────────────────────────────────
 -- Run this SQL in Supabase: Dashboard → SQL Editor
@@ -187,11 +187,16 @@ export default async function SetupPage() {
   if (profile?.role !== "admin") redirect("/admin");
 
   return (
-    <main className="min-h-screen bg-[#F9F7F4]" style={{ fontFamily: "var(--font-geist-sans)" }}>
+    <main className="min-h-screen bg-[#030712]" style={{ fontFamily: "var(--font-geist-sans)" }}>
 
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <NavLogo />
-        <Link href="/admin" className="text-xs text-slate-400 hover:text-slate-700 transition-colors">
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
+        <Link href="/admin" className="text-xs text-white/40 hover:text-white transition-colors">
           ← Admin
         </Link>
       </nav>
@@ -199,18 +204,18 @@ export default async function SetupPage() {
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-10">
 
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-1">Platform Setup Guide</h1>
-          <p className="text-slate-500 text-sm">One-time setup — run the SQL, create the bucket, add the env vars.</p>
+          <h1 className="text-3xl font-extrabold text-white mb-1">Platform Setup Guide</h1>
+          <p className="text-white/50 text-sm">One-time setup — run the SQL, create the bucket, add the env vars.</p>
         </div>
 
         {/* Step 1: SQL */}
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="px-6 py-5 border-b border-stone-100">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="px-6 py-5 border-b border-white/5">
             <div className="flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+              <span className="w-7 h-7 rounded-full bg-white/10 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
               <div>
-                <h2 className="font-extrabold text-slate-900">Run the Database SQL</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Supabase → SQL Editor → paste this → Run</p>
+                <h2 className="font-extrabold text-white">Run the Database SQL</h2>
+                <p className="text-xs text-white/40 mt-0.5">Supabase → SQL Editor → paste this → Run</p>
               </div>
             </div>
           </div>
@@ -222,13 +227,13 @@ export default async function SetupPage() {
         </div>
 
         {/* Step 2: Storage */}
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="px-6 py-5 border-b border-stone-100">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="px-6 py-5 border-b border-white/5">
             <div className="flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+              <span className="w-7 h-7 rounded-full bg-white/10 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
               <div>
-                <h2 className="font-extrabold text-slate-900">Create Storage Bucket</h2>
-                <p className="text-xs text-slate-400 mt-0.5">For uploading photos + videos in the social post tool</p>
+                <h2 className="font-extrabold text-white">Create Storage Bucket</h2>
+                <p className="text-xs text-white/40 mt-0.5">For uploading photos + videos in the social post tool</p>
               </div>
             </div>
           </div>
@@ -240,25 +245,25 @@ export default async function SetupPage() {
         </div>
 
         {/* Step 3: Env vars */}
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="px-6 py-5 border-b border-stone-100">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="px-6 py-5 border-b border-white/5">
             <div className="flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+              <span className="w-7 h-7 rounded-full bg-white/10 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
               <div>
-                <h2 className="font-extrabold text-slate-900">Add Environment Variables</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Vercel → Project → Settings → Environment Variables</p>
+                <h2 className="font-extrabold text-white">Add Environment Variables</h2>
+                <p className="text-xs text-white/40 mt-0.5">Vercel → Project → Settings → Environment Variables</p>
               </div>
             </div>
           </div>
-          <div className="divide-y divide-stone-100">
+          <div className="divide-y divide-white/5">
             {ENV_VARS.map((v) => (
               <div key={v.key} className="flex items-start gap-4 px-6 py-4">
-                <code className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg flex-shrink-0 mt-0.5">
+                <code className="text-xs font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-lg flex-shrink-0 mt-0.5">
                   {v.key}
                 </code>
                 <div className="min-w-0">
-                  <p className="text-sm text-slate-700">{v.desc}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{v.where}</p>
+                  <p className="text-sm text-white/70">{v.desc}</p>
+                  <p className="text-xs text-white/40 mt-0.5">{v.where}</p>
                 </div>
               </div>
             ))}
@@ -266,15 +271,15 @@ export default async function SetupPage() {
         </div>
 
         {/* Step 4: Cron */}
-        <div className="bg-white rounded-2xl border border-stone-200 p-6">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span className="w-7 h-7 rounded-full bg-white/10 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">4</span>
             <div>
-              <h2 className="font-extrabold text-slate-900">Set Up cron-job.org</h2>
-              <p className="text-xs text-slate-400 mt-0.5">For weekly + daily auto-posts — free forever</p>
+              <h2 className="font-extrabold text-white">Set Up cron-job.org</h2>
+              <p className="text-xs text-white/40 mt-0.5">For weekly + daily auto-posts — free forever</p>
             </div>
           </div>
-          <Link href="/admin/social" className="text-sm font-semibold text-amber-600 hover:text-amber-500">
+          <Link href="/admin/social" className="text-sm font-semibold text-amber-400 hover:text-amber-300">
             → Go to Social & AI Hub for full cron-job.org instructions
           </Link>
         </div>

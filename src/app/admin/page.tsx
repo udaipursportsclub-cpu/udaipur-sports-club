@@ -16,7 +16,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import GenerateCodeButton from "./generate-code-button";
 import ChangeRoleButton from "./change-role-button";
-import NavLogo from "@/components/NavLogo";
+
 import Link from "next/link";
 
 export default async function AdminPage() {
@@ -34,12 +34,12 @@ export default async function AdminPage() {
 
   if (profile?.role !== "admin") {
     return (
-      <main className="min-h-screen bg-[#F9F7F4] flex items-center justify-center"
+      <main className="min-h-screen bg-[#030712] flex items-center justify-center"
         style={{ fontFamily: "var(--font-geist-sans)" }}>
         <div className="text-center">
           <p className="text-4xl mb-4">🔒</p>
-          <h1 className="text-xl font-bold text-slate-900">Not authorized</h1>
-          <p className="text-slate-400 text-sm mt-2">This page is for admins only.</p>
+          <h1 className="text-xl font-bold text-white">Not authorized</h1>
+          <p className="text-white/40 text-sm mt-2">This page is for admins only.</p>
         </div>
       </main>
     );
@@ -68,13 +68,18 @@ export default async function AdminPage() {
     .from("rsvps").select("*", { count: "exact", head: true });
 
   return (
-    <main className="min-h-screen bg-[#F9F7F4]"
+    <main className="min-h-screen bg-[#030712]"
       style={{ fontFamily: "var(--font-geist-sans)" }}>
 
       {/* ── NAV ────────────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <NavLogo />
-        <span className="text-xs font-bold tracking-widest uppercase text-red-500 bg-red-50 border border-red-200 px-3 py-1 rounded-full">
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
+        <span className="text-xs font-bold tracking-widest uppercase text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-1 rounded-full">
           Admin Panel
         </span>
       </nav>
@@ -84,20 +89,20 @@ export default async function AdminPage() {
         {/* ── SETUP GUIDE LINK ──────────────────────────────────── */}
         <Link
           href="/admin/setup"
-          className="flex items-center gap-4 bg-white border border-stone-200 hover:border-amber-300 rounded-2xl px-6 py-4 transition-all group"
+          className="flex items-center gap-4 bg-white/[0.03] border border-white/5 hover:border-amber-400/30 rounded-2xl px-6 py-4 transition-all group"
         >
           <span className="text-2xl">⚙️</span>
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-slate-900">Platform Setup Guide</p>
-            <p className="text-xs text-slate-400">SQL setup · env vars · storage bucket · cron jobs</p>
+            <p className="text-sm font-extrabold text-white">Platform Setup Guide</p>
+            <p className="text-xs text-white/40">SQL setup · env vars · storage bucket · cron jobs</p>
           </div>
-          <span className="text-slate-300 group-hover:text-amber-400 transition-colors">→</span>
+          <span className="text-white/30 group-hover:text-amber-400 transition-colors">→</span>
         </Link>
 
         {/* ── AI COMMAND CENTER LINK ─────────────────────────────── */}
         <Link
           href="/admin/social"
-          className="flex items-center gap-4 bg-[#050A18] border border-purple-500/30 hover:border-purple-500/60 rounded-2xl px-6 py-5 transition-all group"
+          className="flex items-center gap-4 bg-white/[0.03] border border-purple-500/30 hover:border-purple-500/60 rounded-2xl px-6 py-5 transition-all group"
         >
           <span className="text-3xl">🤖</span>
           <div className="flex-1">
@@ -115,19 +120,19 @@ export default async function AdminPage() {
             { label: "Total Events",  value: totalEvents ?? 0 },
             { label: "Total RSVPs",   value: totalRSVPs ?? 0 },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-stone-200 p-6 text-center">
-              <p className="text-3xl font-extrabold text-slate-900">{s.value}</p>
-              <p className="text-xs font-bold tracking-widest uppercase text-slate-400 mt-1">{s.label}</p>
+            <div key={s.label} className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 text-center">
+              <p className="text-3xl font-extrabold text-white">{s.value}</p>
+              <p className="text-xs font-bold tracking-widest uppercase text-white/40 mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* ── CHALLENGE CODES ────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-5 border-b border-stone-100">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
             <div>
-              <h2 className="font-extrabold text-slate-900">Challenge Codes</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h2 className="font-extrabold text-white">Challenge Codes</h2>
+              <p className="text-xs text-white/40 mt-0.5">
                 Generate a code and send it to someone you trust — they enter it at /challenge to become a host.
               </p>
             </div>
@@ -137,29 +142,29 @@ export default async function AdminPage() {
 
           {/* Codes list */}
           {!codes || codes.length === 0 ? (
-            <div className="px-6 py-10 text-center text-slate-400 text-sm">
+            <div className="px-6 py-10 text-center text-white/40 text-sm">
               No codes yet. Generate your first one.
             </div>
           ) : (
-            <div className="divide-y divide-stone-100">
+            <div className="divide-y divide-white/5">
               {codes.map((c) => (
                 <div key={c.id} className="flex items-center justify-between px-6 py-4">
                   {/* Code */}
-                  <code className="text-sm font-bold text-slate-800 tracking-widest bg-stone-50 px-3 py-1 rounded-lg">
+                  <code className="text-sm font-bold text-white tracking-widest bg-white/5 px-3 py-1 rounded-lg">
                     {c.code}
                   </code>
 
                   {/* Status */}
                   {c.claimed_by ? (
-                    <span className="text-xs font-semibold text-green-600 bg-green-50 border border-green-200 px-3 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-green-400 bg-green-400/10 border border-green-400/20 px-3 py-1 rounded-full">
                       ✓ Claimed
                     </span>
                   ) : c.is_active ? (
-                    <span className="text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-full">
                       Unclaimed
                     </span>
                   ) : (
-                    <span className="text-xs font-semibold text-slate-400 bg-stone-50 border border-stone-200 px-3 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-white/40 bg-white/5 border border-white/5 px-3 py-1 rounded-full">
                       Deactivated
                     </span>
                   )}
@@ -170,18 +175,18 @@ export default async function AdminPage() {
         </div>
 
         {/* ── HOSTS ──────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="px-6 py-5 border-b border-stone-100">
-            <h2 className="font-extrabold text-slate-900">All Members</h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="px-6 py-5 border-b border-white/5">
+            <h2 className="font-extrabold text-white">All Members</h2>
+            <p className="text-xs text-white/40 mt-0.5">
               Change anyone&apos;s role using the dropdown. Changes take effect instantly.
             </p>
           </div>
 
           {!hosts || hosts.length === 0 ? (
-            <div className="px-6 py-10 text-center text-slate-400 text-sm">No members yet.</div>
+            <div className="px-6 py-10 text-center text-white/40 text-sm">No members yet.</div>
           ) : (
-            <div className="divide-y divide-stone-100">
+            <div className="divide-y divide-white/5">
               {hosts.map((h) => (
                 <div key={h.id} className="flex items-center justify-between px-6 py-4">
                   {/* Left: avatar + name */}
@@ -189,11 +194,11 @@ export default async function AdminPage() {
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold ${
                       h.role === "admin"  ? "bg-red-400"   :
                       h.role === "proxy"  ? "bg-blue-400"  :
-                      h.role === "host"   ? "bg-amber-400" : "bg-slate-300"
+                      h.role === "host"   ? "bg-amber-400" : "bg-white/15"
                     }`}>
                       {(h.full_name ?? "?").charAt(0)}
                     </div>
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-white">
                       {h.full_name ?? "Unknown"}
                     </p>
                   </div>

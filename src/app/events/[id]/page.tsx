@@ -13,7 +13,7 @@ import { getSportEmoji } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Link from "next/link";
-import NavLogo from "@/components/NavLogo";
+
 import RSVPButton           from "./rsvp-button";
 import BookingModal         from "./booking-modal";
 import WaitlistButton       from "./waitlist-button";
@@ -154,8 +154,13 @@ export default async function EventPage({
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
       {/* ── TOP NAV ──────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-8 py-5 bg-white/[0.03] border-b border-white/5">
-        <NavLogo />
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
         <div className="flex items-center gap-4">
           {isHost && event.status === "upcoming" && (
             <Link href={`/events/${event.id}/edit`}
@@ -303,14 +308,21 @@ export default async function EventPage({
                 />
               ) : null}
 
-              {/* Waitlist — shown when event is full and user hasn't RSVPed */}
-              {isFull && !hasRSVPed && !isHost && (
+              {/* Waitlist — shown when event is full and user hasn't RSVPed (logged-in only) */}
+              {isFull && !hasRSVPed && !isHost && user && (
                 <WaitlistButton
                   eventId={event.id}
                   userId={user?.id ?? null}
                   onWaitlist={onWaitlist}
                   waitlistPos={waitlistPos}
                 />
+              )}
+
+              {/* Guest notice when event is full */}
+              {isFull && !user && (
+                <div className="w-full text-center bg-white/[0.03] border border-white/5 text-white/50 font-medium text-sm py-3.5 rounded-xl">
+                  This event is full. Check back later for openings.
+                </div>
               )}
 
               {/* Host: mark event as complete */}

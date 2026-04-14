@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import NavLogo from "@/components/NavLogo";
+
 import ScoringPanel from "./scoring-panel";
 
 export default async function ScorePage({
@@ -104,8 +104,13 @@ export default async function ScorePage({
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
       {/* ── NAV ──────────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-6 py-4 bg-white/[0.03] border-b border-white/5">
-        <NavLogo />
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
         <div className="flex items-center gap-3">
           <Link
             href={`/events/${eventId}/scoreboard`}
