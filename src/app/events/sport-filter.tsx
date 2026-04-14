@@ -42,10 +42,10 @@ export default function SportFilter({ activeSport }: { activeSport: string }) {
           <button
             key={s.label}
             onClick={() => selectSport(s.label)}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all ${
               isActive
-                ? "bg-slate-900 text-white shadow-sm"
-                : "bg-white border border-stone-200 text-slate-500 hover:border-amber-300 hover:text-amber-600"
+                ? "bg-white text-black"
+                : "bg-white/5 border border-white/5 text-white/40 hover:border-amber-400/30 hover:text-amber-400"
             }`}
           >
             <span>{s.emoji}</span>
