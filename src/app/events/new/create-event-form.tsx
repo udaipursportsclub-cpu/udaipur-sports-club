@@ -12,25 +12,17 @@
 
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
 import { SPORT_OPTIONS } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-// Props passed in from the parent page (the logged-in user's info)
-type Props = {
-  userId: string;
-  userName: string;
-};
-
-export default function CreateEventForm({ userId, userName }: Props) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function CreateEventForm(_props: { userId: string; userName: string }) {
   const router = useRouter();
 
-  // Track whether the form is currently submitting
-  const [loading, setLoading] = useState(false);
-
-  // Track any error message to show to the user
-  const [error, setError] = useState<string | null>(null);
+  const [loading,       setLoading]       = useState(false);
+  const [error,         setError]         = useState<string | null>(null);
+  const [aiLoading,     setAiLoading]     = useState(false);
 
   // All the form fields stored in one object
   const [form, setForm] = useState({
@@ -63,15 +55,14 @@ export default function CreateEventForm({ userId, userName }: Props) {
    * Saves the event to Supabase, then redirects to the event page.
    */
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault(); // Stop the browser from refreshing the page
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
-
-    const { data, error: insertError } = await supabase
-      .from("events")
-      .insert({
+    const res = await fetch("/api/events", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         title:       form.title.trim(),
         sport:       form.sport,
         description: form.description.trim() || null,
@@ -80,16 +71,14 @@ export default function CreateEventForm({ userId, userName }: Props) {
         location:    form.location.trim(),
         capacity:    Number(form.capacity),
         total_cost:  Number(form.total_cost),
-        upi_id:      form.total_cost > 0 ? form.upi_id.trim() : null,
-        host_id:     userId,
-        host_name:   userName,
-        status:      "upcoming",
-      })
-      .select()
-      .single();
+        upi_id:      Number(form.total_cost) > 0 ? form.upi_id.trim() : null,
+      }),
+    });
 
-    if (insertError || !data) {
-      setError("Something went wrong. Please try again.");
+    const data = await res.json();
+
+    if (!res.ok || !data.id) {
+      setError(data.error ?? "Something went wrong. Please try again.");
       setLoading(false);
       return;
     }
@@ -259,10 +248,36 @@ export default function CreateEventForm({ userId, userName }: Props) {
 
       {/* ── DESCRIPTION (optional) ──────────────────────────────── */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
-          Description{" "}
-          <span className="normal-case text-slate-300">(optional)</span>
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500">
+            Description <span className="normal-case text-slate-300">(optional)</span>
+          </label>
+          <button
+            type="button"
+            disabled={aiLoading}
+            onClick={async () => {
+              setAiLoading(true);
+              const res = await fetch("/api/ai/describe-event", {
+                method:  "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  title:     form.title,
+                  sport:     form.sport,
+                  location:  form.location,
+                  date:      form.date,
+                  isFree:    Number(form.total_cost) === 0,
+                  perPerson: form.capacity > 0 ? Math.ceil(Number(form.total_cost) / Number(form.capacity)) : 0,
+                }),
+              });
+              const { description } = await res.json();
+              if (description) setForm((prev) => ({ ...prev, description }));
+              setAiLoading(false);
+            }}
+            className="text-xs font-semibold text-amber-500 hover:text-amber-400 disabled:opacity-50 transition-colors flex items-center gap-1"
+          >
+            {aiLoading ? "Writing..." : "✨ Write for me"}
+          </button>
+        </div>
         <textarea
           name="description"
           value={form.description}

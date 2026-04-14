@@ -13,6 +13,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import NavLogo from "@/components/NavLogo";
 import CreateEventForm from "./create-event-form";
 
 export default async function NewEventPage() {
@@ -46,12 +47,7 @@ export default async function NewEventPage() {
     >
       {/* ── TOP NAVIGATION ────────────────────────────────────────── */}
       <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <Link
-          href="/"
-          className="text-sm font-bold tracking-[0.25em] uppercase text-slate-900 hover:text-amber-500 transition-colors"
-        >
-          USC
-        </Link>
+        <NavLogo />
         <Link
           href="/events"
           className="text-sm text-slate-500 hover:text-slate-900 transition-colors"

@@ -68,13 +68,13 @@ export default function RSVPButton({
 
   async function handleRSVP() {
     setLoading(true);
-    const supabase = createClient();
 
     if (hasRSVPed) {
-      // Cancel RSVP
-      await supabase.from("rsvps").delete().eq("event_id", eventId).eq("user_id", userId!);
+      // Cancel via API so waitlist notifications fire
+      await fetch(`/api/events/${eventId}/cancel`, { method: "DELETE" });
     } else {
-      // Add RSVP — mark as "free" or "pending" depending on event type
+      // Add RSVP directly via Supabase client
+      const supabase = createClient();
       await supabase.from("rsvps").insert({
         event_id:       eventId,
         user_id:        userId,

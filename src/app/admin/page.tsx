@@ -16,6 +16,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import GenerateCodeButton from "./generate-code-button";
 import ChangeRoleButton from "./change-role-button";
+import NavLogo from "@/components/NavLogo";
+import Link from "next/link";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -71,13 +73,40 @@ export default async function AdminPage() {
 
       {/* ── NAV ────────────────────────────────────────────────────── */}
       <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <a href="/" className="text-sm font-bold tracking-[0.25em] uppercase text-slate-900 hover:text-amber-500 transition-colors">USC</a>
+        <NavLogo />
         <span className="text-xs font-bold tracking-widest uppercase text-red-500 bg-red-50 border border-red-200 px-3 py-1 rounded-full">
           Admin Panel
         </span>
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-10">
+
+        {/* ── SETUP GUIDE LINK ──────────────────────────────────── */}
+        <Link
+          href="/admin/setup"
+          className="flex items-center gap-4 bg-white border border-stone-200 hover:border-amber-300 rounded-2xl px-6 py-4 transition-all group"
+        >
+          <span className="text-2xl">⚙️</span>
+          <div className="flex-1">
+            <p className="text-sm font-extrabold text-slate-900">Platform Setup Guide</p>
+            <p className="text-xs text-slate-400">SQL setup · env vars · storage bucket · cron jobs</p>
+          </div>
+          <span className="text-slate-300 group-hover:text-amber-400 transition-colors">→</span>
+        </Link>
+
+        {/* ── AI COMMAND CENTER LINK ─────────────────────────────── */}
+        <Link
+          href="/admin/social"
+          className="flex items-center gap-4 bg-[#050A18] border border-purple-500/30 hover:border-purple-500/60 rounded-2xl px-6 py-5 transition-all group"
+        >
+          <span className="text-3xl">🤖</span>
+          <div className="flex-1">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase text-purple-400 mb-0.5">New</p>
+            <p className="text-lg font-extrabold text-white">AI Command Center</p>
+            <p className="text-sm text-white/40">Post to Instagram + X · Auto schedule · Outreach AI</p>
+          </div>
+          <span className="text-purple-400/40 group-hover:text-purple-400 transition-colors text-xl">→</span>
+        </Link>
 
         {/* ── STATS ROW ──────────────────────────────────────────── */}
         <div className="grid grid-cols-3 gap-4">

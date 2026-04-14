@@ -21,6 +21,8 @@ export type Event = {
   capacity: number;        // Max number of players allowed
   host_id: string;         // The user ID of whoever created the event
   host_name: string;       // The host's display name
+  total_cost?: number;     // Total cost of the event (0 or null = free)
+  upi_id?: string | null;  // Host's UPI ID for payment collection
   status: "upcoming" | "completed" | "cancelled";
   rsvp_count?: number;     // How many people have signed up (optional, joined in queries)
 };

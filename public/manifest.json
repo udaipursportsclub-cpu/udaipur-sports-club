@@ -1,0 +1,24 @@
+{
+  "name": "Udaipur Sports Club",
+  "short_name": "USC",
+  "description": "The home for every sport in the City of Lakes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9F7F4",
+  "theme_color": "#050A18",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

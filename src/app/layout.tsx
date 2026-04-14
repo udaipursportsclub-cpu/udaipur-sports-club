@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import MobileNav from "@/components/MobileNav";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,9 +15,14 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  // What shows up in the browser tab and search results
   title: "Udaipur Sports Club",
   description: "A home for every sport in the City of Lakes. Udaipur's premier sports events platform.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "USC",
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +35,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {/* pb-16 md:pb-0 adds space on mobile so content isn't hidden under the bottom nav */}
+        <div className="pb-16 md:pb-0">
+          {children}
+        </div>
+        <MobileNav />
       </body>
     </html>
   );

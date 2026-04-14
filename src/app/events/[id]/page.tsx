@@ -13,9 +13,14 @@ import { getSportEmoji } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Link from "next/link";
-import RSVPButton from "./rsvp-button";
-import MarkPaidButton from "./mark-paid-button";
-import ShareButton from "./share-button";
+import NavLogo from "@/components/NavLogo";
+import RSVPButton           from "./rsvp-button";
+import WaitlistButton       from "./waitlist-button";
+import MarkPaidButton       from "./mark-paid-button";
+import ShareButton          from "./share-button";
+import CompleteEventButton  from "./complete-event-button";
+import SharePlayedCard      from "./share-played-card";
+import ChallengeFriend      from "./challenge-friend";
 
 /**
  * generateMetadata — runs on the server before the page loads.
@@ -100,9 +105,26 @@ export default async function EventPage({
   // Is the logged-in user the host?
   const isHost = user?.id === event.host_id;
 
+  // Fetch waitlist for this event
+  const { data: waitlist } = await supabase
+    .from("waitlist")
+    .select("*")
+    .eq("event_id", params.id)
+    .order("position", { ascending: true });
+
+  const waitlistList = waitlist ?? [];
+
   // Find this user's RSVP (if any)
   const myRSVP = user ? rsvpList.find((r) => r.user_id === user.id) : null;
   const hasRSVPed = !!myRSVP;
+
+  // Find this user's waitlist entry (if any)
+  const myWaitlist    = user ? waitlistList.find((w) => w.user_id === user.id) : null;
+  const onWaitlist    = !!myWaitlist;
+  const waitlistPos   = myWaitlist?.position ?? null;
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const isCompleted = event.status === "completed";
 
   // Format date
   const formattedDate = new Date(event.date).toLocaleDateString("en-IN", {
@@ -124,12 +146,18 @@ export default async function EventPage({
     >
       {/* ── TOP NAV ──────────────────────────────────────────────── */}
       <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <Link href="/" className="text-sm font-bold tracking-[0.25em] uppercase text-slate-900 hover:text-amber-500 transition-colors">
-          USC
-        </Link>
-        <Link href="/events" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-          ← All Events
-        </Link>
+        <NavLogo />
+        <div className="flex items-center gap-4">
+          {isHost && event.status === "upcoming" && (
+            <Link href={`/events/${event.id}/edit`}
+              className="text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-slate-700 px-4 py-2 rounded-full transition-colors">
+              Edit Event
+            </Link>
+          )}
+          <Link href="/events" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
+            ← All Events
+          </Link>
+        </div>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">
@@ -208,28 +236,88 @@ export default async function EventPage({
           <p className="text-xs text-slate-400">{rsvpCount} of {event.capacity} players joined</p>
         </div>
 
-        {/* ── RSVP BUTTON + SHARE BUTTON ───────────────────────────── */}
+        {/* ── ACTION BUTTONS ───────────────────────────────────────── */}
         <div className="mb-8 space-y-3">
-          <RSVPButton
-            eventId={event.id}
-            userId={user?.id ?? null}
-            userName={user?.user_metadata?.full_name ?? ""}
-            userEmail={user?.email ?? ""}
-            hasRSVPed={hasRSVPed}
-            isFull={isFull}
-            isFree={isFree}
-            perPersonAmount={perPerson}
-            upiId={event.upi_id ?? null}
-            hostId={event.host_id}
-            paymentStatus={myRSVP?.payment_status ?? null}
-          />
 
-          {/* Share button — always visible below the RSVP button */}
-          <ShareButton
-            eventId={event.id}
-            eventTitle={event.title}
-            eventUrl={`https://usc-platform-beta.vercel.app/events/${event.id}`}
-          />
+          {/* Completed event — show "I Played" card to attendees */}
+          {isCompleted && hasRSVPed && !isHost && (
+            <SharePlayedCard
+              eventId={event.id}
+              userName={user?.user_metadata?.full_name ?? "Player"}
+              eventTitle={event.title}
+              sport={event.sport}
+              siteUrl={siteUrl}
+            />
+          )}
+
+          {/* Event completed badge */}
+          {isCompleted && (
+            <div className="w-full text-center bg-green-50 border border-green-200 text-green-700 font-semibold text-sm py-3.5 rounded-xl">
+              ✓ This event has been completed
+            </div>
+          )}
+
+          {/* Normal RSVP flow — only for upcoming events */}
+          {!isCompleted && (
+            <>
+              <RSVPButton
+                eventId={event.id}
+                userId={user?.id ?? null}
+                userName={user?.user_metadata?.full_name ?? ""}
+                userEmail={user?.email ?? ""}
+                hasRSVPed={hasRSVPed}
+                isFull={isFull}
+                isFree={isFree}
+                perPersonAmount={perPerson}
+                upiId={event.upi_id ?? null}
+                hostId={event.host_id}
+                paymentStatus={myRSVP?.payment_status ?? null}
+              />
+
+              {/* Waitlist — shown when event is full and user hasn't RSVPed */}
+              {isFull && !hasRSVPed && !isHost && (
+                <WaitlistButton
+                  eventId={event.id}
+                  userId={user?.id ?? null}
+                  onWaitlist={onWaitlist}
+                  waitlistPos={waitlistPos}
+                />
+              )}
+
+              {/* Host: mark event as complete */}
+              {isHost && (
+                <CompleteEventButton eventId={event.id} />
+              )}
+            </>
+          )}
+
+          {/* Photos + Share */}
+          <div className="flex gap-3">
+            <Link
+              href={`/events/${event.id}/photos`}
+              className="flex-1 flex items-center justify-center gap-2 bg-white border border-stone-200 hover:border-amber-300 text-slate-700 rounded-xl py-3 text-sm font-bold transition-colors"
+            >
+              📷 Photos
+            </Link>
+            <div className="flex-1">
+              <ShareButton
+                eventId={event.id}
+                eventTitle={event.title}
+                eventUrl={`${siteUrl}/events/${event.id}`}
+              />
+            </div>
+          </div>
+
+          {/* Challenge friends — shown when user has RSVPed an upcoming event */}
+          {hasRSVPed && !isCompleted && user && (
+            <ChallengeFriend
+              eventTitle={event.title}
+              sport={event.sport}
+              spotsLeft={spotsLeft}
+              eventUrl={`${siteUrl}/events/${event.id}`}
+              userName={user.user_metadata?.full_name ?? "A friend"}
+            />
+          )}
         </div>
 
         {/* ── ATTENDEES LIST ────────────────────────────────────────── */}
@@ -283,6 +371,33 @@ export default async function EventPage({
                 Tap &quot;Mark paid&quot; next to each player once you receive their payment.
               </p>
             )}
+          </div>
+        )}
+
+        {/* ── WAITLIST ─────────────────────────────────────────────── */}
+        {waitlistList.length > 0 && (
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 mt-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
+              Waitlist ({waitlistList.length})
+            </h2>
+            <div className="space-y-3">
+              {waitlistList.map((w) => (
+                <div key={w.id} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xs font-bold flex-shrink-0">
+                      #{w.position}
+                    </div>
+                    <span className="text-sm text-slate-600">
+                      {w.user_name}
+                      {user?.id === w.user_id && (
+                        <span className="text-slate-400 ml-1">(you)</span>
+                      )}
+                    </span>
+                  </div>
+                  <span className="text-xs text-blue-400 font-medium">waiting</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

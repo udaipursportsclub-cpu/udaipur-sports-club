@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="196" fill="#0C1B35" stroke="#C9A94A" stroke-width="3"/>
+
+  <!-- Outer decorative ring -->
+  <circle cx="200" cy="200" r="172" fill="none" stroke="#C9A94A" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- Mandala tick marks (12 points) -->
+  <g stroke="#C9A94A" stroke-width="2">
+    <line x1="200" y1="28" x2="200" y2="44"/>
+    <line x1="200" y1="356" x2="200" y2="372"/>
+    <line x1="28" y1="200" x2="44" y2="200"/>
+    <line x1="356" y1="200" x2="372" y2="200"/>
+    <line x1="82" y1="58" x2="90" y2="72"/>
+    <line x1="310" y1="328" x2="318" y2="342"/>
+    <line x1="58" y1="318" x2="72" y2="310"/>
+    <line x1="328" y1="90" x2="342" y2="82"/>
+    <line x1="82" y1="342" x2="90" y2="328"/>
+    <line x1="310" y1="72" x2="318" y2="58"/>
+    <line x1="58" y1="82" x2="72" y2="90"/>
+    <line x1="328" y1="310" x2="342" y2="318"/>
+  </g>
+
+  <!-- Shield crest shape -->
+  <path d="M200 58 L280 90 L300 160 L300 210 Q300 270 200 320 Q100 270 100 210 L100 160 L120 90 Z"
+    fill="#0C1B35" stroke="#C9A94A" stroke-width="3"/>
+
+  <!-- Inner shield double border -->
+  <path d="M200 72 L270 100 L288 165 L288 208 Q288 260 200 306 Q112 260 112 208 L112 165 L130 100 Z"
+    fill="none" stroke="#C9A94A" stroke-width="1.5"/>
+
+  <!-- Arch at top of shield (Mughal/Rajput arch) -->
+  <path d="M155 115 Q200 88 245 115" fill="none" stroke="#C9A94A" stroke-width="2"/>
+
+  <!-- Rearing horse silhouette -->
+  <!-- Body -->
+  <ellipse cx="200" cy="210" rx="28" ry="22" fill="white" transform="rotate(-15 200 210)"/>
+  <!-- Neck -->
+  <path d="M188 192 Q180 168 185 148 Q190 138 200 140 Q210 138 212 152 Q215 168 205 192 Z" fill="white"/>
+  <!-- Head -->
+  <ellipse cx="196" cy="136" rx="12" ry="16" fill="white" transform="rotate(-20 196 136)"/>
+  <!-- Nose -->
+  <path d="M186 128 Q182 134 184 142 Q186 148 190 146" fill="white" stroke="none"/>
+  <!-- Ear -->
+  <path d="M200 122 L197 112 L204 118 Z" fill="white"/>
+  <!-- Front raised leg -->
+  <path d="M210 198 Q220 185 228 172 Q232 165 228 158 Q226 154 222 156 Q219 162 218 170 Q215 182 208 195 Z" fill="white"/>
+  <!-- Front grounded leg -->
+  <path d="M194 226 Q192 240 190 256 Q189 262 192 264 Q196 265 198 261 Q200 250 200 236 Q200 228 198 224 Z" fill="white"/>
+  <!-- Back legs -->
+  <path d="M178 222 Q170 238 168 255 Q167 261 171 263 Q175 264 177 258 Q180 245 182 228 Z" fill="white"/>
+  <path d="M187 228 Q183 244 182 260 Q181 266 185 267 Q189 267 190 261 Q192 247 193 231 Z" fill="white"/>
+  <!-- Tail -->
+  <path d="M174 214 Q155 220 142 238 Q138 248 142 252 Q146 254 152 246 Q162 232 178 224 Z" fill="#C9A94A"/>
+  <!-- Mane -->
+  <path d="M196 140 Q186 148 182 160 Q180 168 184 170" fill="none" stroke="#C9A94A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M200 138 Q192 148 190 162" fill="none" stroke="#C9A94A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M203 136 Q198 150 196 165" fill="none" stroke="#C9A94A" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Banner ribbon -->
+  <path d="M88 295 L90 272 L310 272 L312 295 L300 288 L200 296 L100 288 Z" fill="#0C1B35" stroke="#C9A94A" stroke-width="2"/>
+  <!-- Banner notch left -->
+  <path d="M88 295 L75 282 L90 272" fill="#C9A94A"/>
+  <!-- Banner notch right -->
+  <path d="M312 295 L325 282 L310 272" fill="#C9A94A"/>
+  <!-- Banner inner line -->
+  <line x1="90" y1="278" x2="310" y2="278" stroke="#C9A94A" stroke-width="0.8"/>
+
+  <!-- Text: UDAIPUR -->
+  <text x="200" y="292" font-family="Arial Black, sans-serif" font-size="26" font-weight="900"
+    fill="white" text-anchor="middle" letter-spacing="4">UDAIPUR</text>
+
+  <!-- Text: SPORTS Club -->
+  <text x="200" y="344" font-family="Arial, sans-serif" font-size="14" font-weight="600"
+    fill="#C9A94A" text-anchor="middle" letter-spacing="6">SPORTS CLUB</text>
+
+  <!-- Sports silhouette figures around the circle (simplified) -->
+  <!-- Cricket player (top left) -->
+  <g fill="white" transform="translate(78, 92) rotate(-30) scale(0.6)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 L6 28 M10 9 L14 28 M4 15 L16 15 M8 28 L6 40 M12 28 L14 40"/>
+    <line x1="14" y1="12" x2="26" y2="4" stroke="white" stroke-width="2"/>
+  </g>
+  <!-- Badminton player (top) -->
+  <g fill="white" transform="translate(158, 44) scale(0.55)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 L8 28 M10 9 L12 28 M6 15 L14 15 M8 28 L7 40 M12 28 L13 40"/>
+    <line x1="14" y1="9" x2="22" y2="-2" stroke="white" stroke-width="2"/>
+  </g>
+  <!-- Tennis player (top right) -->
+  <g fill="white" transform="translate(248, 56) rotate(20) scale(0.55)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 L7 28 M10 9 L13 28 M5 16 L15 16 M7 28 L5 40 M13 28 L15 40"/>
+    <line x1="14" y1="10" x2="24" y2="2" stroke="white" stroke-width="2"/>
+  </g>
+  <!-- Runner (right) -->
+  <g fill="white" transform="translate(316, 155) rotate(15) scale(0.55)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 Q14 16 16 26 M10 9 Q6 16 8 28 M16 26 L22 36 M8 28 L4 38"/>
+  </g>
+  <!-- Basketball player (right lower) -->
+  <g fill="white" transform="translate(318, 248) scale(0.6)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 L12 28 M10 9 L8 28 M8 28 L6 40 M12 28 L14 40"/>
+    <line x1="13" y1="12" x2="22" y2="8" stroke="white" stroke-width="2"/>
+    <circle cx="24" cy="7" r="3" fill="none" stroke="white" stroke-width="1.5"/>
+  </g>
+  <!-- Swimmer (left lower) -->
+  <g fill="white" transform="translate(46, 248) scale(0.55)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 Q4 16 2 26 Q8 20 14 26 Q8 32 4 38 M10 9 L16 20"/>
+  </g>
+  <!-- Gymnast/diver (bottom left) -->
+  <g fill="white" transform="translate(68, 312) rotate(-20) scale(0.55)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 Q6 18 4 28 Q8 22 14 24 M10 9 L16 16"/>
+  </g>
+  <!-- Football player (left upper) -->
+  <g fill="white" transform="translate(44, 152) rotate(-10) scale(0.6)">
+    <circle cx="10" cy="4" r="5"/>
+    <path d="M10 9 L8 28 M10 9 L12 28 M5 15 L15 15 M8 28 L4 40 M12 28 L16 40"/>
+  </g>
+</svg>
