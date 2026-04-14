@@ -10,7 +10,6 @@ import { createClient }      from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect }          from "next/navigation";
 import Link                  from "next/link";
-import NavLogo               from "@/components/NavLogo";
 import MyPhotosGallery       from "./my-photos-gallery";
 
 export const metadata = { title: "My Photos | Udaipur Sports Club" };
@@ -61,18 +60,23 @@ export default async function MyPhotosPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F9F7F4]" style={{ fontFamily: "var(--font-geist-sans)" }}>
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <NavLogo />
-        <Link href="/dashboard" className="text-xs text-slate-400 hover:text-slate-700 transition-colors">
+    <main className="min-h-screen bg-[#030712]" style={{ fontFamily: "var(--font-geist-sans)" }}>
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
+        <Link href="/dashboard" className="text-xs text-white/20 hover:text-white/70 transition-colors">
           &larr; Dashboard
         </Link>
       </nav>
 
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900">My Photos</h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <h1 className="text-2xl font-extrabold text-white">My Photos</h1>
+          <p className="text-sm text-white/20 mt-1">
             Every event photo you appear in — found using face recognition.
           </p>
         </div>

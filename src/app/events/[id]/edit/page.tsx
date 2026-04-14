@@ -6,7 +6,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import NavLogo from "@/components/NavLogo";
 import EditEventForm from "./edit-event-form";
 
 export default async function EditEventPage({ params }: { params: { id: string } }) {
@@ -26,18 +25,23 @@ export default async function EditEventPage({ params }: { params: { id: string }
   }
 
   return (
-    <main className="min-h-screen bg-[#F9F7F4]" style={{ fontFamily: "var(--font-geist-sans)" }}>
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <NavLogo />
-        <Link href={`/events/${params.id}`} className="text-sm text-slate-500 hover:text-slate-900 transition-colors">← Back to Event</Link>
+    <main className="min-h-screen bg-[#030712]" style={{ fontFamily: "var(--font-geist-sans)" }}>
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
+        <Link href={`/events/${params.id}`} className="text-sm text-white/40 hover:text-white transition-colors">← Back to Event</Link>
       </nav>
 
       <div className="max-w-xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-amber-600 bg-amber-50 border border-amber-200 px-4 py-1 rounded-full mb-4">
+          <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-amber-400 bg-amber-400/10 border border-amber-400/20 px-4 py-1 rounded-full mb-4">
             Edit Event
           </span>
-          <h1 className="text-2xl font-extrabold text-slate-900">Update event details</h1>
+          <h1 className="text-2xl font-extrabold text-white">Update event details</h1>
         </div>
         <EditEventForm event={event} />
       </div>

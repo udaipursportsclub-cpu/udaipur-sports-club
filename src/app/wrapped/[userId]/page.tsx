@@ -10,7 +10,6 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound }     from "next/navigation";
 import { type Metadata } from "next";
 import Link             from "next/link";
-import NavLogo          from "@/components/NavLogo";
 import PeriodToggle     from "./period-toggle";
 import ShareWrapped     from "./share-wrapped";
 
@@ -64,12 +63,17 @@ export default async function WrappedPage({
 
   return (
     <main
-      className="min-h-screen bg-[#0C1B35]"
+      className="min-h-screen bg-[#030712]"
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
       {/* ── NAV ─────────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-white/10">
-        <NavLogo />
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
         <Link
           href={isOwn ? "/dashboard" : "/"}
           className="text-xs text-white/50 hover:text-white transition-colors"
@@ -120,7 +124,7 @@ export default async function WrappedPage({
             </p>
             <Link
               href="/login"
-              className="inline-block bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm px-8 py-3.5 rounded-full transition-colors"
+              className="inline-block bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm px-8 py-3.5 rounded-full transition-colors"
             >
               Join USC to create yours →
             </Link>

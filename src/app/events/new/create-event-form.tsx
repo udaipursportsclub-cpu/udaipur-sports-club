@@ -92,14 +92,14 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
 
       {/* Error message (only shown if something goes wrong) */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
+        <div className="bg-red-400/10 border border-red-400/20 text-red-400 text-sm px-4 py-3 rounded-xl">
           {error}
         </div>
       )}
 
       {/* ── EVENT TITLE ─────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Event Title *
         </label>
         <input
@@ -109,13 +109,13 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           onChange={handleChange}
           required
           placeholder='e.g. "Sunday Morning Cricket at Fateh Sagar"'
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition"
         />
       </div>
 
       {/* ── SPORT TYPE ──────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Sport *
         </label>
         <select
@@ -123,7 +123,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           value={form.sport}
           onChange={handleChange}
           required
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
         >
           {SPORT_OPTIONS.map((s) => (
             <option key={s.label} value={s.label}>
@@ -136,7 +136,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       {/* ── DATE & TIME (side by side) ───────────────────────────── */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
             Date *
           </label>
           <input
@@ -146,12 +146,12 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
             onChange={handleChange}
             required
             min={new Date().toISOString().split("T")[0]} // Can't create events in the past
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
             Time *
           </label>
           <input
@@ -160,14 +160,14 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
             value={form.time}
             onChange={handleChange}
             required
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
           />
         </div>
       </div>
 
       {/* ── LOCATION ────────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Location *
         </label>
         <input
@@ -177,13 +177,13 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           onChange={handleChange}
           required
           placeholder='e.g. "Fateh Sagar Ground, Udaipur"'
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition"
         />
       </div>
 
       {/* ── CAPACITY ────────────────────────────────────────────── */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Max Players *
         </label>
         <input
@@ -194,9 +194,9 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           required
           min={2}
           max={500}
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
         />
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-white/20 mt-1">
           Maximum number of players allowed to join
         </p>
       </div>
@@ -204,9 +204,9 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       {/* ── COST ────────────────────────────────────────────────── */}
       {/* 0 = free event. Any amount = paid event with UPI collection */}
       <div>
-        <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
           Total Event Cost (₹){" "}
-          <span className="normal-case text-slate-300">(0 = free)</span>
+          <span className="normal-case text-white/15">(0 = free)</span>
         </label>
         <input
           type="number"
@@ -214,11 +214,11 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           value={form.total_cost}
           onChange={handleChange}
           min={0}
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
         />
         {/* Show the per-person breakdown live as they type */}
         {Number(form.total_cost) > 0 && Number(form.capacity) > 0 && (
-          <p className="text-xs text-amber-600 font-semibold mt-1">
+          <p className="text-xs text-amber-400 font-semibold mt-1">
             ₹{Math.ceil(Number(form.total_cost) / Number(form.capacity))} per person
             {" "}({form.capacity} players × ₹{Math.ceil(Number(form.total_cost) / Number(form.capacity))} = ₹{Number(form.capacity) * Math.ceil(Number(form.total_cost) / Number(form.capacity))})
           </p>
@@ -228,7 +228,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       {/* ── UPI ID (only shown for paid events) ─────────────────── */}
       {Number(form.total_cost) > 0 && (
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
             Your UPI ID *
           </label>
           <input
@@ -238,9 +238,9 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
             onChange={handleChange}
             required={Number(form.total_cost) > 0}
             placeholder="e.g. yourname@upi or 9876543210@paytm"
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition"
           />
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-white/20 mt-1">
             Players will pay directly to this UPI ID
           </p>
         </div>
@@ -249,8 +249,8 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       {/* ── DESCRIPTION (optional) ──────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500">
-            Description <span className="normal-case text-slate-300">(optional)</span>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40">
+            Description <span className="normal-case text-white/15">(optional)</span>
           </label>
           <button
             type="button"
@@ -284,7 +284,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
           onChange={handleChange}
           rows={3}
           placeholder="Any extra details — skill level, what to bring, parking info, etc."
-          className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition resize-none"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition resize-none"
         />
       </div>
 
@@ -292,7 +292,7 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-sm py-4 rounded-xl transition-colors"
+        className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold disabled:opacity-60 disabled:cursor-not-allowed text-sm py-4 rounded-xl transition-colors"
       >
         {loading ? "Creating event..." : "Create Event →"}
       </button>

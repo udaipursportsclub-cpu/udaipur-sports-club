@@ -77,7 +77,7 @@ export default async function InvitePage({
 
   return (
     <main
-      className="min-h-screen bg-[#0C1B35]"
+      className="min-h-screen bg-[#030712]"
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
       {/* Ambient glow */}
@@ -132,14 +132,14 @@ export default async function InvitePage({
         {user ? (
           <Link
             href="/events"
-            className="w-full bg-amber-500 hover:bg-amber-400 text-white font-extrabold text-base py-4 rounded-2xl transition-all text-center block shadow-xl shadow-amber-500/30"
+            className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-base py-4 rounded-2xl transition-all text-center block shadow-xl shadow-amber-500/30"
           >
             Browse Events →
           </Link>
         ) : (
           <Link
             href="/login"
-            className="w-full bg-amber-500 hover:bg-amber-400 text-white font-extrabold text-base py-4 rounded-2xl transition-all text-center block shadow-xl shadow-amber-500/30"
+            className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-base py-4 rounded-2xl transition-all text-center block shadow-xl shadow-amber-500/30"
           >
             Join Free — It&apos;s on us 🏅
           </Link>

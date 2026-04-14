@@ -121,10 +121,10 @@ export default function PhotoGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center">
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-12 text-center">
         <p className="text-4xl mb-3">📷</p>
-        <p className="text-lg font-bold text-slate-900">No photos yet</p>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-lg font-bold text-white">No photos yet</p>
+        <p className="text-sm text-white/20 mt-1">
           The host will upload event photos here after the game.
         </p>
       </div>
@@ -157,7 +157,7 @@ export default function PhotoGallery({
             </span>
             <button
               onClick={() => { setFilterOn(false); setMatchedIds(new Set()); }}
-              className="text-xs text-slate-400 hover:text-slate-700 underline"
+              className="text-xs text-white/20 hover:text-white/70 underline"
             >
               Show all
             </button>
@@ -177,7 +177,7 @@ export default function PhotoGallery({
           }}
         />
 
-        <span className="text-xs text-slate-400 ml-auto">
+        <span className="text-xs text-white/20 ml-auto">
           {photos.length} photo{photos.length !== 1 ? "s" : ""}
         </span>
       </div>
@@ -191,7 +191,7 @@ export default function PhotoGallery({
             className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer group border-2 transition-all ${
               matchedIds.has(photo.id)
                 ? "border-green-400 ring-2 ring-green-200"
-                : "border-transparent hover:border-amber-300"
+                : "border-transparent hover:border-amber-400/30"
             }`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -212,7 +212,7 @@ export default function PhotoGallery({
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           onClick={() => setLightbox(null)}
         >
           <button

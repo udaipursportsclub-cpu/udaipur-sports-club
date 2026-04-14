@@ -109,11 +109,11 @@ export default function MyPhotosGallery({
   return (
     <div className="space-y-8">
       {/* Scan button */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6">
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h2 className="font-extrabold text-slate-900">Find yourself in event photos</h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <h2 className="font-extrabold text-white">Find yourself in event photos</h2>
+            <p className="text-xs text-white/20 mt-0.5">
               Take a selfie — we&apos;ll scan all event photos to find you.
             </p>
           </div>
@@ -148,32 +148,32 @@ export default function MyPhotosGallery({
         </div>
 
         {scanResult && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-            <p className="text-sm font-semibold text-amber-700">{scanResult}</p>
+          <div className="mt-4 bg-amber-400/10 border border-amber-400/20 rounded-xl px-4 py-3">
+            <p className="text-sm font-semibold text-amber-400">{scanResult}</p>
           </div>
         )}
       </div>
 
       {/* Matched photos */}
       {matchedPhotos.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-12 text-center">
           <p className="text-4xl mb-3">📸</p>
-          <p className="text-lg font-bold text-slate-900">No matched photos yet</p>
-          <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
+          <p className="text-lg font-bold text-white">No matched photos yet</p>
+          <p className="text-sm text-white/20 mt-1 max-w-md mx-auto">
             Tap &quot;Find me&quot; above to scan event photos. Once your face is matched,
             all your photos will appear here automatically.
           </p>
         </div>
       ) : (
         <div>
-          <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
             Your photos ({matchedPhotos.length})
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {matchedPhotos.map((photo) => (
               <div
                 key={photo.id}
-                className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group border-2 border-transparent hover:border-amber-300"
+                className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group border-2 border-transparent hover:border-amber-400/30"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -184,7 +184,7 @@ export default function MyPhotosGallery({
                 />
                 <Link
                   href={`/events/${photo.event_id}/photos`}
-                  className="absolute bottom-2 left-2 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm hover:bg-black/80"
+                  className="absolute bottom-2 left-2 bg-black/70 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm hover:bg-black/80"
                 >
                   View event &rarr;
                 </Link>
@@ -197,7 +197,7 @@ export default function MyPhotosGallery({
       {/* Events with photos */}
       {eventsWithPhotos.length > 0 && (
         <div>
-          <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
             Events with photos
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -205,15 +205,15 @@ export default function MyPhotosGallery({
               <Link
                 key={ev.id}
                 href={`/events/${ev.id}/photos`}
-                className="flex items-center justify-between bg-white border border-stone-200 hover:border-amber-300 rounded-xl px-5 py-4 transition-colors group"
+                className="flex items-center justify-between bg-white/[0.03] border border-white/5 hover:border-amber-400/30 rounded-xl px-5 py-4 transition-colors group"
               >
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{ev.title}</p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-sm font-bold text-white">{ev.title}</p>
+                  <p className="text-xs text-white/20">
                     {new Date(ev.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                   </p>
                 </div>
-                <span className="text-slate-300 group-hover:text-amber-400 transition-colors">&rarr;</span>
+                <span className="text-white/20 group-hover:text-amber-400 transition-colors">&rarr;</span>
               </Link>
             ))}
           </div>
@@ -223,7 +223,7 @@ export default function MyPhotosGallery({
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           onClick={() => setLightbox(null)}
         >
           <button

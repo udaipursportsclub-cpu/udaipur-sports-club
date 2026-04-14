@@ -108,9 +108,9 @@ export default function PhotoUploader({ eventId }: { eventId: string }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 p-6">
-      <h2 className="font-extrabold text-slate-900 mb-1">Upload Photos</h2>
-      <p className="text-xs text-slate-400 mb-4">
+    <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
+      <h2 className="font-extrabold text-white mb-1">Upload Photos</h2>
+      <p className="text-xs text-white/20 mb-4">
         Upload event photos — faces are automatically detected so members can find themselves.
       </p>
 
@@ -124,22 +124,22 @@ export default function PhotoUploader({ eventId }: { eventId: string }) {
         }}
         className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
           uploading
-            ? "border-amber-300 bg-amber-50"
-            : "border-stone-200 hover:border-amber-300 hover:bg-amber-50/50"
+            ? "border-amber-400/30 bg-amber-400/10"
+            : "border-white/5 hover:border-amber-400/30 hover:bg-amber-400/5"
         }`}
       >
         {uploading ? (
           <div>
             <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm font-semibold text-amber-700">{progress}</p>
+            <p className="text-sm font-semibold text-amber-400">{progress}</p>
           </div>
         ) : (
           <div>
             <p className="text-3xl mb-2">📷</p>
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-white/70">
               Drop photos here or click to upload
             </p>
-            <p className="text-xs text-slate-400 mt-1">JPG, PNG, HEIC — up to 20 photos at once</p>
+            <p className="text-xs text-white/20 mt-1">JPG, PNG, HEIC — up to 20 photos at once</p>
           </div>
         )}
       </div>

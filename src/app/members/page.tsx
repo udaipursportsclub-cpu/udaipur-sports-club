@@ -10,7 +10,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient }      from "@/lib/supabase/server";
 import { getSportEmoji }     from "@/lib/types";
 import Link from "next/link";
-import NavLogo from "@/components/NavLogo";
 
 export const revalidate = 60;
 
@@ -41,23 +40,28 @@ export default async function MembersPage() {
   }
 
   const ROLE_COLORS: Record<string, string> = {
-    admin:  "text-red-500 bg-red-50 border-red-200",
-    proxy:  "text-blue-600 bg-blue-50 border-blue-200",
-    host:   "text-amber-600 bg-amber-50 border-amber-200",
-    member: "text-slate-500 bg-stone-50 border-stone-200",
+    admin:  "text-red-500 bg-red-500/10 border-red-500/20",
+    proxy:  "text-blue-400 bg-blue-500/10 border-blue-500/20",
+    host:   "text-amber-400 bg-amber-500/10 border-amber-500/20",
+    member: "text-white/40 bg-white/5 border-white/5",
   };
   const ROLE_LABELS: Record<string, string> = {
     admin: "Admin", proxy: "Proxy Owner", host: "Host", member: "Member",
   };
 
   return (
-    <main className="min-h-screen bg-[#F9F7F4]" style={{ fontFamily: "var(--font-geist-sans)" }}>
+    <main className="min-h-screen bg-[#030712]" style={{ fontFamily: "var(--font-geist-sans)" }}>
 
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
-        <NavLogo />
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl sticky top-0 z-40">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <span className="text-white font-black text-xs">U</span>
+          </div>
+          <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
+        </Link>
         <div className="flex items-center gap-4">
-          <Link href="/leaderboard" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Leaderboard</Link>
-          {user && <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Dashboard</Link>}
+          <Link href="/leaderboard" className="text-sm text-white/40 hover:text-white transition-colors">Leaderboard</Link>
+          {user && <Link href="/dashboard" className="text-sm text-white/40 hover:text-white transition-colors">Dashboard</Link>}
         </div>
       </nav>
 
@@ -66,14 +70,14 @@ export default async function MembersPage() {
           <span className="inline-block text-xs font-bold tracking-widest uppercase text-amber-600 bg-amber-50 border border-amber-200 px-4 py-1 rounded-full mb-4">
             Community
           </span>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Members</h1>
-          <p className="text-slate-500 text-sm">
+          <h1 className="text-4xl font-extrabold text-white mb-2">Members</h1>
+          <p className="text-white/40 text-sm">
             {profiles?.length ?? 0} athletes in Udaipur Sports Club
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
-          <div className="divide-y divide-stone-100">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 overflow-hidden">
+          <div className="divide-y divide-white/5">
             {(profiles ?? []).map((p) => {
               const stats       = statsMap[p.id] ?? { count: 0, sports: new Set<string>() };
               const topSports   = Array.from(stats.sports).slice(0, 3);
@@ -83,7 +87,7 @@ export default async function MembersPage() {
                 <Link
                   key={p.id}
                   href={`/profile/${p.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-stone-50 transition-colors"
+                  className="flex items-center gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors"
                 >
                   {/* Avatar */}
                   <div className={`w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-base flex-shrink-0 ${
@@ -97,7 +101,7 @@ export default async function MembersPage() {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-bold text-slate-900 truncate">
+                      <span className="text-sm font-bold text-white truncate">
                         {p.full_name ?? "Unknown"}
                       </span>
                       {isMe && <span className="text-xs text-amber-500">(you)</span>}
@@ -106,7 +110,7 @@ export default async function MembersPage() {
                       </span>
                     </div>
                     {topSports.length > 0 && (
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-white/20 mt-0.5">
                         {topSports.map((s) => getSportEmoji(s)).join(" ")} {topSports.join(", ")}
                       </p>
                     )}
@@ -116,7 +120,7 @@ export default async function MembersPage() {
                   {stats.count > 0 && (
                     <div className="text-right flex-shrink-0">
                       <p className="text-base font-extrabold text-amber-500">{stats.count}</p>
-                      <p className="text-xs text-slate-400">games</p>
+                      <p className="text-xs text-white/20">games</p>
                     </div>
                   )}
                 </Link>

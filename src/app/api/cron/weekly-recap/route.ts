@@ -14,6 +14,7 @@
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { buildOAuthHeader }  from "@/lib/social";
 import { NextResponse }      from "next/server";
 
 export const runtime = "nodejs";
@@ -171,14 +172,21 @@ TWITTER: [tweet here]`;
     results.instagram = "not_configured";
   }
 
-  // X (Twitter) — simple Bearer token post
-  if (process.env.TWITTER_ACCESS_TOKEN && process.env.TWITTER_API_KEY) {
+  // X (Twitter) — OAuth 1.0a (required for write access)
+  if (process.env.TWITTER_ACCESS_TOKEN && process.env.TWITTER_API_KEY &&
+      process.env.TWITTER_API_SECRET && process.env.TWITTER_ACCESS_SECRET) {
     try {
+      const oauthHeader = buildOAuthHeader("POST", "https://api.twitter.com/2/tweets", {
+        apiKey:       process.env.TWITTER_API_KEY,
+        apiSecret:    process.env.TWITTER_API_SECRET,
+        accessToken:  process.env.TWITTER_ACCESS_TOKEN,
+        accessSecret: process.env.TWITTER_ACCESS_SECRET,
+      });
       const res = await fetch("https://api.twitter.com/2/tweets", {
         method:  "POST",
         headers: {
           "Content-Type":  "application/json",
-          "Authorization": `Bearer ${process.env.TWITTER_ACCESS_TOKEN}`,
+          "Authorization": oauthHeader,
         },
         body: JSON.stringify({ text: twCaption }),
       });

@@ -12,8 +12,9 @@
  *   - mediaType: "image" | "reel" (default: "image")
  */
 
-import { createClient }   from "@/lib/supabase/server";
-import { uploadToImgBB }  from "@/lib/imgbb";
+import { createClient }      from "@/lib/supabase/server";
+import { uploadToImgBB }     from "@/lib/imgbb";
+import { buildOAuthHeader }  from "@/lib/social";
 import { NextResponse }      from "next/server";
 
 export const runtime = "nodejs";
@@ -140,19 +141,27 @@ export async function POST(request: Request) {
     results.instagram = "not_configured";
   }
 
-  // X (Twitter) — text only (X v2 free tier doesn't support image upload easily)
+  // X (Twitter) — OAuth 1.0a (required for write access)
   if ((platform === "all" || platform === "twitter") &&
-       process.env.TWITTER_ACCESS_TOKEN && process.env.TWITTER_API_KEY) {
+       process.env.TWITTER_ACCESS_TOKEN && process.env.TWITTER_API_KEY &&
+       process.env.TWITTER_API_SECRET && process.env.TWITTER_ACCESS_SECRET) {
     try {
       // Truncate to 280 chars for X
       const tweetText = (finalCaption + (eventId ? `\n${siteUrl}/events/${eventId}` : `\n${siteUrl}`))
         .slice(0, 280);
 
+      const oauthHeader = buildOAuthHeader("POST", "https://api.twitter.com/2/tweets", {
+        apiKey:       process.env.TWITTER_API_KEY,
+        apiSecret:    process.env.TWITTER_API_SECRET,
+        accessToken:  process.env.TWITTER_ACCESS_TOKEN,
+        accessSecret: process.env.TWITTER_ACCESS_SECRET,
+      });
+
       const res = await fetch("https://api.twitter.com/2/tweets", {
         method:  "POST",
         headers: {
           "Content-Type":  "application/json",
-          "Authorization": `Bearer ${process.env.TWITTER_ACCESS_TOKEN}`,
+          "Authorization": oauthHeader,
         },
         body: JSON.stringify({ text: tweetText }),
       });

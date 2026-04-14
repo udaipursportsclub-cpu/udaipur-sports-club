@@ -54,10 +54,10 @@ export default function ClaimForm() {
     return (
       <div className="text-center py-8">
         <div className="text-6xl mb-4">🎉</div>
-        <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
+        <h2 className="text-2xl font-extrabold text-white mb-2">
           You&apos;re a host now!
         </h2>
-        <p className="text-slate-500 text-sm">
+        <p className="text-white/40 text-sm">
           Taking you to create your first event...
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function ClaimForm() {
     <form onSubmit={handleClaim} className="space-y-4">
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl text-center">
+        <div className="bg-red-400/10 border border-red-400/20 text-red-400 text-sm px-4 py-3 rounded-xl text-center">
           {error}
         </div>
       )}
@@ -81,18 +81,18 @@ export default function ClaimForm() {
         placeholder="Enter challenge code (e.g. USC-AB12CD)"
         required
         maxLength={20}
-        className="w-full bg-white border border-stone-200 rounded-xl px-5 py-4 text-center text-lg font-bold tracking-widest text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition uppercase"
+        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-center text-lg font-bold tracking-widest text-white placeholder-white/20 focus:border-amber-400/50 focus:outline-none transition uppercase"
       />
 
       <button
         type="submit"
         disabled={loading || code.length < 4}
-        className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm py-4 rounded-xl transition-colors"
+        className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold disabled:opacity-50 disabled:cursor-not-allowed text-sm py-4 rounded-xl transition-colors"
       >
         {loading ? "Claiming..." : "Claim Host Status →"}
       </button>
 
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-white/20">
         Don&apos;t have a code? Ask Avi for one.
       </p>
 

@@ -75,47 +75,47 @@ export default function SettingsForm({
 
       {/* Success banner */}
       {saved && (
-        <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-xl font-semibold">
+        <div className="bg-green-400/10 border border-green-400/20 text-green-400 text-sm px-4 py-3 rounded-xl font-semibold">
           ✓ Settings saved
         </div>
       )}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
+        <div className="bg-red-400/10 border border-red-400/20 text-red-400 text-sm px-4 py-3 rounded-xl">
           {error}
         </div>
       )}
 
       {/* ── Profile Info ───────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400">Profile</h2>
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">Profile</h2>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Display Name</label>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Display Name</label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your full name"
-            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
-            Phone <span className="normal-case text-slate-300">(optional)</span>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+            Phone <span className="normal-case text-white/15">(optional)</span>
           </label>
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+91 98765 43210"
-            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
           />
         </div>
       </div>
 
       {/* ── Notification Email ─────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-stone-200 p-6">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-1">Email Notifications</h2>
-        <p className="text-xs text-slate-400 mb-4">
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-1">Email Notifications</h2>
+        <p className="text-xs text-white/20 mb-4">
           We&apos;ll send new event alerts here. Leave blank to use your login email.
         </p>
         <input
@@ -123,21 +123,21 @@ export default function SettingsForm({
           value={notifyEmail}
           onChange={(e) => setNotifyEmail(e.target.value)}
           placeholder="your@email.com"
-          className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition"
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
         />
       </div>
 
       {/* ── Change Password (email accounts only) ─────────────────── */}
       {isEmailProvider && (
-        <div className="bg-white rounded-2xl border border-stone-200 p-6">
-          <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-1">Change Password</h2>
-          <p className="text-xs text-slate-400 mb-4">Leave blank to keep your current password.</p>
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
+          <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-1">Change Password</h2>
+          <p className="text-xs text-white/20 mb-4">Leave blank to keep your current password.</p>
           <input
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="New password (min 6 chars)"
-            className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
           />
         </div>
       )}
@@ -145,7 +145,7 @@ export default function SettingsForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-white font-bold text-sm py-4 rounded-xl transition-colors"
+        className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold disabled:opacity-60 text-sm py-4 rounded-xl transition-colors"
       >
         {loading ? "Saving..." : "Save Settings →"}
       </button>

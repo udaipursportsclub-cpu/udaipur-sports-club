@@ -1,11 +1,3 @@
-/**
- * FILE: src/app/login/page.tsx
- *
- * Supports two login methods:
- *   1. Email + Password (for owner/internal accounts like owner@usc.com)
- *   2. Continue with Google (for regular members)
- */
-
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
@@ -14,7 +6,7 @@ import { useState }     from "react";
 
 export default function LoginPage() {
   const router  = useRouter();
-  const [tab,      setTab]      = useState<"email" | "google">("email");
+  const [tab,      setTab]      = useState<"email" | "google">("google");
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [loading,  setLoading]  = useState(false);
@@ -24,19 +16,9 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email:    email.trim(),
-      password: password,
-    });
-
-    if (signInError) {
-      setError("Wrong email or password. Try again.");
-      setLoading(false);
-      return;
-    }
-
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    if (signInError) { setError("Wrong email or password."); setLoading(false); return; }
     router.push("/dashboard");
     router.refresh();
   }
@@ -46,118 +28,57 @@ export default function LoginPage() {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options:  { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
   }
 
   return (
-    <main
-      className="min-h-screen bg-[#F9F7F4] flex items-center justify-center px-6"
-      style={{ fontFamily: "var(--font-geist-sans)" }}
-    >
-      <div className="w-full max-w-sm">
+    <main className="min-h-screen bg-[#030712] flex items-center justify-center px-6" style={{ fontFamily: "var(--font-geist-sans)" }}>
+      <div className="absolute top-0 left-1/3 w-96 h-96 rounded-full bg-amber-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-blue-500/5 blur-[100px] pointer-events-none" />
 
-        {/* Back to home */}
-        <a href="/" className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors mb-8">
-          ← Back to home
+      <div className="w-full max-w-sm relative">
+        <a href="/" className="flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition-colors mb-8">
+          &larr; Back to home
         </a>
 
-        {/* Header */}
         <div className="text-center mb-10">
-          <span className="text-xs font-bold tracking-[0.25em] uppercase text-slate-400">USC</span>
-          <h1 className="text-3xl font-extrabold text-slate-900 mt-3 mb-2">Welcome back</h1>
-          <p className="text-slate-500 text-sm">Sign in to Udaipur Sports Club</p>
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-black text-sm">U</span>
+          </div>
+          <h1 className="text-2xl font-black text-white mb-1">Join the Club</h1>
+          <p className="text-white/30 text-sm">Udaipur Sports Club</p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex bg-stone-100 rounded-xl p-1 mb-6">
-          <button
-            onClick={() => { setTab("email"); setError(null); }}
-            className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "email"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-400 hover:text-slate-600"
-            }`}
-          >
-            Email & Password
-          </button>
+        <div className="flex bg-white/5 rounded-xl p-1 mb-6">
           <button
             onClick={() => { setTab("google"); setError(null); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "google"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-400 hover:text-slate-600"
+              tab === "google" ? "bg-white/10 text-white" : "text-white/30 hover:text-white/50"
             }`}
           >
             Google
           </button>
+          <button
+            onClick={() => { setTab("email"); setError(null); }}
+            className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
+              tab === "email" ? "bg-white/10 text-white" : "text-white/30 hover:text-white/50"
+            }`}
+          >
+            Email &amp; Password
+          </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-8">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
 
-          {/* ── EMAIL / PASSWORD TAB ──────────────────────────────── */}
-          {tab === "email" && (
-            <form onSubmit={handleEmailLogin} className="space-y-4">
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-xl">
-                  {error}
-                </div>
-              )}
-
-              <div>
-                <label className="block text-xs font-bold tracking-widest uppercase text-slate-400 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="owner@usc.com"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold tracking-widest uppercase text-slate-400 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-slate-900 hover:bg-slate-700 disabled:opacity-60 text-white font-bold text-sm py-3.5 rounded-xl transition-colors"
-              >
-                {loading ? "Signing in..." : "Sign In →"}
-              </button>
-            </form>
-          )}
-
-          {/* ── GOOGLE TAB ───────────────────────────────────────── */}
           {tab === "google" && (
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-stone-300 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-700 hover:bg-stone-50 hover:border-stone-400 transition-all disabled:opacity-60 shadow-sm"
+              className="w-full flex items-center justify-center gap-3 bg-white rounded-xl px-4 py-3.5 text-sm font-bold text-slate-800 hover:bg-amber-400 hover:text-black transition-all disabled:opacity-60"
             >
-              {loading ? (
-                <>
-                  <svg className="w-4 h-4 animate-spin text-slate-400" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                  </svg>
-                  Connecting...
-                </>
-              ) : (
+              {loading ? "Connecting..." : (
                 <>
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -171,12 +92,30 @@ export default function LoginPage() {
             </button>
           )}
 
+          {tab === "email" && (
+            <form onSubmit={handleEmailLogin} className="space-y-4">
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-4 py-3 rounded-xl">{error}</div>
+              )}
+              <div>
+                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">Email</label>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@email.com"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/20 mb-2">Password</label>
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
+              </div>
+              <button type="submit" disabled={loading}
+                className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm py-3.5 rounded-xl hover:opacity-90 disabled:opacity-50 transition">
+                {loading ? "Signing in..." : "Sign In →"}
+              </button>
+            </form>
+          )}
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6 leading-relaxed">
-          By signing in you agree to our Terms of Service.
-        </p>
-
+        <p className="text-center text-[10px] text-white/15 mt-6">By signing in you agree to our Terms of Service.</p>
       </div>
     </main>
   );

@@ -76,19 +76,19 @@ export default function EditEventForm({ event }: { event: EventData }) {
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">{error}</div>
+          <div className="bg-red-400/10 border border-red-400/20 text-red-400 text-sm px-4 py-3 rounded-xl">{error}</div>
         )}
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Event Title</label>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Event Title</label>
           <input name="title" value={form.title} onChange={handleChange} required
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Sport</label>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Sport</label>
           <select name="sport" value={form.sport} onChange={handleChange}
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition">
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition">
             {SPORT_OPTIONS.map((s) => (
               <option key={s.label} value={s.label}>{s.emoji} {s.label}</option>
             ))}
@@ -97,37 +97,37 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Date</label>
+            <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Date</label>
             <input type="date" name="date" value={form.date} onChange={handleChange} required
-              className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
           </div>
           <div>
-            <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Time</label>
+            <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Time</label>
             <input type="time" name="time" value={form.time} onChange={handleChange} required
-              className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Location</label>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Location</label>
           <input name="location" value={form.location} onChange={handleChange} required
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Max Players</label>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Max Players</label>
           <input type="number" name="capacity" value={form.capacity} onChange={handleChange} required min={2} max={500}
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
         </div>
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
-            Total Cost (₹) <span className="normal-case text-slate-300">(0 = free)</span>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+            Total Cost (₹) <span className="normal-case text-white/15">(0 = free)</span>
           </label>
           <input type="number" name="total_cost" value={form.total_cost} onChange={handleChange} min={0}
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
           {Number(form.total_cost) > 0 && Number(form.capacity) > 0 && (
-            <p className="text-xs text-amber-600 font-semibold mt-1">
+            <p className="text-xs text-amber-400 font-semibold mt-1">
               ₹{Math.ceil(Number(form.total_cost) / Number(form.capacity))} per person
             </p>
           )}
@@ -135,37 +135,37 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
         {Number(form.total_cost) > 0 && (
           <div>
-            <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">Your UPI ID</label>
+            <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Your UPI ID</label>
             <input name="upi_id" value={form.upi_id} onChange={handleChange}
               placeholder="yourname@upi"
-              className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition" />
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-bold tracking-widest uppercase text-slate-500 mb-2">
-            Description <span className="normal-case text-slate-300">(optional)</span>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+            Description <span className="normal-case text-white/15">(optional)</span>
           </label>
           <textarea name="description" value={form.description} onChange={handleChange} rows={3}
-            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-amber-400 transition resize-none" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition resize-none" />
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-white font-bold text-sm py-4 rounded-xl transition-colors">
+          className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold disabled:opacity-60 text-sm py-4 rounded-xl transition-colors">
           {loading ? "Saving..." : "Save Changes →"}
         </button>
       </form>
 
       {/* Cancel event section */}
-      <div className="border-t border-stone-200 pt-6">
+      <div className="border-t border-white/5 pt-6">
         {cancelConfirm ? (
           <div className="space-y-3">
-            <p className="text-sm text-slate-600 font-medium">
+            <p className="text-sm text-white/60 font-medium">
               Cancel this event? All RSVPed members will be notified by email.
             </p>
             <div className="grid grid-cols-2 gap-2">
               <button onClick={() => setCancelConfirm(false)}
-                className="bg-stone-100 hover:bg-stone-200 text-slate-600 font-semibold text-sm py-3 rounded-xl transition-colors">
+                className="bg-white/5 hover:bg-white/10 text-white/60 font-semibold text-sm py-3 rounded-xl transition-colors">
                 Keep Event
               </button>
               <button onClick={handleCancel} disabled={loading}
@@ -176,7 +176,7 @@ export default function EditEventForm({ event }: { event: EventData }) {
           </div>
         ) : (
           <button onClick={handleCancel}
-            className="w-full text-red-400 hover:text-red-500 border border-red-100 hover:border-red-200 text-sm font-semibold py-3 rounded-xl transition-colors">
+            className="w-full text-red-400 hover:text-red-300 border border-red-400/20 hover:border-red-400/30 text-sm font-semibold py-3 rounded-xl transition-colors">
             Cancel This Event
           </button>
         )}

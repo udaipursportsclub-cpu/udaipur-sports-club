@@ -31,7 +31,7 @@ export default function MobileNav() {
   ) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-stone-200 safe-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#030712] border-t border-white/5 safe-bottom">
       <div className="flex items-stretch">
         {NAV_ITEMS.map((item) => {
           const isActive =
@@ -44,15 +44,15 @@ export default function MobileNav() {
               key={item.href}
               href={item.href}
               className={`relative flex-1 flex flex-col items-center justify-center py-2.5 gap-1 transition-colors ${
-                isActive ? "text-amber-500" : "text-slate-400 hover:text-slate-600"
+                isActive ? "text-amber-400" : "text-white/30 hover:text-white/50"
               }`}
             >
               {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-amber-400" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500" />
               )}
               <span className="text-xl leading-none">{item.icon}</span>
               <span className={`text-[10px] font-bold tracking-wide ${
-                isActive ? "text-amber-500" : "text-slate-400"
+                isActive ? "text-amber-400" : "text-white/30"
               }`}>
                 {item.label}
               </span>

@@ -141,20 +141,20 @@ export default async function EventPage({
 
   return (
     <main
-      className="min-h-screen bg-[#F9F7F4]"
+      className="min-h-screen bg-[#030712]"
       style={{ fontFamily: "var(--font-geist-sans)" }}
     >
       {/* ── TOP NAV ──────────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-stone-200">
+      <nav className="flex items-center justify-between px-8 py-5 bg-white/[0.03] border-b border-white/5">
         <NavLogo />
         <div className="flex items-center gap-4">
           {isHost && event.status === "upcoming" && (
             <Link href={`/events/${event.id}/edit`}
-              className="text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-slate-700 px-4 py-2 rounded-full transition-colors">
+              className="text-xs font-semibold bg-white/5 hover:bg-white/10 text-white/70 px-4 py-2 rounded-full transition-colors">
               Edit Event
             </Link>
           )}
-          <Link href="/events" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
+          <Link href="/events" className="text-sm text-white/40 hover:text-white transition-colors">
             ← All Events
           </Link>
         </div>
@@ -166,24 +166,24 @@ export default async function EventPage({
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-4xl">{getSportEmoji(event.sport)}</span>
-            <span className="text-xs font-bold tracking-widest uppercase text-slate-400">{event.sport}</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-white/20">{event.sport}</span>
           </div>
 
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-6 leading-tight">
+          <h1 className="text-3xl font-extrabold text-white mb-6 leading-tight">
             {event.title}
           </h1>
 
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm text-slate-600">
+            <div className="flex items-center gap-3 text-sm text-white/60">
               <span>📅</span><span>{formattedDate}</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-600">
+            <div className="flex items-center gap-3 text-sm text-white/60">
               <span>⏰</span><span>{formattedTime}</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-600">
+            <div className="flex items-center gap-3 text-sm text-white/60">
               <span>📍</span><span>{event.location}</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-600">
+            <div className="flex items-center gap-3 text-sm text-white/60">
               <span>👤</span>
               <span>Hosted by <strong>{event.host_name}</strong></span>
             </div>
@@ -192,15 +192,15 @@ export default async function EventPage({
 
         {/* ── CONTRIBUTION AMOUNT (paid events only) ───────────────── */}
         {!isFree && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
-            <p className="text-xs font-bold tracking-widest uppercase text-amber-600 mb-1">
+          <div className="bg-amber-400/10 border border-amber-400/20 rounded-2xl p-6 mb-6">
+            <p className="text-xs font-bold tracking-widest uppercase text-amber-400 mb-1">
               Contribution
             </p>
-            <p className="text-3xl font-extrabold text-amber-600">
+            <p className="text-3xl font-extrabold text-amber-400">
               ₹{perPerson}
-              <span className="text-base font-medium text-amber-400 ml-2">per person</span>
+              <span className="text-base font-medium text-amber-400/60 ml-2">per person</span>
             </p>
-            <p className="text-xs text-amber-500 mt-2">
+            <p className="text-xs text-amber-400/70 mt-2">
               Total event cost ₹{event.total_cost} ÷ {event.capacity} players.
               Pay directly to host via UPI.
             </p>
@@ -209,31 +209,31 @@ export default async function EventPage({
 
         {/* ── DESCRIPTION ──────────────────────────────────────────── */}
         {event.description && (
-          <div className="bg-white rounded-2xl border border-stone-200 p-6 mb-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-3">
+          <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-3">
               About this event
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">{event.description}</p>
+            <p className="text-sm text-white/60 leading-relaxed">{event.description}</p>
           </div>
         )}
 
         {/* ── CAPACITY BAR ─────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-stone-200 p-6 mb-6">
+        <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400">Spots</h2>
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20">Spots</h2>
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-              isFull ? "bg-red-50 text-red-500" : spotsLeft <= 5 ? "bg-orange-50 text-orange-500" : "bg-green-50 text-green-600"
+              isFull ? "bg-red-400/10 text-red-400" : spotsLeft <= 5 ? "bg-orange-400/10 text-orange-400" : "bg-green-400/10 text-green-400"
             }`}>
               {isFull ? "Full" : `${spotsLeft} spots left`}
             </span>
           </div>
-          <div className="w-full bg-stone-100 rounded-full h-2 mb-2">
+          <div className="w-full bg-white/5 rounded-full h-2 mb-2">
             <div
               className={`h-2 rounded-full transition-all ${isFull ? "bg-red-400" : "bg-amber-400"}`}
               style={{ width: `${fillPercent}%` }}
             />
           </div>
-          <p className="text-xs text-slate-400">{rsvpCount} of {event.capacity} players joined</p>
+          <p className="text-xs text-white/20">{rsvpCount} of {event.capacity} players joined</p>
         </div>
 
         {/* ── ACTION BUTTONS ───────────────────────────────────────── */}
@@ -252,7 +252,7 @@ export default async function EventPage({
 
           {/* Event completed badge */}
           {isCompleted && (
-            <div className="w-full text-center bg-green-50 border border-green-200 text-green-700 font-semibold text-sm py-3.5 rounded-xl">
+            <div className="w-full text-center bg-green-400/10 border border-green-400/20 text-green-400 font-semibold text-sm py-3.5 rounded-xl">
               ✓ This event has been completed
             </div>
           )}
@@ -295,7 +295,7 @@ export default async function EventPage({
           <div className="flex gap-3">
             <Link
               href={`/events/${event.id}/photos`}
-              className="flex-1 flex items-center justify-center gap-2 bg-white border border-stone-200 hover:border-amber-300 text-slate-700 rounded-xl py-3 text-sm font-bold transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 bg-white/[0.03] border border-white/5 hover:border-amber-400/30 text-white/70 rounded-xl py-3 text-sm font-bold transition-colors"
             >
               📷 Photos
             </Link>
@@ -322,8 +322,8 @@ export default async function EventPage({
 
         {/* ── ATTENDEES LIST ────────────────────────────────────────── */}
         {rsvpList.length > 0 && (
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
+          <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
               Who&apos;s coming ({rsvpCount})
             </h2>
             <div className="space-y-3">
@@ -332,20 +332,20 @@ export default async function EventPage({
 
                   {/* Left: avatar + name */}
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-sm font-bold flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-400 text-sm font-bold flex-shrink-0">
                       {rsvp.user_name.charAt(0)}
                     </div>
                     <div>
-                      <span className="text-sm text-slate-700 font-medium">
+                      <span className="text-sm text-white/70 font-medium">
                         {rsvp.user_name}
                         {user?.id === rsvp.user_id && (
-                          <span className="text-slate-400 font-normal ml-1">(you)</span>
+                          <span className="text-white/20 font-normal ml-1">(you)</span>
                         )}
                       </span>
                       {/* Payment status label for non-free events */}
                       {!isFree && (
                         <p className={`text-xs mt-0.5 ${
-                          rsvp.payment_status === "paid" ? "text-green-500" : "text-amber-500"
+                          rsvp.payment_status === "paid" ? "text-green-400" : "text-amber-400"
                         }`}>
                           {rsvp.payment_status === "paid" ? "✓ Paid" : "⏳ Payment pending"}
                         </p>
@@ -367,7 +367,7 @@ export default async function EventPage({
 
             {/* Host tip — only shown to the host */}
             {isHost && !isFree && (
-              <p className="text-xs text-slate-300 mt-6 border-t border-stone-100 pt-4">
+              <p className="text-xs text-white/15 mt-6 border-t border-white/5 pt-4">
                 Tap &quot;Mark paid&quot; next to each player once you receive their payment.
               </p>
             )}
@@ -376,21 +376,21 @@ export default async function EventPage({
 
         {/* ── WAITLIST ─────────────────────────────────────────────── */}
         {waitlistList.length > 0 && (
-          <div className="bg-white rounded-2xl border border-stone-200 p-6 mt-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-slate-400 mb-4">
+          <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mt-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/20 mb-4">
               Waitlist ({waitlistList.length})
             </h2>
             <div className="space-y-3">
               {waitlistList.map((w) => (
                 <div key={w.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xs font-bold flex-shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-blue-400/10 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">
                       #{w.position}
                     </div>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-white/60">
                       {w.user_name}
                       {user?.id === w.user_id && (
-                        <span className="text-slate-400 ml-1">(you)</span>
+                        <span className="text-white/20 ml-1">(you)</span>
                       )}
                     </span>
                   </div>

@@ -12,12 +12,13 @@
  * Keys needed (all free tiers):
  *   INSTAGRAM_ACCESS_TOKEN  — Meta Graph API (from Meta Developer)
  *   INSTAGRAM_ACCOUNT_ID    — Your USC Instagram Business account ID
- *   TWITTER_BEARER_TOKEN    — X API v2 (from developer.twitter.com)
- *   TWITTER_API_KEY         — X API key
+ *   TWITTER_API_KEY         — X API consumer key
  *   TWITTER_API_SECRET      — X API secret
  *   TWITTER_ACCESS_TOKEN    — X access token
  *   TWITTER_ACCESS_SECRET   — X access token secret
  */
+
+import { createHmac, randomBytes } from "crypto";
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -152,20 +153,21 @@ async function postToX(event: EventPostData): Promise<void> {
 }
 
 // ── OAuth 1.0a helper for X API ───────────────────────────────────────────
-// X still uses OAuth 1.0a for write access
+// X API v2 requires OAuth 1.0a HMAC-SHA1 for write access (tweeting).
+// Bearer tokens only work for read-only endpoints.
 
-function buildOAuthHeader(
+export function buildOAuthHeader(
   method: string,
   url: string,
   keys: { apiKey: string; apiSecret: string; accessToken: string; accessSecret: string }
 ): string {
-  const nonce     = Math.random().toString(36).substring(2);
+  const nonce     = randomBytes(16).toString("hex");
   const timestamp = Math.floor(Date.now() / 1000).toString();
 
   const oauthParams: Record<string, string> = {
     oauth_consumer_key:     keys.apiKey,
     oauth_nonce:            nonce,
-    oauth_signature_method: "HMAC-SHA256",
+    oauth_signature_method: "HMAC-SHA1",
     oauth_timestamp:        timestamp,
     oauth_token:            keys.accessToken,
     oauth_version:          "1.0",
@@ -185,10 +187,12 @@ function buildOAuthHeader(
 
   const signingKey = `${encodeURIComponent(keys.apiSecret)}&${encodeURIComponent(keys.accessSecret)}`;
 
-  // HMAC-SHA256 using Web Crypto API (works in Node.js 18+ and Edge)
-  // We return a placeholder here — the actual signing happens async below
-  // For production, use the oauth-1.0a package or the full crypto implementation
-  void signatureBase; void signingKey; // Used in full implementation
+  // Compute HMAC-SHA1 signature
+  const signature = createHmac("sha1", signingKey)
+    .update(signatureBase)
+    .digest("base64");
+
+  oauthParams.oauth_signature = signature;
 
   const headerParams = Object.entries(oauthParams)
     .map(([k, v]) => `${encodeURIComponent(k)}="${encodeURIComponent(v)}"`)
