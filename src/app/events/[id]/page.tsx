@@ -291,7 +291,15 @@ export default async function EventPage({
             </>
           )}
 
-          {/* Photos + Share */}
+          {/* Scoreboard + Photos + Share */}
+          {event.sport?.toLowerCase() === "cricket" && (
+            <Link
+              href={`/events/${event.id}/scoreboard`}
+              className="flex items-center justify-center gap-2 bg-amber-400/10 border border-amber-400/20 hover:bg-amber-400/20 text-amber-400 rounded-xl py-3 text-sm font-bold transition-colors w-full"
+            >
+              🏏 Live Scoreboard
+            </Link>
+          )}
           <div className="flex gap-3">
             <Link
               href={`/events/${event.id}/photos`}
