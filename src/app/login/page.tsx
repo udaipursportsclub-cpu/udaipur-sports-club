@@ -181,7 +181,7 @@ export default function LoginPage() {
           <p className="text-white/50 text-sm">Udaipur Sports Club</p>
         </div>
 
-        {/* Tab switcher — 3 tabs */}
+        {/* Tab switcher — 2 tabs */}
         <div className="flex bg-white/5 rounded-xl p-1 mb-6">
           <button
             onClick={() => { setTab("google"); setError(null); }}
@@ -190,14 +190,6 @@ export default function LoginPage() {
             }`}
           >
             Google
-          </button>
-          <button
-            onClick={() => { setTab("phone"); setError(null); resetPhoneOtp(); }}
-            className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "phone" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
-            }`}
-          >
-            Phone OTP
           </button>
           <button
             onClick={() => { setTab("email"); setError(null); }}
