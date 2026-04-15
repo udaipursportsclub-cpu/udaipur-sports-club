@@ -10,6 +10,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { getSportEmoji } from "@/lib/types";
+import { maskName } from "@/lib/privacy";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Link from "next/link";
@@ -75,12 +76,14 @@ export default async function EventPage({
   // Check who's logged in
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Fetch user's profile (for phone number)
+  // Fetch user's profile (for phone number + role)
   let userPhone = "";
+  let isAdmin = false;
   if (user) {
     const { data: profile } = await supabase
-      .from("profiles").select("phone").eq("id", user.id).single();
+      .from("profiles").select("phone, role").eq("id", user.id).single();
     userPhone = profile?.phone ?? "";
+    isAdmin = profile?.role === "admin";
   }
 
   // Fetch the event
@@ -199,7 +202,7 @@ export default async function EventPage({
             </div>
             <div className="flex items-center gap-3 text-sm text-white/60">
               <span>👤</span>
-              <span>Hosted by <strong>{event.host_name}</strong></span>
+              <span>Hosted by <strong>{maskName(event.host_name)}</strong></span>
             </div>
           </div>
         </div>
@@ -375,44 +378,65 @@ export default async function EventPage({
             <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Who&apos;s coming ({rsvpCount})
             </h2>
-            <div className="space-y-3">
-              {rsvpList.map((rsvp) => (
-                <div key={rsvp.id} className="flex items-center justify-between">
 
-                  {/* Left: avatar + name */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-400 text-sm font-bold flex-shrink-0">
-                      {rsvp.user_name.charAt(0)}
-                    </div>
-                    <div>
-                      <span className="text-sm text-white/70 font-medium">
-                        {rsvp.user_name}
-                        {user?.id === rsvp.user_id && (
-                          <span className="text-white/40 font-normal ml-1">(you)</span>
+            {(isHost || isAdmin) ? (
+              /* Host / Admin: full attendee list with names */
+              <div className="space-y-3">
+                {rsvpList.map((rsvp) => (
+                  <div key={rsvp.id} className="flex items-center justify-between">
+
+                    {/* Left: avatar + name */}
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-400 text-sm font-bold flex-shrink-0">
+                        {rsvp.user_name.charAt(0)}
+                      </div>
+                      <div>
+                        <span className="text-sm text-white/70 font-medium">
+                          {rsvp.user_name}
+                          {user?.id === rsvp.user_id && (
+                            <span className="text-white/40 font-normal ml-1">(you)</span>
+                          )}
+                        </span>
+                        {/* Payment status label for non-free events */}
+                        {!isFree && (
+                          <p className={`text-xs mt-0.5 ${
+                            rsvp.payment_status === "paid" ? "text-green-400" : "text-amber-400"
+                          }`}>
+                            {rsvp.payment_status === "paid" ? "✓ Paid" : "⏳ Payment pending"}
+                          </p>
                         )}
-                      </span>
-                      {/* Payment status label for non-free events */}
-                      {!isFree && (
-                        <p className={`text-xs mt-0.5 ${
-                          rsvp.payment_status === "paid" ? "text-green-400" : "text-amber-400"
-                        }`}>
-                          {rsvp.payment_status === "paid" ? "✓ Paid" : "⏳ Payment pending"}
-                        </p>
-                      )}
+                      </div>
                     </div>
+
+                    {/* Right: "Mark as Paid" button — only visible to host */}
+                    {isHost && !isFree && rsvp.user_id !== event.host_id && (
+                      <MarkPaidButton
+                        rsvpId={rsvp.id}
+                        paymentStatus={rsvp.payment_status}
+                      />
+                    )}
+
                   </div>
-
-                  {/* Right: "Mark as Paid" button — only visible to host */}
-                  {isHost && !isFree && rsvp.user_id !== event.host_id && (
-                    <MarkPaidButton
-                      rsvpId={rsvp.id}
-                      paymentStatus={rsvp.payment_status}
-                    />
+                ))}
+              </div>
+            ) : (
+              /* Everyone else: anonymous avatars + count only */
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {rsvpList.slice(0, 5).map((_, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#030712] flex items-center justify-center text-white/30 text-xs">
+                      👤
+                    </div>
+                  ))}
+                  {rsvpList.length > 5 && (
+                    <div className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#030712] flex items-center justify-center text-white/40 text-xs font-bold">
+                      +{rsvpList.length - 5}
+                    </div>
                   )}
-
                 </div>
-              ))}
-            </div>
+                <span className="text-sm text-white/50">{rsvpCount} people joined</span>
+              </div>
+            )}
 
             {/* Host tip — only shown to the host */}
             {isHost && !isFree && (
@@ -429,24 +453,43 @@ export default async function EventPage({
             <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">
               Waitlist ({waitlistList.length})
             </h2>
-            <div className="space-y-3">
-              {waitlistList.map((w) => (
-                <div key={w.id} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-blue-400/10 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">
-                      #{w.position}
+
+            {(isHost || isAdmin) ? (
+              <div className="space-y-3">
+                {waitlistList.map((w) => (
+                  <div key={w.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-full bg-blue-400/10 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">
+                        #{w.position}
+                      </div>
+                      <span className="text-sm text-white/60">
+                        {w.user_name}
+                        {user?.id === w.user_id && (
+                          <span className="text-white/40 ml-1">(you)</span>
+                        )}
+                      </span>
                     </div>
-                    <span className="text-sm text-white/60">
-                      {w.user_name}
-                      {user?.id === w.user_id && (
-                        <span className="text-white/40 ml-1">(you)</span>
-                      )}
-                    </span>
+                    <span className="text-xs text-blue-400 font-medium">waiting</span>
                   </div>
-                  <span className="text-xs text-blue-400 font-medium">waiting</span>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {waitlistList.slice(0, 5).map((_, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#030712] flex items-center justify-center text-white/30 text-xs">
+                      👤
+                    </div>
+                  ))}
+                  {waitlistList.length > 5 && (
+                    <div className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#030712] flex items-center justify-center text-white/40 text-xs font-bold">
+                      +{waitlistList.length - 5}
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+                <span className="text-sm text-white/50">{waitlistList.length} people waiting</span>
+              </div>
+            )}
           </div>
         )}
 

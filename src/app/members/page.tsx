@@ -9,6 +9,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient }      from "@/lib/supabase/server";
 import { getSportEmoji }     from "@/lib/types";
+import { maskName }          from "@/lib/privacy";
 import Link from "next/link";
 
 export const revalidate = 60;
@@ -95,14 +96,14 @@ export default async function MembersPage() {
                     p.role === "proxy"  ? "bg-blue-400"  :
                     p.role === "host"   ? "bg-amber-400" : "bg-slate-300"
                   }`}>
-                    {(p.full_name ?? "?").charAt(0)}
+                    {maskName(p.full_name).charAt(0)}
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-bold text-white truncate">
-                        {p.full_name ?? "Unknown"}
+                        {isMe ? (p.full_name ?? "Unknown") : maskName(p.full_name)}
                       </span>
                       {isMe && <span className="text-xs text-amber-500">(you)</span>}
                       <span className={`text-xs font-semibold border px-2 py-0.5 rounded-full ${ROLE_COLORS[p.role] ?? ROLE_COLORS.member}`}>

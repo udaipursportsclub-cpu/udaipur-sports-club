@@ -29,12 +29,15 @@ export default async function DashboardPage() {
   const userEmail  = user.email ?? "";
   const firstName  = userName.split(" ")[0];
 
-  // Get this user's role
+  // Get this user's role and onboarding status
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, onboarding_done")
     .eq("id", user.id)
     .single();
+
+  // Force new users through onboarding first
+  if (profile?.onboarding_done !== true) redirect("/onboarding");
 
   const role   = profile?.role ?? "member";
   const isHost = role === "host" || role === "admin";

@@ -9,6 +9,7 @@
 import { createClient }    from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSportEmoji }   from "@/lib/types";
+import { maskName }        from "@/lib/privacy";
 import { notFound }        from "next/navigation";
 import Link                from "next/link";
 
@@ -179,7 +180,7 @@ export default async function TournamentPage({
               </p>
             )}
             <p className="text-sm text-white/40">
-              Hosted by <strong className="text-white/60">{tournament.host_name}</strong>
+              Hosted by <strong className="text-white/60">{maskName(tournament.host_name)}</strong>
             </p>
           </div>
         </div>
@@ -241,7 +242,7 @@ export default async function TournamentPage({
                     <div className="ml-11 space-y-1">
                       {team.tournament_players.map((p: { id: string; user_name: string; role: string }) => (
                         <p key={p.id} className="text-xs text-white/40">
-                          {p.user_name}
+                          {maskName(p.user_name)}
                           {p.role === "captain" && (
                             <span className="text-amber-400 ml-1">(C)</span>
                           )}

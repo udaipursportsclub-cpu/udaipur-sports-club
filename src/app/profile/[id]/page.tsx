@@ -12,6 +12,7 @@
 import { createClient }                             from "@/lib/supabase/server";
 import { getSportEmoji }                            from "@/lib/types";
 import { computeAchievements }                      from "@/lib/achievements";
+import { maskName }                                 from "@/lib/privacy";
 import { notFound }                                 from "next/navigation";
 import Link from "next/link";
 
@@ -130,13 +131,13 @@ export default async function ProfilePage({
               profile.role === "proxy" ? "bg-blue-400" :
               profile.role === "host"  ? "bg-amber-400" : "bg-white/15"
             }`}>
-              {(profile.full_name ?? "?").charAt(0)}
+              {(isOwnProfile ? (profile.full_name ?? "?") : maskName(profile.full_name)).charAt(0)}
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl font-extrabold text-white">
-                  {profile.full_name ?? "Unknown"}
+                  {isOwnProfile ? (profile.full_name ?? "Unknown") : maskName(profile.full_name)}
                 </h1>
                 {isOwnProfile && (
                   <span className="text-xs text-white/40">(you)</span>

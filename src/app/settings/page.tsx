@@ -44,6 +44,7 @@ export default async function SettingsPage() {
           currentName={profile?.full_name ?? ""}
           currentNotifyEmail={profile?.notify_email ?? ""}
           currentPhone={profile?.phone ?? ""}
+          currentShowOnLeaderboard={profile?.show_on_leaderboard ?? false}
           isEmailProvider={isEmailProvider}
         />
       </div>

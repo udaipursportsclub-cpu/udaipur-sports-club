@@ -11,22 +11,24 @@ import { useRouter }    from "next/navigation";
 import { useState }     from "react";
 
 type Props = {
-  userId:             string;
-  currentName:        string;
-  currentNotifyEmail: string;
-  currentPhone:       string;
-  isEmailProvider:    boolean;
+  userId:                  string;
+  currentName:             string;
+  currentNotifyEmail:      string;
+  currentPhone:            string;
+  currentShowOnLeaderboard: boolean;
+  isEmailProvider:         boolean;
 };
 
 export default function SettingsForm({
-  userId, currentName, currentNotifyEmail, currentPhone, isEmailProvider,
+  userId, currentName, currentNotifyEmail, currentPhone, currentShowOnLeaderboard, isEmailProvider,
 }: Props) {
   const router = useRouter();
 
-  const [name,        setName]        = useState(currentName);
-  const [notifyEmail, setNotifyEmail] = useState(currentNotifyEmail);
-  const [phone,       setPhone]       = useState(currentPhone);
-  const [newPassword, setNewPassword] = useState("");
+  const [name,              setName]              = useState(currentName);
+  const [notifyEmail,       setNotifyEmail]       = useState(currentNotifyEmail);
+  const [phone,             setPhone]             = useState(currentPhone);
+  const [showOnLeaderboard, setShowOnLeaderboard] = useState(currentShowOnLeaderboard);
+  const [newPassword,       setNewPassword]       = useState("");
   const [loading,     setLoading]     = useState(false);
   const [saved,       setSaved]       = useState(false);
   const [error,       setError]       = useState<string | null>(null);
@@ -41,9 +43,10 @@ export default function SettingsForm({
 
     // Update profile table
     await supabase.from("profiles").update({
-      full_name:    name.trim(),
-      notify_email: notifyEmail.trim() || null,
-      phone:        phone.trim() || null,
+      full_name:            name.trim(),
+      notify_email:         notifyEmail.trim() || null,
+      phone:                phone.trim() || null,
+      show_on_leaderboard:  showOnLeaderboard,
     }).eq("id", userId);
 
     // Update display name in auth metadata
@@ -141,6 +144,32 @@ export default function SettingsForm({
           />
         </div>
       )}
+
+      {/* ── Leaderboard Visibility ──────────────────────────────── */}
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-1">Leaderboard</h2>
+        <p className="text-xs text-white/40 mb-4">
+          Allow your name and stats to appear on the public leaderboard.
+        </p>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showOnLeaderboard}
+            onClick={() => setShowOnLeaderboard(!showOnLeaderboard)}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              showOnLeaderboard ? "bg-amber-400" : "bg-white/10"
+            }`}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                showOnLeaderboard ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+          <span className="text-sm text-white/70 font-medium">Show me on Leaderboard</span>
+        </label>
+      </div>
 
       <button
         type="submit"

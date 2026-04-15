@@ -28,9 +28,12 @@ export default async function NewEventPage() {
   // Check if user is a host or admin — only they can create events
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, onboarding_done")
     .eq("id", user.id)
     .single();
+
+  // Force new users through onboarding first
+  if (profile?.onboarding_done !== true) redirect("/onboarding");
 
   const isHost = profile?.role === "host" || profile?.role === "admin";
 

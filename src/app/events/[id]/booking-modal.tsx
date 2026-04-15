@@ -32,7 +32,7 @@ type Props = {
   userPhone: string;
 };
 
-type PaymentMethod = "upi" | "card" | "netbanking";
+type PaymentMethod = "upi" | "card" | "netbanking" | "pay_at_spot";
 
 export default function BookingModal({
   eventId,
@@ -106,6 +106,7 @@ export default function BookingModal({
             userEmail: email.trim(),
             userPhone: phone.trim(),
             spots,
+            paymentMethod: isFree ? undefined : paymentMethod,
           }),
         });
 
@@ -131,7 +132,7 @@ export default function BookingModal({
         }
       }
 
-      // For paid events with UPI selected — open UPI deep link
+      // For paid events with UPI selected (not pay_at_spot) — open UPI deep link
       if (!isFree && paymentMethod === "upi" && upiId) {
         const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(name.trim())}&am=${total}&cu=INR&tn=${encodeURIComponent("USC Event Booking")}`;
         window.location.href = upiUrl;
@@ -309,24 +310,25 @@ export default function BookingModal({
                     <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">
                       Payment Method
                     </label>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
+                    <div className="grid grid-cols-2 gap-2 mt-2">
                       {(
                         [
-                          { key: "upi", label: "UPI", sub: "0% fee" },
-                          { key: "card", label: "Card", sub: "coming soon" },
-                          { key: "netbanking", label: "Net Banking", sub: "coming soon" },
+                          { key: "upi", label: "UPI", sub: "0% fee", disabled: false },
+                          { key: "card", label: "Card", sub: "coming soon", disabled: true },
+                          { key: "netbanking", label: "Net Banking", sub: "coming soon", disabled: true },
+                          { key: "pay_at_spot", label: "Pay at Spot", sub: "cash / any method", disabled: false },
                         ] as const
-                      ).map(({ key, label, sub }) => (
+                      ).map(({ key, label, sub, disabled }) => (
                         <button
                           key={key}
                           type="button"
                           onClick={() => setPaymentMethod(key)}
-                          disabled={key !== "upi"}
+                          disabled={disabled}
                           className={`p-3 rounded-xl border text-center transition-all ${
                             paymentMethod === key
                               ? "bg-amber-400/10 border-amber-400/40 ring-1 ring-amber-400/20"
                               : "bg-white/[0.03] border-white/10 hover:border-white/20"
-                          } ${key !== "upi" ? "opacity-40 cursor-not-allowed" : ""}`}
+                          } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
                         >
                           <p className={`text-sm font-bold ${paymentMethod === key ? "text-amber-400" : "text-white/70"}`}>
                             {label}
@@ -342,6 +344,15 @@ export default function BookingModal({
                     <div className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3">
                       <p className="text-xs text-white/50">Pay to UPI ID</p>
                       <p className="text-sm font-mono font-semibold text-white/70 mt-0.5">{upiId}</p>
+                    </div>
+                  )}
+
+                  {/* Pay at Spot info */}
+                  {paymentMethod === "pay_at_spot" && (
+                    <div className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3">
+                      <p className="text-sm text-white/60">
+                        Pay the host directly when you arrive. Cash, UPI, or any method.
+                      </p>
                     </div>
                   )}
                 </>

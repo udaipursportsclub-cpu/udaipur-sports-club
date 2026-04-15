@@ -15,7 +15,7 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { userName, userEmail, userPhone, spots } = body;
+    const { userName, userEmail, userPhone, spots, paymentMethod } = body;
     const eventId = params.id;
 
     // ── Validation ────────────────────────────────────────────────
@@ -115,6 +115,7 @@ export async function POST(
       user_email: userEmail.trim(),
       user_phone: userPhone.trim(),
       payment_status: isFree ? "free" : "pending",
+      payment_method: isFree ? null : (paymentMethod || "upi"),
       is_guest: true,
     }));
 

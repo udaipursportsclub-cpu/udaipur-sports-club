@@ -9,6 +9,7 @@ import { createClient }      from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSportEmoji }     from "@/lib/types";
 import { getXP, getPlayerLevel, getNextLevel } from "@/lib/xp";
+import { maskName }          from "@/lib/privacy";
 import Link from "next/link";
 
 export const revalidate = 60;
@@ -20,6 +21,10 @@ export default async function LeaderboardPage() {
 
   const { data: rsvpRaw } = await admin.from("rsvps").select("user_id, user_name, events(sport)");
   const { data: hostRaw } = await admin.from("events").select("host_id, host_name, sport");
+
+  // Fetch profiles that opted in to the leaderboard
+  const { data: optedInProfiles } = await admin.from("profiles").select("id").eq("show_on_leaderboard", true);
+  const optedInIds = new Set((optedInProfiles ?? []).map(p => p.id));
 
   // Build player stats
   const playerMap: Record<string, { id: string; name: string; games: number; hosted: number; sports: string[] }> = {};
@@ -34,9 +39,12 @@ export default async function LeaderboardPage() {
     playerMap[e.host_id].hosted++;
   }
 
-  const players = Object.values(playerMap)
+  const allPlayers = Object.values(playerMap)
     .map(p => ({ ...p, xp: getXP(p.games, p.hosted), level: getPlayerLevel(getXP(p.games, p.hosted)) }))
     .sort((a, b) => b.xp - a.xp);
+
+  // Filter to only opted-in players (always include the viewer's own row)
+  const players = allPlayers.filter(p => optedInIds.has(p.id) || (user && p.id === user.id));
 
   // This week's hot players
   const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
@@ -135,7 +143,7 @@ export default async function LeaderboardPage() {
               {weekTop.map((p, i) => (
                 <Link key={p.id} href={`/profile/${p.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors">
                   <span className="text-lg w-6 text-center">{i === 0 ? "👑" : ["⚡","🔥","💪","🎯"][i-1]}</span>
-                  <span className="text-sm font-bold text-white/80 flex-1 truncate">{p.name}</span>
+                  <span className="text-sm font-bold text-white/80 flex-1 truncate">{maskName(p.name)}</span>
                   <span className="text-sm font-black text-red-400">{p.count}</span>
                   <span className="text-[10px] text-white/40">games</span>
                 </Link>
@@ -181,13 +189,13 @@ export default async function LeaderboardPage() {
                       i === 2 ? "bg-gradient-to-br from-orange-600 to-orange-700" :
                       "bg-white/10"
                     }`}>
-                      {p.name.charAt(0)}
+                      {maskName(p.name).charAt(0)}
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-white/80 truncate">{p.name}</span>
+                        <span className="text-sm font-bold text-white/80 truncate">{isMe ? p.name : maskName(p.name)}</span>
                         {isMe && <span className="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded">you</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
@@ -231,6 +239,17 @@ export default async function LeaderboardPage() {
             </div>
           </div>
         )}
+
+        {/* Opt-in notice */}
+        <p className="text-center text-xs text-white/40">
+          Only showing players who opted in.{" "}
+          {user ? (
+            <Link href="/settings" className="text-amber-400 hover:underline">Go to Settings</Link>
+          ) : (
+            <span>Log in and go to Settings</span>
+          )}{" "}
+          to appear on the leaderboard.
+        </p>
 
         {/* CTA */}
         <div className="text-center py-8">

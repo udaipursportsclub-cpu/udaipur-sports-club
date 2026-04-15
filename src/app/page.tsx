@@ -10,6 +10,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient }      from "@/lib/supabase/server";
 import { getSportEmoji }     from "@/lib/types";
+import { maskName }          from "@/lib/privacy";
 import Link                  from "next/link";
 
 export const revalidate = 30;
@@ -174,14 +175,29 @@ export default async function Home() {
 
           {/* CTAs */}
           <div className="flex flex-wrap items-center gap-4">
-            <Link href={user ? "/events" : "/login"}
-              className="bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold px-8 py-4 rounded-full text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all">
-              {user ? "Find a Game" : "Join Free"} →
-            </Link>
-            <Link href="/leaderboard"
-              className="border border-white/10 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/5">
-              See Rankings
-            </Link>
+            {user ? (
+              <>
+                <Link href="/events"
+                  className="bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold px-8 py-4 rounded-full text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all">
+                  Find a Game →
+                </Link>
+                <Link href="/leaderboard"
+                  className="border border-white/10 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/5">
+                  See Rankings
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/login"
+                  className="bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold px-8 py-4 rounded-full text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all">
+                  Login →
+                </Link>
+                <Link href="/login"
+                  className="border border-white/10 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/5">
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Stats bar */}
@@ -199,6 +215,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Sections below hero: only for logged-in users ────── */}
+      {user && (<>
 
       {/* ── NEXT GAME — featured event ────────────────────────── */}
       {upcomingEvents && upcomingEvents.length > 0 && (() => {
@@ -276,7 +295,7 @@ export default async function Home() {
               </div>
               <div className="flex-1">
                 <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-amber-400/60 mb-1">Champion of the Week</p>
-                <p className="text-xl md:text-2xl font-black text-white">{weekChampion.name}</p>
+                <p className="text-xl md:text-2xl font-black text-white">{maskName(weekChampion.name)}</p>
               </div>
               <div className="text-right">
                 <p className="text-3xl font-black text-amber-400">{weekChampion.count}</p>
@@ -332,7 +351,7 @@ export default async function Home() {
                         <span className="text-xs text-white/50">{ev.location}</span>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-[10px] font-bold text-white/40">{ev.host_name}</span>
+                        <span className="text-[10px] font-bold text-white/40">{maskName(ev.host_name)}</span>
                         {spotsLeft <= 3 && spotsLeft > 0 && (
                           <span className="text-[10px] font-bold text-red-400 animate-pulse">
                             {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left
@@ -385,7 +404,7 @@ export default async function Home() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-white/60">
-                        <span className="font-bold text-white/90">{a.user_name.split(" ")[0]}</span>
+                        <span className="font-bold text-white/90">{maskName(a.user_name).split(" ")[0]}</span>
                         {" "}joined{" "}
                         <span className="text-amber-400/70">{ev?.title ?? sport}</span>
                       </p>
@@ -415,10 +434,10 @@ export default async function Home() {
                   <Link key={p.id} href={`/profile/${p.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors">
                     <span className="text-lg w-6 text-center">{RANK_BADGES[i]}</span>
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
-                      {p.name.charAt(0)}
+                      {maskName(p.name).charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-white/80 truncate">{p.name}</p>
+                      <p className="text-xs font-bold text-white/80 truncate">{maskName(p.name)}</p>
                       <p className={`text-[10px] font-bold ${level.color}`}>{level.name} · {getXP(p.count)} XP</p>
                     </div>
                     <span className="text-sm font-black text-white/40">{p.count}</span>
@@ -453,6 +472,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      </>)}
 
       {/* ── BOTTOM CTA ────────────────────────────────────────────── */}
       <section className="border-t border-white/5">

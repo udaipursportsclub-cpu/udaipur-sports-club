@@ -7,6 +7,7 @@
 
 import { createClient }              from "@/lib/supabase/server";
 import { getSportEmoji, type Event } from "@/lib/types";
+import { maskName }                  from "@/lib/privacy";
 import Link       from "next/link";
 import { Suspense } from "react";
 import SportFilter  from "./sport-filter";
@@ -233,7 +234,7 @@ export default async function EventsPage({
 
                   {/* Bottom */}
                   <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                    <span className="text-[10px] font-bold text-white/30">{event.host_name}</span>
+                    <span className="text-[10px] font-bold text-white/30">{maskName(event.host_name)}</span>
                   </div>
                 </Link>
               );

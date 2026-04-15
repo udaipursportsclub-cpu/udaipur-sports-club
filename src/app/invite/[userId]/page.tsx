@@ -11,6 +11,7 @@
 import { createClient }    from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSportEmoji }   from "@/lib/types";
+import { maskName }        from "@/lib/privacy";
 import { notFound }        from "next/navigation";
 import { type Metadata }   from "next";
 import Link                from "next/link";
@@ -28,7 +29,7 @@ export async function generateMetadata({
     .eq("id", params.userId)
     .single();
 
-  const name = profile?.full_name ?? "A friend";
+  const name = maskName(profile?.full_name);
   return {
     title: `${name} invites you to USC`,
     description: `${name} wants you on Udaipur Sports Club — the home for every sport in the City of Lakes.`,
@@ -73,7 +74,7 @@ export default async function InvitePage({
   }
   const topSports = Array.from(sportSet).slice(0, 4);
 
-  const firstName = (profile.full_name ?? "A friend").split(" ")[0];
+  const firstName = maskName(profile.full_name).split(" ")[0];
 
   return (
     <main
@@ -97,7 +98,7 @@ export default async function InvitePage({
         </div>
 
         <p className="text-white/50 text-sm mb-1">You&apos;ve been invited by</p>
-        <h1 className="text-3xl font-extrabold text-white mb-2">{profile.full_name}</h1>
+        <h1 className="text-3xl font-extrabold text-white mb-2">{maskName(profile.full_name)}</h1>
 
         {/* Their stats */}
         <div className="flex items-center gap-4 mt-4 mb-8">

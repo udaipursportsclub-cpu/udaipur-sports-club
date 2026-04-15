@@ -8,6 +8,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { maskName } from "@/lib/privacy";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
@@ -283,7 +284,7 @@ export default async function ScoreboardPage({
                           : "text-white/60"
                       }`}
                     >
-                      {b!.player_name}
+                      {maskName(b!.player_name)}
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-sm tabular-nums">
@@ -321,7 +322,7 @@ export default async function ScoreboardPage({
             </p>
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-white">
-                {currentBowler.player_name}
+                {maskName(currentBowler.player_name)}
               </span>
               <div className="flex items-center gap-4 text-sm tabular-nums">
                 <span className="text-white/60">
@@ -414,7 +415,7 @@ export default async function ScoreboardPage({
                               : "text-white/60"
                           }`}
                         >
-                          {b.player_name}
+                          {maskName(b.player_name)}
                           {b.status === "striker" && (
                             <span className="text-amber-400 ml-1">*</span>
                           )}
@@ -486,7 +487,7 @@ export default async function ScoreboardPage({
                     className="border-b border-white/[0.03] last:border-0"
                   >
                     <td className="px-4 py-2.5 font-medium text-white/70">
-                      {b.player_name}
+                      {maskName(b.player_name)}
                     </td>
                     <td className="text-right px-2 py-2.5 text-white/50 tabular-nums">
                       {formatOvers(b.overs)}
@@ -523,7 +524,7 @@ export default async function ScoreboardPage({
                   className="bg-red-400/5 border border-red-400/10 rounded-lg px-3 py-1.5"
                 >
                   <span className="text-xs text-red-400/80 font-medium">
-                    {fow.playerName} ({fow.runs})
+                    {maskName(fow.playerName)} ({fow.runs})
                   </span>
                 </div>
               ))}

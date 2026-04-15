@@ -9,6 +9,7 @@
 import { createClient }      from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSportEmoji }     from "@/lib/types";
+import { maskName }          from "@/lib/privacy";
 import Link                  from "next/link";
 
 export default async function TournamentsPage() {
@@ -111,7 +112,7 @@ export default async function TournamentsPage() {
 
         {/* Bottom */}
         <div className="flex items-center justify-between pt-3 border-t border-white/5">
-          <span className="text-[10px] font-bold text-white/30">{t.host_name}</span>
+          <span className="text-[10px] font-bold text-white/30">{maskName(t.host_name)}</span>
           <div className="flex items-center gap-1.5">
             <span className="text-sm font-black text-white/40">{teamCount}</span>
             <span className="text-[10px] text-white/30">/{t.max_teams} teams</span>
