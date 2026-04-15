@@ -105,16 +105,61 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fallback: return wa.me link for admin to manually send
-    const encodedMessage = encodeURIComponent(message);
-    const waLink = `https://wa.me/91${cleaned}?text=${encodedMessage}`;
+    // Fallback 1: Send via email if user has an email on file
+    const resendKey = process.env.RESEND_API_KEY;
+    if (resendKey) {
+      // Look up user's email by phone
+      const { data: profileWithEmail } = await supabase
+        .from("profiles")
+        .select("notify_email")
+        .eq("phone", cleaned)
+        .single();
 
+      // Also check auth.users for email
+      const { data: users } = await supabase.rpc("get_user_email_by_phone", { phone_number: cleaned }).maybeSingle();
+      void users;
+
+      // Try to find email from profiles table joined with auth
+      const { data: profileMatch } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("phone", cleaned)
+        .single();
+
+      if (profileMatch) {
+        // Get email from auth.users
+        const { data: authUser } = await supabase.auth.admin.getUserById(profileMatch.id);
+        const email = profileWithEmail?.notify_email || authUser?.user?.email;
+
+        if (email) {
+          try {
+            await fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${resendKey}`,
+              },
+              body: JSON.stringify({
+                from: "USC <onboarding@resend.dev>",
+                to: email,
+                subject: `Your USC login code: ${code}`,
+                html: `<div style="font-family:sans-serif;padding:20px"><h2>Your login code</h2><p style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#f59e0b">${code}</p><p>Valid for 5 minutes. Do not share.</p><p style="color:#999;font-size:12px">— Udaipur Sports Club</p></div>`,
+              }),
+            });
+            return NextResponse.json({ success: true, method: "email", email: email.replace(/(.{2}).*(@.*)/, "$1***$2") });
+          } catch {
+            // Fall through
+          }
+        }
+      }
+    }
+
+    // Fallback 2: return code directly (for testing/development)
     return NextResponse.json({
       success: true,
-      method: "manual",
-      waLink,
-      // In dev/testing, also return the code so the admin can see it
-      ...(process.env.NODE_ENV === "development" ? { devCode: code } : {}),
+      method: "display",
+      devCode: code,
+      message: "WhatsApp not configured. Code shown for testing.",
     });
   } catch (err) {
     console.error("OTP send error:", err);

@@ -63,6 +63,12 @@ export default function LoginPage() {
       setOtpSent(true);
       setLoading(false);
 
+      // If code returned directly (testing mode), auto-fill it
+      if (data.devCode) {
+        const digits = data.devCode.split("");
+        setOtp(digits);
+      }
+
       // Auto-focus first OTP input
       setTimeout(() => otpRefs.current[0]?.focus(), 100);
     } catch {
