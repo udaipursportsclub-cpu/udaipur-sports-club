@@ -12,7 +12,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import SignOutButton from "./sign-out-button";
+// SignOutButton moved to Settings page
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -124,9 +124,16 @@ export default async function DashboardPage() {
           <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
         </Link>
 
-        {/* Right side: avatar + name + sign out */}
-        <div className="flex items-center gap-4">
-          <SignOutButton />
+        {/* Right side: admin + settings + avatar */}
+        <div className="flex items-center gap-3">
+          {role === "admin" && (
+            <Link href="/admin" className="text-xs font-bold text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-1.5 rounded-full hover:bg-red-400/20 transition-colors">
+              Admin
+            </Link>
+          )}
+          <Link href="/settings" className="text-xs font-semibold text-white/40 hover:text-white transition-colors">
+            ⚙️
+          </Link>
           <div className="flex items-center gap-2">
             {userAvatar ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -136,9 +143,6 @@ export default async function DashboardPage() {
                 {userName.charAt(0)}
               </div>
             )}
-            <span className="text-sm font-medium text-white/70 hidden sm:block">
-              {firstName}
-            </span>
           </div>
         </div>
 
@@ -237,25 +241,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {/* Admin panel link — only for admins */}
-        {role === "admin" && (
-          <div className="mb-6 flex items-center gap-4">
-            <Link href="/admin" className="flex items-center gap-2 text-xs font-semibold text-red-500 hover:text-red-700 transition-colors">
-              <span>🔑</span> Admin Panel
-            </Link>
-            <span className="text-white/30">·</span>
-            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/40 hover:text-white/70 transition-colors">
-              ⚙️ Settings
-            </Link>
-          </div>
-        )}
-        {role !== "admin" && (
-          <div className="mb-6">
-            <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/40 hover:text-white/70 transition-colors">
-              ⚙️ Settings
-            </Link>
-          </div>
-        )}
+        {/* Admin + Settings moved to top nav bar */}
 
         {/* ── HOST EARNINGS (hosts only) ──────────────────────────────── */}
         {isHost && (hostEarned > 0 || hostPending > 0) && (
