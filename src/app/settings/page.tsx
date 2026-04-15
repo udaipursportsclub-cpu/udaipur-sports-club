@@ -43,10 +43,11 @@ export default async function SettingsPage() {
         <SettingsForm
           userId={user.id}
           currentName={profile?.full_name ?? ""}
-          currentNotifyEmail={profile?.notify_email ?? ""}
+          currentNotifyEmail={profile?.notify_email ?? user.email ?? ""}
           currentPhone={profile?.phone ?? ""}
-          currentShowOnLeaderboard={profile?.show_on_leaderboard ?? false}
+          currentShowOnLeaderboard={profile?.show_on_leaderboard === true}
           isEmailProvider={isEmailProvider}
+          loginEmail={user.email ?? ""}
         />
 
         {/* Sign out */}

@@ -17,10 +17,11 @@ type Props = {
   currentPhone:            string;
   currentShowOnLeaderboard: boolean;
   isEmailProvider:         boolean;
+  loginEmail:              string;
 };
 
 export default function SettingsForm({
-  userId, currentName, currentNotifyEmail, currentPhone, currentShowOnLeaderboard, isEmailProvider,
+  userId, currentName, currentNotifyEmail, currentPhone, currentShowOnLeaderboard, isEmailProvider, loginEmail,
 }: Props) {
   const router = useRouter();
 
@@ -115,19 +116,34 @@ export default function SettingsForm({
         </div>
       </div>
 
-      {/* ── Notification Email ─────────────────────────────────────── */}
-      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-1">Email Notifications</h2>
-        <p className="text-xs text-white/40 mb-4">
-          We&apos;ll send new event alerts here. Leave blank to use your login email.
-        </p>
-        <input
-          type="email"
-          value={notifyEmail}
-          onChange={(e) => setNotifyEmail(e.target.value)}
-          placeholder="your@email.com"
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
-        />
+      {/* ── Email ──────────────────────────────────────────────────── */}
+      <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h2 className="text-xs font-bold tracking-widest uppercase text-white/40">Email</h2>
+
+        <div>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+            Login Email <span className="normal-case text-white/30">(cannot change)</span>
+          </label>
+          <input
+            value={loginEmail}
+            disabled
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white/40 cursor-not-allowed"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+            Notification Email <span className="normal-case text-white/30">(for event alerts)</span>
+          </label>
+          <input
+            type="email"
+            value={notifyEmail}
+            onChange={(e) => setNotifyEmail(e.target.value)}
+            placeholder={loginEmail || "your@email.com"}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
+          />
+          <p className="text-xs text-white/30 mt-1">Leave blank to use your login email</p>
+        </div>
       </div>
 
       {/* ── Change Password (email accounts only) ─────────────────── */}
