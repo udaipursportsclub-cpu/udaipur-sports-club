@@ -6,29 +6,16 @@ import { useState, useRef } from "react";
 
 export default function LoginPage() {
   const router  = useRouter();
-  const [tab,      setTab]      = useState<"google" | "email" | "phone">("google");
+  const [tab,      setTab]      = useState<"google" | "emailotp">("google");
   const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState<string | null>(null);
 
-  // Phone OTP state
-  const [phone,    setPhone]    = useState("");
-  const [otpSent,  setOtpSent]  = useState(false);
-  const [otp,      setOtp]      = useState(["", "", "", "", "", ""]);
+  // Email OTP state
+  const [otpSent,    setOtpSent]    = useState(false);
+  const [otp,        setOtp]        = useState(["", "", "", "", "", ""]);
   const [otpSuccess, setOtpSuccess] = useState(false);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  async function handleEmailLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-    if (signInError) { setError("Wrong email or password."); setLoading(false); return; }
-    router.push("/dashboard");
-    router.refresh();
-  }
 
   async function handleGoogleLogin() {
     setLoading(true);
@@ -39,55 +26,41 @@ export default function LoginPage() {
     });
   }
 
-  // --- Phone OTP handlers ---
-
-  async function handleSendOtp(e: React.FormEvent) {
+  async function handleSendEmailOtp(e: React.FormEvent) {
     e.preventDefault();
+    if (!email.trim()) return;
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/otp/send", {
+      const res = await fetch("/api/auth/email-otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Could not send OTP.");
+        setError(data.error || "Could not send code.");
         setLoading(false);
         return;
       }
 
       setOtpSent(true);
       setLoading(false);
-
-      // If code returned directly (testing mode), auto-fill it
-      if (data.devCode) {
-        const digits = data.devCode.split("");
-        setOtp(digits);
-      }
-
-      // Auto-focus first OTP input
       setTimeout(() => otpRefs.current[0]?.focus(), 100);
     } catch {
-      setError("Network error. Check your connection.");
+      setError("Network error.");
       setLoading(false);
     }
   }
 
   function handleOtpChange(index: number, value: string) {
-    if (!/^\d*$/.test(value)) return; // Only digits
-
+    if (!/^\d*$/.test(value)) return;
     const newOtp = [...otp];
-    newOtp[index] = value.slice(-1); // Only keep last digit
+    newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-
-    // Auto-advance to next input
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
+    if (value && index < 5) otpRefs.current[index + 1]?.focus();
   }
 
   function handleOtpKeyDown(index: number, e: React.KeyboardEvent) {
@@ -105,58 +78,60 @@ export default function LoginPage() {
     }
   }
 
-  async function handleVerifyOtp(e: React.FormEvent) {
+  async function handleVerifyEmailOtp(e: React.FormEvent) {
     e.preventDefault();
     const code = otp.join("");
-    if (code.length !== 6) {
-      setError("Enter all 6 digits.");
-      return;
-    }
+    if (code.length !== 6) { setError("Enter all 6 digits."); return; }
 
     setLoading(true);
     setError(null);
 
     try {
-      // Step 1: Verify the OTP
-      const verifyRes = await fetch("/api/auth/otp/verify", {
+      const res = await fetch("/api/auth/email-otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code }),
+        body: JSON.stringify({ email: email.trim().toLowerCase(), code }),
       });
-      const verifyData = await verifyRes.json();
+      const data = await res.json();
 
-      if (!verifyRes.ok) {
-        setError(verifyData.error || "Invalid OTP.");
+      if (!res.ok) {
+        setError(data.error || "Invalid code.");
         setLoading(false);
         return;
       }
 
-      // Step 2: Create a session for the verified user
       setOtpSuccess(true);
 
-      const sessionRes = await fetch("/api/auth/otp/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: verifyData.userId }),
+      // Use Supabase magic link to create session
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: { shouldCreateUser: true },
       });
-      const sessionData = await sessionRes.json();
 
-      if (!sessionRes.ok) {
-        setError(sessionData.error || "Could not create session.");
-        setOtpSuccess(false);
-        setLoading(false);
-        return;
+      if (signInError) {
+        // Fallback: redirect to session endpoint
+        const sessionRes = await fetch("/api/auth/email-otp/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email.trim().toLowerCase() }),
+        });
+        const sessionData = await sessionRes.json();
+        if (sessionData.redirectUrl) {
+          window.location.href = sessionData.redirectUrl;
+          return;
+        }
       }
 
-      // Step 3: Redirect to the magic link URL (this signs them in)
-      window.location.href = sessionData.redirectUrl;
+      router.push("/dashboard");
+      router.refresh();
     } catch {
-      setError("Network error. Check your connection.");
+      setError("Something went wrong.");
       setLoading(false);
     }
   }
 
-  function resetPhoneOtp() {
+  function resetOtp() {
     setOtpSent(false);
     setOtp(["", "", "", "", "", ""]);
     setError(null);
@@ -181,29 +156,29 @@ export default function LoginPage() {
           <p className="text-white/50 text-sm">Udaipur Sports Club</p>
         </div>
 
-        {/* Tab switcher — 2 tabs */}
+        {/* Tab switcher */}
         <div className="flex bg-white/5 rounded-xl p-1 mb-6">
           <button
             onClick={() => { setTab("google"); setError(null); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "google" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
+              tab === "google" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/70"
             }`}
           >
             Google
           </button>
           <button
-            onClick={() => { setTab("email"); setError(null); }}
+            onClick={() => { setTab("emailotp"); setError(null); resetOtp(); }}
             className={`flex-1 text-xs font-bold py-2.5 rounded-lg transition-all ${
-              tab === "email" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/50"
+              tab === "emailotp" ? "bg-white/10 text-white" : "text-white/50 hover:text-white/70"
             }`}
           >
-            Email
+            Email OTP
           </button>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
 
-          {/* ---------- GOOGLE TAB ---------- */}
+          {/* Google */}
           {tab === "google" && (
             <button
               onClick={handleGoogleLogin}
@@ -224,83 +199,72 @@ export default function LoginPage() {
             </button>
           )}
 
-          {/* ---------- PHONE OTP TAB ---------- */}
-          {tab === "phone" && (
+          {/* Email OTP */}
+          {tab === "emailotp" && (
             <>
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-4 py-3 rounded-xl mb-4">{error}</div>
               )}
 
               {otpSuccess ? (
-                <div className="text-center py-4">
-                  <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="text-center py-6">
+                  <div className="w-12 h-12 rounded-full bg-green-400/20 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-green-400 text-xl">✓</span>
                   </div>
                   <p className="text-white font-bold text-sm mb-1">Verified!</p>
                   <p className="text-white/40 text-xs">Signing you in...</p>
                 </div>
               ) : !otpSent ? (
-                /* Step 1: Enter phone number */
-                <form onSubmit={handleSendOtp} className="space-y-4">
+                <form onSubmit={handleSendEmailOtp} className="space-y-4">
                   <div>
                     <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">
-                      Phone Number
+                      Email Address
                     </label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white/40 text-sm font-medium shrink-0">+91</span>
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={e => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                        required
-                        placeholder="98765 43210"
-                        maxLength={10}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition tracking-wider"
-                      />
-                    </div>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                      placeholder="you@gmail.com"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition"
+                    />
                     <p className="text-[10px] text-white/40 mt-2">
-                      We&apos;ll send a login code via WhatsApp
+                      We&apos;ll send a 6-digit login code to your email
                     </p>
                   </div>
                   <button
                     type="submit"
-                    disabled={loading || phone.length !== 10}
+                    disabled={loading || !email.trim()}
                     className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm py-3.5 rounded-xl hover:opacity-90 disabled:opacity-50 transition"
                   >
-                    {loading ? "Sending..." : "Send OTP"}
+                    {loading ? "Sending..." : "Send Code"}
                   </button>
                 </form>
               ) : (
-                /* Step 2: Enter OTP code */
-                <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <form onSubmit={handleVerifyEmailOtp} className="space-y-4">
                   <div>
                     <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">
                       Enter 6-digit code
                     </label>
                     <p className="text-white/50 text-xs mb-4">
-                      Sent to +91 {phone}
+                      Sent to {email}
                     </p>
-
-                    {/* 6 individual OTP boxes */}
                     <div className="flex gap-2 justify-center" onPaste={handleOtpPaste}>
                       {otp.map((digit, i) => (
                         <input
                           key={i}
-                          ref={el => { otpRefs.current[i] = el; }}
+                          ref={(el) => { otpRefs.current[i] = el; }}
                           type="text"
                           inputMode="numeric"
                           maxLength={1}
                           value={digit}
                           onChange={e => handleOtpChange(i, e.target.value)}
                           onKeyDown={e => handleOtpKeyDown(i, e)}
-                          className="w-11 h-13 bg-white/5 border border-white/10 rounded-xl text-center text-lg font-bold text-white focus:outline-none focus:border-amber-400/50 transition"
+                          className="w-11 h-13 text-center text-lg font-bold bg-white/5 border border-white/10 rounded-lg text-white focus:border-amber-400/50 focus:outline-none transition"
                         />
                       ))}
                     </div>
                   </div>
-
                   <button
                     type="submit"
                     disabled={loading || otp.join("").length !== 6}
@@ -308,40 +272,16 @@ export default function LoginPage() {
                   >
                     {loading ? "Verifying..." : "Verify & Sign In"}
                   </button>
-
                   <button
                     type="button"
-                    onClick={resetPhoneOtp}
-                    className="w-full text-white/50 hover:text-white/60 text-xs py-2 transition"
+                    onClick={resetOtp}
+                    className="w-full text-white/40 hover:text-white/60 text-xs py-2 transition"
                   >
-                    Change number / Resend
+                    Change email / Resend
                   </button>
                 </form>
               )}
             </>
-          )}
-
-          {/* ---------- EMAIL TAB ---------- */}
-          {tab === "email" && (
-            <form onSubmit={handleEmailLogin} className="space-y-4">
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-4 py-3 rounded-xl">{error}</div>
-              )}
-              <div>
-                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@email.com"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
-              </div>
-              <div>
-                <label className="block text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-2">Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="--------"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition" />
-              </div>
-              <button type="submit" disabled={loading}
-                className="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-black font-extrabold text-sm py-3.5 rounded-xl hover:opacity-90 disabled:opacity-50 transition">
-                {loading ? "Signing in..." : "Sign In"}
-              </button>
-            </form>
           )}
         </div>
 
