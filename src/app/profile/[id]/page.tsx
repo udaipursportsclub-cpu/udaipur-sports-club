@@ -143,6 +143,9 @@ export default async function ProfilePage({
                   <span className="text-xs text-white/40">(you)</span>
                 )}
               </div>
+              {profile.username && (
+                <p className="text-sm text-amber-400 font-medium">@{profile.username}</p>
+              )}
               <span className={`inline-block text-xs font-semibold border px-2.5 py-0.5 rounded-full mt-1.5 ${ROLE_COLORS[profile.role] ?? ROLE_COLORS.member}`}>
                 {ROLE_LABELS[profile.role] ?? "Member"}
               </span>

@@ -54,6 +54,47 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id);
 
+  // Host finance data
+  let hostEarned = 0;
+  let hostPending = 0;
+  type HostEventFinance = { id: string; title: string; earned: number; pending: number; total: number };
+  let hostEventFinance: HostEventFinance[] = [];
+
+  if (isHost) {
+    const { data: myHostedEvents } = await supabase
+      .from("events")
+      .select("id, title, total_cost, capacity")
+      .eq("host_id", user.id)
+      .gt("total_cost", 0);
+
+    if (myHostedEvents && myHostedEvents.length > 0) {
+      const myEventIds = myHostedEvents.map((e) => e.id);
+      const { data: myEventRsvps } = await supabase
+        .from("rsvps")
+        .select("event_id, payment_status, payment_waived")
+        .in("event_id", myEventIds);
+
+      const rsvpsByEvent: Record<string, typeof myEventRsvps> = {};
+      for (const r of myEventRsvps ?? []) {
+        if (!rsvpsByEvent[r.event_id]) rsvpsByEvent[r.event_id] = [];
+        rsvpsByEvent[r.event_id]!.push(r);
+      }
+
+      hostEventFinance = myHostedEvents.map((ev) => {
+        const evRsvps = rsvpsByEvent[ev.id] ?? [];
+        const perPerson = Math.ceil(ev.total_cost / ev.capacity);
+        const paidCount = evRsvps.filter((r) => r.payment_status === "paid").length;
+        const nonWaivedCount = evRsvps.filter((r) => !r.payment_waived).length;
+        const earned = paidCount * perPerson;
+        const total = nonWaivedCount * perPerson;
+        return { id: ev.id, title: ev.title, earned, pending: total - earned, total };
+      });
+
+      hostEarned = hostEventFinance.reduce((s, e) => s + e.earned, 0);
+      hostPending = hostEventFinance.reduce((s, e) => s + e.pending, 0);
+    }
+  }
+
   // Upcoming events the user has joined
   const { data: myUpcomingRsvps } = await supabase
     .from("rsvps")
@@ -213,6 +254,38 @@ export default async function DashboardPage() {
             <Link href="/settings" className="flex items-center gap-2 text-xs font-semibold text-white/40 hover:text-white/70 transition-colors">
               ⚙️ Settings
             </Link>
+          </div>
+        )}
+
+        {/* ── HOST EARNINGS (hosts only) ──────────────────────────────── */}
+        {isHost && (hostEarned > 0 || hostPending > 0) && (
+          <div className="bg-white/[0.03] rounded-2xl border border-white/5 p-6 mb-8">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-4">My Earnings</h2>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="text-center">
+                <p className="text-2xl font-extrabold text-green-400">₹{hostEarned.toLocaleString("en-IN")}</p>
+                <p className="text-xs text-white/40 mt-1">Earned</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-extrabold text-amber-400">₹{hostPending.toLocaleString("en-IN")}</p>
+                <p className="text-xs text-white/40 mt-1">Pending</p>
+              </div>
+            </div>
+            {hostEventFinance.length > 0 && (
+              <div className="space-y-2 border-t border-white/5 pt-4">
+                {hostEventFinance.slice(0, 5).map((ef) => (
+                  <Link key={ef.id} href={`/events/${ef.id}`} className="flex items-center justify-between py-1 hover:bg-white/[0.02] rounded px-2 transition-colors">
+                    <span className="text-sm text-white/60 truncate">{ef.title}</span>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <span className="text-xs text-green-400 font-medium">₹{ef.earned.toLocaleString("en-IN")}</span>
+                      {ef.pending > 0 && (
+                        <span className="text-xs text-amber-400">+₹{ef.pending.toLocaleString("en-IN")}</span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

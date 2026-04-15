@@ -19,6 +19,7 @@ import RSVPButton           from "./rsvp-button";
 import BookingModal         from "./booking-modal";
 import WaitlistButton       from "./waitlist-button";
 import MarkPaidButton       from "./mark-paid-button";
+import WaivePaymentButton   from "./waive-payment-button";
 import ShareButton          from "./share-button";
 import CompleteEventButton  from "./complete-event-button";
 import SharePlayedCard      from "./share-played-card";
@@ -104,9 +105,11 @@ export default async function EventPage({
 
   const rsvpList = rsvps ?? [];
   const rsvpCount = rsvpList.length;
-  const spotsLeft = event.capacity - rsvpCount;
+  const reservedSlots = event.reserved_slots ?? 0;
+  const publicCapacity = event.capacity - reservedSlots;
+  const spotsLeft = publicCapacity - rsvpCount;
   const isFull = spotsLeft <= 0;
-  const fillPercent = Math.min((rsvpCount / event.capacity) * 100, 100);
+  const fillPercent = Math.min((rsvpCount / publicCapacity) * 100, 100);
 
   // Is this a free event?
   const isFree = !event.total_cost || event.total_cost === 0;
@@ -400,20 +403,29 @@ export default async function EventPage({
                         {/* Payment status label for non-free events */}
                         {!isFree && (
                           <p className={`text-xs mt-0.5 ${
-                            rsvp.payment_status === "paid" ? "text-green-400" : "text-amber-400"
+                            rsvp.payment_status === "paid" ? "text-green-400" :
+                            rsvp.payment_status === "waived" ? "text-blue-400" : "text-amber-400"
                           }`}>
-                            {rsvp.payment_status === "paid" ? "✓ Paid" : "⏳ Payment pending"}
+                            {rsvp.payment_status === "paid" ? "✓ Paid" :
+                             rsvp.payment_status === "waived" ? "✓ Payment waived" : "⏳ Payment pending"}
                           </p>
                         )}
                       </div>
                     </div>
 
-                    {/* Right: "Mark as Paid" button — only visible to host */}
-                    {isHost && !isFree && rsvp.user_id !== event.host_id && (
-                      <MarkPaidButton
-                        rsvpId={rsvp.id}
-                        paymentStatus={rsvp.payment_status}
-                      />
+                    {/* Right: "Mark as Paid" + "Waive" buttons — only visible to host/admin */}
+                    {(isHost || isAdmin) && !isFree && rsvp.user_id !== event.host_id && (
+                      <div className="flex items-center gap-1">
+                        <MarkPaidButton
+                          rsvpId={rsvp.id}
+                          paymentStatus={rsvp.payment_status}
+                        />
+                        <WaivePaymentButton
+                          eventId={event.id}
+                          rsvpId={rsvp.id}
+                          paymentStatus={rsvp.payment_status}
+                        />
+                      </div>
                     )}
 
                   </div>

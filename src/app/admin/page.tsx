@@ -113,6 +113,19 @@ export default async function AdminPage() {
           <span className="text-purple-400/40 group-hover:text-purple-400 transition-colors text-xl">→</span>
         </Link>
 
+        {/* ── FINANCE DASHBOARD LINK ─────────────────────────── */}
+        <Link
+          href="/admin/finance"
+          className="flex items-center gap-4 bg-white/[0.03] border border-green-500/30 hover:border-green-500/60 rounded-2xl px-6 py-5 transition-all group"
+        >
+          <span className="text-3xl">💰</span>
+          <div className="flex-1">
+            <p className="text-lg font-extrabold text-white">Finance Dashboard</p>
+            <p className="text-sm text-white/40">Money overview · per-event breakdown · host earnings</p>
+          </div>
+          <span className="text-green-400/40 group-hover:text-green-400 transition-colors text-xl">→</span>
+        </Link>
+
         {/* ── STATS ROW ──────────────────────────────────────────── */}
         <div className="grid grid-cols-3 gap-4">
           {[

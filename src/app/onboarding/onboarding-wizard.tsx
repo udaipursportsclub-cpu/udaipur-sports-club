@@ -114,7 +114,7 @@ export default function OnboardingWizard({
     if (!existingAvatar) return 1;
     if (!existingFaceScan) return 2;
     if (!existingPhone) return 3;
-    return 4; // all done
+    return 4; // username step (or all done)
   };
 
   const [step, setStep] = useState(getInitialStep);
@@ -142,8 +142,23 @@ export default function OnboardingWizard({
   const [phoneError, setPhoneError] = useState("");
   const [, setPhoneSaved] = useState(!!existingPhone);
 
-  // Step 4 state: Complete
-  const [completing, setCompleting] = useState(false);
+  // Step 4 state: Username
+  const [usernameSuggestions, setUsernameSuggestions] = useState<string[]>([]);
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [claimingUsername, setClaimingUsername] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+
+  // Step 5 state: Complete
+  const [, setCompleting] = useState(false);
+
+  // Fetch username suggestions when step 4 loads
+  useEffect(() => {
+    if (step === 4 && usernameSuggestions.length === 0 && !loadingSuggestions) {
+      fetchUsernameSuggestions();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   // ─── Step 1: Avatar upload ────────────────────────────────────────────
 
@@ -314,11 +329,58 @@ export default function OnboardingWizard({
       setPhoneSaved(true);
       setSavingPhone(false);
 
-      // Complete onboarding
-      await completeOnboarding();
+      // Go to username step
+      setStep(4);
+      fetchUsernameSuggestions();
     } catch {
       setPhoneError("Failed to save. Check your connection.");
       setSavingPhone(false);
+    }
+  }
+
+  // ─── Step 4: Username ─────────────────────────────────────────────────
+
+  async function fetchUsernameSuggestions() {
+    setLoadingSuggestions(true);
+    setUsernameError("");
+    try {
+      const res = await fetch(`/api/settings/username?q=${encodeURIComponent(userName)}`);
+      const data = await res.json();
+      if (data.suggestions) {
+        setUsernameSuggestions(data.suggestions);
+        setSelectedUsername(null);
+      }
+    } catch {
+      setUsernameError("Could not load suggestions");
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  }
+
+  async function claimUsername() {
+    if (!selectedUsername) return;
+    setClaimingUsername(true);
+    setUsernameError("");
+
+    try {
+      const res = await fetch("/api/settings/username", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: selectedUsername }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setUsernameError(data.error || "Could not claim username");
+        setClaimingUsername(false);
+        return;
+      }
+
+      setClaimingUsername(false);
+      await completeOnboarding();
+    } catch {
+      setUsernameError("Something went wrong. Try again.");
+      setClaimingUsername(false);
     }
   }
 
@@ -335,7 +397,7 @@ export default function OnboardingWizard({
         console.error("Onboarding complete error:", data.error);
       }
 
-      setStep(4);
+      setStep(5);
 
       // Redirect to dashboard after a short celebration
       setTimeout(() => {
@@ -343,8 +405,8 @@ export default function OnboardingWizard({
       }, 3000);
     } catch (err) {
       console.error("Failed to complete onboarding:", err);
-      // Still go to step 4 and redirect
-      setStep(4);
+      // Still go to step 5 and redirect
+      setStep(5);
       setTimeout(() => {
         router.push("/dashboard");
       }, 3000);
@@ -355,7 +417,7 @@ export default function OnboardingWizard({
 
   // ─── Progress bar ─────────────────────────────────────────────────────
 
-  const totalSteps = 3;
+  const totalSteps = 4;
   const currentProgress = Math.min(step, totalSteps);
 
   return (
@@ -365,7 +427,7 @@ export default function OnboardingWizard({
         <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
           <span className="text-white font-black text-sm">U</span>
         </div>
-        {step < 4 && (
+        {step < 5 && (
           <>
             <h1 className="text-2xl font-extrabold text-white mb-1">
               Set up your profile
@@ -378,10 +440,10 @@ export default function OnboardingWizard({
       </div>
 
       {/* Progress bar */}
-      {step < 4 && (
+      {step < 5 && (
         <div className="mb-10">
           <div className="flex items-center justify-between mb-2">
-            {[1, 2, 3].map((s) => (
+            {[1, 2, 3, 4].map((s) => (
               <div
                 key={s}
                 className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all ${
@@ -606,20 +668,88 @@ export default function OnboardingWizard({
 
           <button
             onClick={savePhone}
-            disabled={savingPhone || completing || phone.length < 10}
+            disabled={savingPhone || phone.length < 10}
             className="w-full py-3 rounded-xl font-bold text-sm bg-amber-400 hover:bg-amber-300 text-black transition-all disabled:opacity-50"
           >
-            {completing
-              ? "Setting up your profile..."
-              : savingPhone
+            {savingPhone
               ? "Saving..."
-              : "Finish Setup"}
+              : "Save & Continue"}
           </button>
         </div>
       )}
 
-      {/* ─── STEP 4: Celebration ─────────────────────────────────────── */}
-      {step === 4 && <CelebrationScreen userName={userName} />}
+      {/* ─── STEP 4: Pick Username ──────────────────────────────────── */}
+      {step === 4 && (
+        <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-8">
+          <h2 className="text-xl font-bold text-white mb-1">
+            Pick your username
+          </h2>
+          <p className="text-white/40 text-sm mb-6">
+            Choose from suggestions — no custom typing allowed
+          </p>
+
+          {/* Suggestions */}
+          {loadingSuggestions ? (
+            <div className="flex justify-center py-8">
+              <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3 mb-6">
+              {usernameSuggestions.map((u) => (
+                <button
+                  key={u}
+                  onClick={() => { setSelectedUsername(u); setUsernameError(""); }}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    selectedUsername === u
+                      ? "bg-amber-400 text-black"
+                      : "bg-white/5 text-white/60 hover:bg-white/10 border border-white/10"
+                  }`}
+                >
+                  @{u}
+                  {selectedUsername === u && (
+                    <svg className="w-4 h-4 inline-block ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {usernameError && (
+            <p className="text-red-400 text-sm mb-4">{usernameError}</p>
+          )}
+
+          <div className="space-y-3">
+            <button
+              onClick={claimUsername}
+              disabled={!selectedUsername || claimingUsername}
+              className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
+                selectedUsername
+                  ? "bg-amber-400 hover:bg-amber-300 text-black"
+                  : "bg-white/5 text-white/30 cursor-not-allowed"
+              } disabled:opacity-50`}
+            >
+              {claimingUsername
+                ? "Claiming..."
+                : selectedUsername
+                ? `Claim @${selectedUsername}`
+                : "Select a username above"}
+            </button>
+
+            <button
+              onClick={fetchUsernameSuggestions}
+              disabled={loadingSuggestions}
+              className="w-full py-3 rounded-xl font-bold text-sm bg-white/5 hover:bg-white/10 text-white/40 transition-all disabled:opacity-50"
+            >
+              {loadingSuggestions ? "Loading..." : "Refresh suggestions"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── STEP 5: Celebration ─────────────────────────────────────── */}
+      {step === 5 && <CelebrationScreen userName={userName} />}
     </div>
   );
 }

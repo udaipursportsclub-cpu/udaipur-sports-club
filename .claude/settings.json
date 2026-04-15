@@ -9,7 +9,8 @@
       "Bash(find src:*)",
       "Bash(xargs sed:*)",
       "Bash(node /Users/charul/Documents/usc-platform/setup-privacy.js)",
-      "Bash(node /Users/charul/Documents/usc-platform/setup-face.js)"
+      "Bash(node /Users/charul/Documents/usc-platform/setup-face.js)",
+      "Bash(node db-setup-temp.mjs)"
     ],
     "additionalDirectories": [
       "/Users/charul/Documents/metro-erp-app",

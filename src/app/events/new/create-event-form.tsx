@@ -33,8 +33,9 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
     time: "",
     location: "",
     capacity: 20,
-    total_cost: 0,   // 0 means free event
-    upi_id: "",      // host's UPI ID — only needed if cost > 0
+    reserved_slots: 0,  // host can reserve spots for themselves/friends
+    total_cost: 0,      // 0 means free event
+    upi_id: "",         // host's UPI ID — only needed if cost > 0
   });
 
   // Update a single field in the form when the user types
@@ -69,8 +70,9 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
         date:        form.date,
         time:        form.time,
         location:    form.location.trim(),
-        capacity:    Number(form.capacity),
-        total_cost:  Number(form.total_cost),
+        capacity:       Number(form.capacity),
+        reserved_slots: Number(form.reserved_slots),
+        total_cost:     Number(form.total_cost),
         upi_id:      Number(form.total_cost) > 0 ? form.upi_id.trim() : null,
       }),
     });
@@ -198,6 +200,26 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
         />
         <p className="text-xs text-white/40 mt-1">
           Maximum number of players allowed to join
+        </p>
+      </div>
+
+      {/* ── RESERVED SLOTS ──────────────────────────────────────── */}
+      <div>
+        <label className="block text-xs font-bold tracking-widest uppercase text-white/40 mb-2">
+          Reserved Slots{" "}
+          <span className="normal-case text-white/30">(for you + friends)</span>
+        </label>
+        <input
+          type="number"
+          name="reserved_slots"
+          value={form.reserved_slots}
+          onChange={handleChange}
+          min={0}
+          max={Math.max(0, Number(form.capacity) - 1)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-400/50 focus:outline-none transition"
+        />
+        <p className="text-xs text-white/40 mt-1">
+          These spots are blocked for people you invite. Others can only book the remaining {Math.max(0, Number(form.capacity) - Number(form.reserved_slots))} spots.
         </p>
       </div>
 

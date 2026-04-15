@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect }     from "next/navigation";
 import Link from "next/link";
 import SettingsForm     from "./settings-form";
+import SignOutButton    from "@/app/dashboard/sign-out-button";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -47,6 +48,17 @@ export default async function SettingsPage() {
           currentShowOnLeaderboard={profile?.show_on_leaderboard ?? false}
           isEmailProvider={isEmailProvider}
         />
+
+        {/* Sign out */}
+        <div className="mt-10 pt-8 border-t border-white/5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-bold text-white">Sign Out</p>
+              <p className="text-xs text-white/40 mt-0.5">End your session on this device</p>
+            </div>
+            <SignOutButton />
+          </div>
+        </div>
       </div>
     </main>
   );
