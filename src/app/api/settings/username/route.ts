@@ -34,6 +34,13 @@ export async function POST(request: Request) {
     );
   }
 
+  // Username must contain the user's first name
+  const fullName = user.user_metadata?.full_name ?? "";
+  const firstName = fullName.toLowerCase().replace(/[^a-z]/g, "").trim();
+  if (firstName && !username.includes(firstName)) {
+    return NextResponse.json({ error: "Username must contain your first name" }, { status: 400 });
+  }
+
   const admin = createAdminClient();
 
   // Check reserved

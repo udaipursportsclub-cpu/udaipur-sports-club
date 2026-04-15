@@ -105,31 +105,45 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fallback 1: Send via email if user has an email on file
+    // Fallback 1: Send via Fast2SMS (free SMS OTP for India)
+    const fast2smsKey = process.env.FAST2SMS_API_KEY;
+    if (fast2smsKey) {
+      try {
+        const smsRes = await fetch("https://www.fast2sms.com/dev/bulkV2", {
+          method: "POST",
+          headers: {
+            "authorization": fast2smsKey,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            route: "otp",
+            variables_values: code,
+            numbers: cleaned,
+          }),
+        });
+
+        const smsData = await smsRes.json();
+        if (smsData.return === true) {
+          return NextResponse.json({ success: true, method: "sms" });
+        }
+      } catch (smsErr) {
+        console.error("Fast2SMS error:", smsErr);
+        // Fall through to next fallback
+      }
+    }
+
+    // Fallback 2: Send via email using Resend
     const resendKey = process.env.RESEND_API_KEY;
     if (resendKey) {
-      // Look up user's email by phone
-      const { data: profileWithEmail } = await supabase
-        .from("profiles")
-        .select("notify_email")
-        .eq("phone", cleaned)
-        .single();
-
-      // Also check auth.users for email
-      const { data: users } = await supabase.rpc("get_user_email_by_phone", { phone_number: cleaned }).maybeSingle();
-      void users;
-
-      // Try to find email from profiles table joined with auth
       const { data: profileMatch } = await supabase
         .from("profiles")
-        .select("id")
+        .select("id, notify_email")
         .eq("phone", cleaned)
         .single();
 
       if (profileMatch) {
-        // Get email from auth.users
         const { data: authUser } = await supabase.auth.admin.getUserById(profileMatch.id);
-        const email = profileWithEmail?.notify_email || authUser?.user?.email;
+        const email = profileMatch.notify_email || authUser?.user?.email;
 
         if (email) {
           try {
@@ -154,13 +168,10 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fallback 2: return code directly (for testing/development)
+    // Fallback 3: Phone not registered yet — tell user to sign up first
     return NextResponse.json({
-      success: true,
-      method: "display",
-      devCode: code,
-      message: "WhatsApp not configured. Code shown for testing.",
-    });
+      error: "This phone number is not registered. Sign up with Google first, then add your phone in Settings.",
+    }, { status: 404 });
   } catch (err) {
     console.error("OTP send error:", err);
     return NextResponse.json(
