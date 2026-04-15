@@ -15,6 +15,8 @@ import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Link from "next/link";
 
+export const revalidate = 10;
+
 import RSVPButton           from "./rsvp-button";
 import BookingModal         from "./booking-modal";
 import WaitlistButton       from "./waitlist-button";
@@ -77,31 +79,25 @@ export default async function EventPage({
   // Check who's logged in
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Fetch user's profile (for phone number + role)
-  let userPhone = "";
-  let isAdmin = false;
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles").select("phone, role").eq("id", user.id).single();
-    userPhone = profile?.phone ?? "";
-    isAdmin = profile?.role === "admin";
-  }
-
-  // Fetch the event
-  const { data: event } = await supabase
-    .from("events")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+  // Fire event, rsvps, waitlist, and profile queries in parallel
+  const [
+    { data: event },
+    { data: rsvps },
+    { data: waitlist },
+    profileResult,
+  ] = await Promise.all([
+    supabase.from("events").select("*").eq("id", params.id).single(),
+    supabase.from("rsvps").select("*").eq("event_id", params.id).order("created_at", { ascending: true }),
+    supabase.from("waitlist").select("*").eq("event_id", params.id).order("position", { ascending: true }),
+    user
+      ? supabase.from("profiles").select("phone, role").eq("id", user.id).single()
+      : Promise.resolve({ data: null }),
+  ]);
 
   if (!event) notFound();
 
-  // Fetch all RSVPs for this event
-  const { data: rsvps } = await supabase
-    .from("rsvps")
-    .select("*")
-    .eq("event_id", params.id)
-    .order("created_at", { ascending: true });
+  const userPhone = profileResult.data?.phone ?? "";
+  const isAdmin = profileResult.data?.role === "admin";
 
   const rsvpList = rsvps ?? [];
   const rsvpCount = rsvpList.length;
@@ -119,13 +115,6 @@ export default async function EventPage({
 
   // Is the logged-in user the host?
   const isHost = user?.id === event.host_id;
-
-  // Fetch waitlist for this event
-  const { data: waitlist } = await supabase
-    .from("waitlist")
-    .select("*")
-    .eq("event_id", params.id)
-    .order("position", { ascending: true });
 
   const waitlistList = waitlist ?? [];
 

@@ -19,11 +19,21 @@ export default async function LeaderboardPage() {
   const admin    = createAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: rsvpRaw } = await admin.from("rsvps").select("user_id, user_name, events(sport)");
-  const { data: hostRaw } = await admin.from("events").select("host_id, host_name, sport");
+  // Fire all independent queries in parallel
+  const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
 
-  // Fetch profiles that opted in to the leaderboard
-  const { data: optedInProfiles } = await admin.from("profiles").select("id").eq("show_on_leaderboard", true);
+  const [
+    { data: rsvpRaw },
+    { data: hostRaw },
+    { data: optedInProfiles },
+    { data: weekRsvps },
+  ] = await Promise.all([
+    admin.from("rsvps").select("user_id, user_name, events(sport)"),
+    admin.from("events").select("host_id, host_name, sport"),
+    admin.from("profiles").select("id").eq("show_on_leaderboard", true),
+    admin.from("rsvps").select("user_id, user_name").gte("created_at", lastWeek),
+  ]);
+
   const optedInIds = new Set((optedInProfiles ?? []).map(p => p.id));
 
   // Build player stats
@@ -47,8 +57,6 @@ export default async function LeaderboardPage() {
   const players = allPlayers.filter(p => optedInIds.has(p.id) || (user && p.id === user.id));
 
   // This week's hot players
-  const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
-  const { data: weekRsvps } = await admin.from("rsvps").select("user_id, user_name").gte("created_at", lastWeek);
   const weekMap: Record<string, { id: string; name: string; count: number }> = {};
   for (const r of weekRsvps ?? []) {
     if (!weekMap[r.user_id]) weekMap[r.user_id] = { id: r.user_id, name: r.user_name, count: 0 };

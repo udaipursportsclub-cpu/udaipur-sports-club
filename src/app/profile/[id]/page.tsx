@@ -17,6 +17,8 @@ import { notFound }                                 from "next/navigation";
 import Link from "next/link";
 
 
+export const revalidate = 30;
+
 export default async function ProfilePage({
   params,
 }: {
@@ -27,28 +29,18 @@ export default async function ProfilePage({
   // Who's viewing
   const { data: { user: viewer } } = await supabase.auth.getUser();
 
-  // Fetch the profile being viewed
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+  // Fire profile, rsvps, and hosted events queries in parallel
+  const [
+    { data: profile },
+    { data: rsvps },
+    { data: hostedEvents },
+  ] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", params.id).single(),
+    supabase.from("rsvps").select("event_id, created_at, events(id, title, sport, date, status)").eq("user_id", params.id).order("created_at", { ascending: false }),
+    supabase.from("events").select("id, title, sport, date, status, capacity").eq("host_id", params.id).order("date", { ascending: false }),
+  ]);
 
   if (!profile) notFound();
-
-  // Fetch events they've RSVPed to (joined)
-  const { data: rsvps } = await supabase
-    .from("rsvps")
-    .select("event_id, created_at, events(id, title, sport, date, status)")
-    .eq("user_id", params.id)
-    .order("created_at", { ascending: false });
-
-  // Fetch events they've hosted
-  const { data: hostedEvents } = await supabase
-    .from("events")
-    .select("id, title, sport, date, status, capacity")
-    .eq("host_id", params.id)
-    .order("date", { ascending: false });
 
   const joined  = rsvps ?? [];
   const hosted  = hostedEvents ?? [];

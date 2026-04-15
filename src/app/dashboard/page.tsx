@@ -14,6 +14,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 // SignOutButton moved to Settings page
 
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   const supabase = await createClient();
 
@@ -42,17 +44,20 @@ export default async function DashboardPage() {
   const role   = profile?.role ?? "member";
   const isHost = role === "host" || role === "admin";
 
-  // Count how many events this user has created
-  const { count: eventsCreated } = await supabase
-    .from("events")
-    .select("*", { count: "exact", head: true })
-    .eq("host_id", user.id);
-
-  // Count how many events this user has RSVPed to
-  const { count: eventsJoined } = await supabase
-    .from("rsvps")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id);
+  // Fire independent queries in parallel
+  const [
+    { count: eventsCreated },
+    { count: eventsJoined },
+    { data: myUpcomingRsvps },
+    hostEventsResult,
+  ] = await Promise.all([
+    supabase.from("events").select("*", { count: "exact", head: true }).eq("host_id", user.id),
+    supabase.from("rsvps").select("*", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("rsvps").select("event_id, events(id, title, sport, date, time, location, status)").eq("user_id", user.id).order("created_at", { ascending: false }),
+    isHost
+      ? supabase.from("events").select("id, title, total_cost, capacity").eq("host_id", user.id).gt("total_cost", 0)
+      : Promise.resolve({ data: null }),
+  ]);
 
   // Host finance data
   let hostEarned = 0;
@@ -61,11 +66,7 @@ export default async function DashboardPage() {
   let hostEventFinance: HostEventFinance[] = [];
 
   if (isHost) {
-    const { data: myHostedEvents } = await supabase
-      .from("events")
-      .select("id, title, total_cost, capacity")
-      .eq("host_id", user.id)
-      .gt("total_cost", 0);
+    const myHostedEvents = hostEventsResult.data;
 
     if (myHostedEvents && myHostedEvents.length > 0) {
       const myEventIds = myHostedEvents.map((e) => e.id);
@@ -94,13 +95,6 @@ export default async function DashboardPage() {
       hostPending = hostEventFinance.reduce((s, e) => s + e.pending, 0);
     }
   }
-
-  // Upcoming events the user has joined
-  const { data: myUpcomingRsvps } = await supabase
-    .from("rsvps")
-    .select("event_id, events(id, title, sport, date, time, location, status)")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
 
   type JoinedEvent = { id: string; title: string; sport: string; date: string; time: string; location: string; status: string };
   const upcomingJoined = (myUpcomingRsvps ?? [])

@@ -30,29 +30,33 @@ export default async function Home() {
     admin.from("rsvps").select("*", { count: "exact", head: true }),
   ]);
 
-  // Recent activity
-  const { data: recentActivity } = await admin
-    .from("rsvps")
-    .select("user_name, created_at, events(title, sport)")
-    .order("created_at", { ascending: false })
-    .limit(8);
+  // Fire all independent queries in parallel
+  const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
+  const yesterday = new Date(Date.now() - 86400000).toISOString();
+
+  const [
+    { data: recentActivity },
+    { data: allRsvps },
+    { data: upcomingEvents },
+    { data: sportData },
+    { data: weekRsvps },
+    { data: todayRsvps },
+  ] = await Promise.all([
+    admin.from("rsvps").select("user_name, created_at, events(title, sport)").order("created_at", { ascending: false }).limit(8),
+    admin.from("rsvps").select("user_id, user_name"),
+    admin.from("events").select("id, title, sport, date, time, location, capacity, host_name, total_cost").eq("status", "upcoming").order("date", { ascending: true }).limit(4),
+    admin.from("events").select("sport"),
+    admin.from("rsvps").select("user_id, user_name").gte("created_at", lastWeek),
+    admin.from("rsvps").select("user_id").gte("created_at", yesterday),
+  ]);
 
   // Top 5 players
-  const { data: allRsvps } = await admin.from("rsvps").select("user_id, user_name");
   const playerCounts: Record<string, { name: string; count: number; id: string }> = {};
   for (const r of allRsvps ?? []) {
     if (!playerCounts[r.user_id]) playerCounts[r.user_id] = { name: r.user_name, count: 0, id: r.user_id };
     playerCounts[r.user_id].count++;
   }
   const top5 = Object.values(playerCounts).sort((a, b) => b.count - a.count).slice(0, 5);
-
-  // Upcoming events
-  const { data: upcomingEvents } = await admin
-    .from("events")
-    .select("id, title, sport, date, time, location, capacity, host_name, total_cost")
-    .eq("status", "upcoming")
-    .order("date", { ascending: true })
-    .limit(4);
 
   // Upcoming RSVPs for spot counts
   const eventIds = (upcomingEvents ?? []).map(e => e.id);
@@ -65,13 +69,10 @@ export default async function Home() {
   }
 
   // Sports played
-  const { data: sportData } = await admin.from("events").select("sport");
   const sportSet = new Set((sportData ?? []).map(e => e.sport));
   const sports = Array.from(sportSet).slice(0, 10);
 
   // Week champion
-  const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
-  const { data: weekRsvps } = await admin.from("rsvps").select("user_id, user_name").gte("created_at", lastWeek);
   const weekCounts: Record<string, { name: string; count: number; id: string }> = {};
   for (const r of weekRsvps ?? []) {
     if (!weekCounts[r.user_id]) weekCounts[r.user_id] = { name: r.user_name, count: 0, id: r.user_id };
@@ -80,8 +81,6 @@ export default async function Home() {
   const weekChampion = Object.values(weekCounts).sort((a, b) => b.count - a.count)[0] ?? null;
 
   // Active today
-  const yesterday = new Date(Date.now() - 86400000).toISOString();
-  const { data: todayRsvps } = await admin.from("rsvps").select("user_id").gte("created_at", yesterday);
   const activeToday = new Set((todayRsvps ?? []).map(r => r.user_id)).size;
 
   function timeAgo(ts: string): string {

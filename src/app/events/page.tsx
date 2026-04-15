@@ -12,6 +12,8 @@ import Link       from "next/link";
 import { Suspense } from "react";
 import SportFilter  from "./sport-filter";
 
+export const revalidate = 30;
+
 export default async function EventsPage({
   searchParams,
 }: {
@@ -33,7 +35,13 @@ export default async function EventsPage({
   if (activeSport !== "All") query = query.eq("sport", activeSport);
   if (searchQuery.trim())    query = query.ilike("title", `%${searchQuery.trim()}%`);
 
-  const { data: events, error } = await query;
+  // Fire both queries in parallel
+  const [{ data: events, error }, { data: activeSports }] = await Promise.all([
+    query,
+    supabase.from("events").select("sport").eq("status", activeTab === "past" ? "completed" : "upcoming"),
+  ]);
+
+  const sportsWithEvents = Array.from(new Set((activeSports ?? []).map(e => e.sport)));
 
   function formatDate(dateStr: string) {
     return new Date(dateStr).toLocaleDateString("en-IN", {
@@ -115,7 +123,7 @@ export default async function EventsPage({
         </div>
 
         <Suspense>
-          <SportFilter activeSport={activeSport} />
+          <SportFilter activeSport={activeSport} availableSports={sportsWithEvents} />
         </Suspense>
       </div>
 
