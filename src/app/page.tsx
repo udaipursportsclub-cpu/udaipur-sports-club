@@ -12,6 +12,7 @@ import { createClient }      from "@/lib/supabase/server";
 import { getSportEmoji }     from "@/lib/types";
 import { maskName }          from "@/lib/privacy";
 import Link                  from "next/link";
+import AppSwitcher           from "@/components/AppSwitcher";
 
 export const revalidate = 30;
 
@@ -125,6 +126,7 @@ export default async function Home() {
         </div>
 
         <div className="flex items-center gap-3">
+          {user && <AppSwitcher />}
           {user ? (
             <Link href="/dashboard" className="text-xs font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-amber-400 hover:text-black transition-colors">
               Dashboard

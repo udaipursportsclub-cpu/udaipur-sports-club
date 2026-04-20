@@ -12,6 +12,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import AppSwitcher from "@/components/AppSwitcher";
 // SignOutButton moved to Settings page
 
 export const revalidate = 0;
@@ -118,8 +119,9 @@ export default async function DashboardPage() {
           <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
         </Link>
 
-        {/* Right side: admin + settings + avatar */}
+        {/* Right side: app switcher + admin + settings + avatar */}
         <div className="flex items-center gap-3">
+          <AppSwitcher />
           {role === "admin" && (
             <Link href="/admin" className="text-xs font-bold text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-1.5 rounded-full hover:bg-red-400/20 transition-colors">
               Admin

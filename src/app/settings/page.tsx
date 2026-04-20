@@ -8,6 +8,7 @@ import { redirect }     from "next/navigation";
 import Link from "next/link";
 import SettingsForm     from "./settings-form";
 import SignOutButton    from "@/app/dashboard/sign-out-button";
+import AppSwitcher      from "@/components/AppSwitcher";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -28,7 +29,10 @@ export default async function SettingsPage() {
           </div>
           <span className="text-sm font-black tracking-[0.2em] uppercase text-white hidden sm:block">USC</span>
         </Link>
-        <Link href="/dashboard" className="text-sm text-white/40 hover:text-white transition-colors">← Dashboard</Link>
+        <div className="flex items-center gap-3">
+          <AppSwitcher />
+          <Link href="/dashboard" className="text-sm text-white/40 hover:text-white transition-colors">← Dashboard</Link>
+        </div>
       </nav>
 
       <div className="max-w-lg mx-auto px-6 py-12">
