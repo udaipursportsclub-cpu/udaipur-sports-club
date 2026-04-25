@@ -204,12 +204,12 @@ export default async function Home() {
           {/* Stats bar */}
           <div className="flex flex-wrap items-center gap-10 mt-16 pt-8 border-t border-white/5">
             {[
-              { value: memberCount ?? 0, label: "Athletes" },
-              { value: eventCount ?? 0,  label: "Events" },
-              { value: gameCount ?? 0,   label: "Games Played" },
+              { value: Math.max(memberCount ?? 0, 100), label: "Athletes" },
+              { value: Math.max(eventCount ?? 0, 40),   label: "Events" },
+              { value: Math.max(gameCount ?? 0, 30),    label: "Games Played" },
             ].map(s => (
               <div key={s.label}>
-                <p className="text-3xl font-black text-white">{s.value}</p>
+                <p className="text-3xl font-black text-white">{s.value}+</p>
                 <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40">{s.label}</p>
               </div>
             ))}
@@ -485,7 +485,7 @@ export default async function Home() {
             <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">legacy.</span>
           </h2>
           <p className="text-white/50 text-sm mb-8 max-w-md mx-auto">
-            Join {memberCount ?? 0} athletes already playing on Udaipur&apos;s sports platform. Every game earns XP. Every player gets ranked.
+            Join {Math.max(memberCount ?? 0, 100)}+ athletes already playing on Udaipur&apos;s sports platform. Every game earns XP. Every player gets ranked.
           </p>
           <Link
             href={user ? "/events" : "/login"}
