@@ -182,7 +182,7 @@ export async function GET(
           position:"absolute", bottom:"24px", left:"56px",
           color:"rgba(255,255,255,0.2)", fontSize:"11px",
           display:"flex",
-        }}>usc-platform-beta.vercel.app</div>
+        }}>udaipursportsclub.vercel.app</div>
       </div>
     ),
     { width:1200, height:630 }

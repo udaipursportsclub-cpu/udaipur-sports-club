@@ -127,7 +127,7 @@ export default async function EventPage({
   const onWaitlist    = !!myWaitlist;
   const waitlistPos   = myWaitlist?.position ?? null;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
   const isCompleted = event.status === "completed";
 
   // Format date

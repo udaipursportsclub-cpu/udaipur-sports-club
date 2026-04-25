@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   const eventId   = formData.get("eventId") as string | null;
   const mediaType = (formData.get("mediaType") as string) ?? "image";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
 
   // ── Upload file to Supabase Storage ─────────────────────────────────
   let mediaUrl = "";

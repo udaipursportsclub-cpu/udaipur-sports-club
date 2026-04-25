@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     const cleaned = email.toLowerCase().trim();
     const admin = createAdminClient();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://usc-platform-beta.vercel.app";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://udaipursportsclub.vercel.app";
 
     // Generate a magic link for this email
     const { data, error } = await admin.auth.admin.generateLink({

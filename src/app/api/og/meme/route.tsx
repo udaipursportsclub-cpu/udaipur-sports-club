@@ -102,7 +102,7 @@ export async function GET(request: Request) {
           display: "flex", alignItems: "center", gap: "6px",
         }}>
           <span>🏅</span>
-          <span>usc-platform-beta.vercel.app</span>
+          <span>udaipursportsclub.vercel.app</span>
         </div>
       </div>
     ),

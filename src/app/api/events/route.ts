@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   // ── Post to social media + send emails in the background ────────────
   // We don't await this — the event is created, we return immediately.
   // Emails go out async so the host isn't waiting.
-  const eventUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app"}/events/${event.id}`;
+  const eventUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app"}/events/${event.id}`;
   const perPerson = Number(total_cost) > 0 ? Math.ceil(Number(total_cost) / Number(capacity)) : 0;
 
   const formattedDate = new Date(date).toLocaleDateString("en-IN", {
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     rsvpCount: 0,
     isFree:    Number(total_cost) === 0,
     perPerson,
-    siteUrl:   process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app",
+    siteUrl:   process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app",
   }).catch(() => {});
 
   // Fetch all member emails (non-host members who want event alerts)

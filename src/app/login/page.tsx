@@ -102,25 +102,16 @@ export default function LoginPage() {
 
       setOtpSuccess(true);
 
-      // Use Supabase magic link to create session
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithOtp({
-        email: email.trim().toLowerCase(),
-        options: { shouldCreateUser: true },
+      // Create Supabase session via admin magic link
+      const sessionRes = await fetch("/api/auth/email-otp/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
-
-      if (signInError) {
-        // Fallback: redirect to session endpoint
-        const sessionRes = await fetch("/api/auth/email-otp/session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email.trim().toLowerCase() }),
-        });
-        const sessionData = await sessionRes.json();
-        if (sessionData.redirectUrl) {
-          window.location.href = sessionData.redirectUrl;
-          return;
-        }
+      const sessionData = await sessionRes.json();
+      if (sessionData.redirectUrl) {
+        window.location.href = sessionData.redirectUrl;
+        return;
       }
 
       router.push("/dashboard");

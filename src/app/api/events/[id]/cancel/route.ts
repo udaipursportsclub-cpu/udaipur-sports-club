@@ -50,7 +50,7 @@ export async function DELETE(
       .single();
 
     if (next?.user_email) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
       sendSpotOpenedEmail({
         to:         next.user_email,
         userName:   next.user_name,

@@ -236,7 +236,7 @@ export async function GET(
 
           {/* Website */}
           <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "16px" }}>
-            usc-platform-beta.vercel.app
+            udaipursportsclub.vercel.app
           </span>
         </div>
       </div>

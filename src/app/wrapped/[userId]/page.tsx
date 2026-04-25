@@ -57,7 +57,7 @@ export default async function WrappedPage({
   const firstName  = (profile.full_name ?? "Your").split(" ")[0];
   const isOwn      = user?.id === params.userId;
 
-  const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
   const cardUrl  = `/api/og/wrapped/${params.userId}?period=${period}`;
   const shareUrl = `${siteUrl}/wrapped/${params.userId}?period=${period}`;
 

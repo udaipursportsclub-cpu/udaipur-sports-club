@@ -9,7 +9,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { MetadataRoute }     from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
   const admin   = createAdminClient();
 
   // Static pages

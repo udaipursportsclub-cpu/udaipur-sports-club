@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   }
 
   const admin   = createAdminClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
 
   // Check for events today or in next 3 days
   const today = new Date().toISOString().split("T")[0];

@@ -11,12 +11,17 @@
       "Bash(node /Users/charul/Documents/usc-platform/setup-privacy.js)",
       "Bash(node /Users/charul/Documents/usc-platform/setup-face.js)",
       "Bash(node db-setup-temp.mjs)",
-      "Bash(pkill -f \"node -e\")"
+      "Bash(git credential-osxkeychain:*)",
+      "Bash(curl -s 'https://iukpuouiutxoworbdfuo.supabase.co/rest/v1/advocates?select=id,full_name,email,user_id' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1a3B1b3VpdXR4b3dvcmJkZnVvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjU5Nzc5OCwiZXhwIjoyMDkyMTczNzk4fQ.ZEAHB95bgl8iIeAE6RFqwkup_sE86w8pf6iCLeurocg' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1a3B1b3VpdXR4b3dvcmJkZnVvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjU5Nzc5OCwiZXhwIjoyMDkyMTczNzk4fQ.ZEAHB95bgl8iIeAE6RFqwkup_sE86w8pf6iCLeurocg')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" \"https://advocate-diary-hub.vercel.app/diary/cases/new\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" \"https://advocate-diary-hub.vercel.app/diary/search\")",
+      "Bash(xargs cat *)",
+      "WebSearch"
     ],
     "additionalDirectories": [
       "/Users/charul/Documents/metro-erp-app",
       "/Users/charul/Documents/usc-platform/src/app/api/events/[id]",
-      "/Users/charul/Documents/Advocate_app/app/diary/empanelment/draft"
+      "/Users/charul/Documents/Advocate_app/app/diary/components"
     ]
   }
 }

@@ -235,7 +235,7 @@ export async function GET(
             display: "flex",
           }}
         >
-          usc-platform-beta.vercel.app
+          udaipursportsclub.vercel.app
         </div>
       </div>
     ),

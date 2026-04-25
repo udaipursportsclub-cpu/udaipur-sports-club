@@ -86,7 +86,7 @@ export async function GET() {
           color: "rgba(255,255,255,0.2)", fontSize: "12px",
           display: "flex",
         }}>
-          usc-platform-beta.vercel.app
+          udaipursportsclub.vercel.app
         </div>
       </div>
     ),

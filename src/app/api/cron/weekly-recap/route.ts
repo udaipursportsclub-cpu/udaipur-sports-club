@@ -37,7 +37,7 @@ export async function GET(request: Request) {
   }
 
   const admin   = createAdminClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
 
   // ── This week's stats ─────────────────────────────────────────────────
   const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();

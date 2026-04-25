@@ -67,7 +67,7 @@ export async function POST(
   });
 
   // Send waitlist confirmation email (if they have an email)
-  const eventUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app"}/events/${eventId}`;
+  const eventUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app"}/events/${eventId}`;
   if (user.email) {
     sendWaitlistEmail({
       to:         user.email,

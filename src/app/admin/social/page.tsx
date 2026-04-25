@@ -200,7 +200,7 @@ export default async function SocialAdminPage() {
                   <div>
                     <p>Add <strong>Weekly Recap</strong> — posts every Sunday 8am IST:</p>
                     <code className="block mt-1.5 text-xs bg-white/5 border border-white/5 rounded-lg px-3 py-2 break-all text-amber-400">
-                      https://usc-platform-beta.vercel.app/api/cron/weekly-recap?secret=YOUR_CRON_SECRET
+                      https://udaipursportsclub.vercel.app/api/cron/weekly-recap?secret=YOUR_CRON_SECRET
                     </code>
                     <p className="text-xs text-white/40 mt-1">Schedule: <code className="bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/60">30 2 * * 0</code> (cron expression)</p>
                   </div>
@@ -210,7 +210,7 @@ export default async function SocialAdminPage() {
                   <div>
                     <p>Add <strong>Daily Nudge</strong> — posts Mon–Fri 9am IST:</p>
                     <code className="block mt-1.5 text-xs bg-white/5 border border-white/5 rounded-lg px-3 py-2 break-all text-amber-400">
-                      https://usc-platform-beta.vercel.app/api/cron/daily-nudge?secret=YOUR_CRON_SECRET
+                      https://udaipursportsclub.vercel.app/api/cron/daily-nudge?secret=YOUR_CRON_SECRET
                     </code>
                     <p className="text-xs text-white/40 mt-1">Schedule: <code className="bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/60">30 3 * * 1-5</code></p>
                   </div>

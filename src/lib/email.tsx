@@ -19,7 +19,7 @@ function getResend() {
 }
 
 // The "from" address — update this once you have a custom domain
-const FROM = "Udaipur Sports Club <noreply@usc-platform-beta.vercel.app>";
+const FROM = "Udaipur Sports Club <noreply@udaipursportsclub.vercel.app>";
 
 // ── Email: New event created ──────────────────────────────────────────
 // Sent to all members when a host creates a new event

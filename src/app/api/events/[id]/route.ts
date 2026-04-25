@@ -67,7 +67,7 @@ export async function DELETE(
   const { data: rsvps } = await admin
     .from("rsvps").select("user_email, user_name").eq("event_id", eventId);
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://usc-platform-beta.vercel.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://udaipursportsclub.vercel.app";
 
   if (rsvps && process.env.RESEND_API_KEY) {
     const { Resend } = await import("resend");
@@ -76,7 +76,7 @@ export async function DELETE(
     for (const r of rsvps) {
       if (!r.user_email) continue;
       resend.emails.send({
-        from:    "Udaipur Sports Club <noreply@usc-platform-beta.vercel.app>",
+        from:    "Udaipur Sports Club <noreply@udaipursportsclub.vercel.app>",
         to:      [r.user_email],
         subject: `Event cancelled: ${event.title}`,
         html: `
