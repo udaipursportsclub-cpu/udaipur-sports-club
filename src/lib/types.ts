@@ -52,6 +52,7 @@ export const SPORT_OPTIONS = [
   { label: "Kabaddi",         emoji: "🤼" },
   { label: "Chess",           emoji: "♟️" },
   { label: "Hockey",          emoji: "🏑" },
+  { label: "Pickleball",      emoji: "🏓" },
   { label: "Squash",          emoji: "🎱" },
   { label: "Other",           emoji: "🏅" },
 ] as const;
