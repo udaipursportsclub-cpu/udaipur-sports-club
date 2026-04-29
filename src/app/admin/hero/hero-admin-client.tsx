@@ -24,9 +24,14 @@ export default function HeroAdminClient({
     if (!file) return;
     setUploading(true);
     try {
-      const form = new FormData();
-      form.append("image", file);
-      const res  = await fetch("https://freeimage.host/api/1/upload?key=6d207e02198a847aa98d0a2a901485a5", { method: "POST", body: form });
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve((reader.result as string).split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const body = new URLSearchParams({ key: "6d207e02198a847aa98d0a2a901485a5", source: base64, format: "json" });
+      const res  = await fetch("https://freeimage.host/api/1/upload", { method: "POST", body });
       const json = await res.json();
       const url  = json?.image?.url;
       if (!url) { alert("Upload failed. Try again."); return; }
