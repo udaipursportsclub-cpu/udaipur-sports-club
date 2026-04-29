@@ -296,6 +296,7 @@ export default async function EventPage({
                   isFree={isFree}
                   perPerson={perPerson}
                   upiId={event.upi_id ?? null}
+                  upiQrUrl={event.upi_qr_url ?? null}
                   userId={user?.id ?? null}
                   userName={user?.user_metadata?.full_name ?? ""}
                   userEmail={user?.email ?? ""}

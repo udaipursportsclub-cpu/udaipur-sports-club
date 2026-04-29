@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
   // Parse the event data
   const body = await request.json();
-  const { title, sport, description, date, time, location, capacity, total_cost, upi_id, reserved_slots } = body;
+  const { title, sport, description, date, time, location, capacity, total_cost, upi_id, upi_qr_url, reserved_slots } = body;
 
   if (!title || !sport || !date || !time || !location || !capacity) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
       reserved_slots: Number(reserved_slots ?? 0),
       total_cost:     Number(total_cost ?? 0),
       upi_id:      Number(total_cost) > 0 ? upi_id?.trim() : null,
+      upi_qr_url:  Number(total_cost) > 0 ? upi_qr_url || null : null,
       host_id:     user.id,
       host_name:   user.user_metadata?.full_name ?? "Unknown Host",
       status:      "upcoming",

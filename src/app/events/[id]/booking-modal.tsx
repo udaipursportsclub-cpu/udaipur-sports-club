@@ -21,6 +21,7 @@ type Props = {
   isFree: boolean;
   perPerson: number;
   upiId: string | null;
+  upiQrUrl: string | null;
   userId: string | null;
   userName: string;
   userEmail: string;
@@ -29,7 +30,7 @@ type Props = {
 
 export default function BookingModal({
   eventId, eventTitle, date, time, location,
-  spotsLeft, isFree, perPerson,
+  spotsLeft, isFree, perPerson, upiId, upiQrUrl,
   userId, userName, userEmail, userPhone,
 }: Props) {
   const router  = useRouter();
@@ -279,9 +280,29 @@ export default function BookingModal({
                     </div>
 
                     {paymentMethod === "razorpay" && (
-                      <div className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3 mt-2 flex items-center gap-2">
-                        <span className="text-green-400 text-sm">🔒</span>
-                        <p className="text-xs text-white/50">Secure payment via Razorpay. Card, UPI, Net Banking all accepted.</p>
+                      <div className="mt-2 space-y-2">
+                        <div className="bg-white/[0.03] border border-white/5 rounded-xl px-4 py-3 flex items-center gap-2">
+                          <span className="text-green-400 text-sm">🔒</span>
+                          <p className="text-xs text-white/50">Secure payment via Razorpay. Card, UPI, Net Banking all accepted.</p>
+                        </div>
+                        {/* UPI QR Code */}
+                        {(upiQrUrl || upiId) && (
+                          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+                            <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">Or pay directly via UPI</p>
+                            {upiQrUrl && (
+                              <div className="flex justify-center mb-3">
+                                <img src={upiQrUrl} alt="UPI QR Code" className="w-40 h-40 rounded-xl border border-white/10 object-contain bg-white p-1" />
+                              </div>
+                            )}
+                            {upiId && (
+                              <div className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2">
+                                <p className="text-sm font-mono text-white/70">{upiId}</p>
+                                <button type="button" onClick={() => navigator.clipboard.writeText(upiId)}
+                                  className="text-xs text-amber-400 hover:text-amber-300 transition-colors ml-2 flex-shrink-0">Copy</button>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     )}
                     {paymentMethod === "pay_at_spot" && (
