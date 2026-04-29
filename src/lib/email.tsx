@@ -99,6 +99,90 @@ export async function sendNewEventEmail({
   });
 }
 
+// ── Email: Booking confirmation ───────────────────────────────────────
+// Sent to the user right after they book a spot
+export async function sendBookingConfirmationEmail({
+  to,
+  userName,
+  eventTitle,
+  sport,
+  date,
+  time,
+  location,
+  spots,
+  perPerson,
+  isFree,
+  eventUrl,
+}: {
+  to:         string;
+  userName:   string;
+  eventTitle: string;
+  sport:      string;
+  date:       string;
+  time:       string;
+  location:   string;
+  spots:      number;
+  perPerson:  number;
+  isFree:     boolean;
+  eventUrl:   string;
+}) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const total = perPerson * spots;
+
+  await getResend()!.emails.send({
+    from:    FROM,
+    to:      [to],
+    subject: `You're in! ${eventTitle} ✅`,
+    html: `
+      <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: 0 auto; background: #F9F7F4; padding: 40px 20px;">
+        <div style="background: white; border-radius: 20px; padding: 40px; border: 1px solid #e7e5e4;">
+
+          <p style="color: #F59E0B; font-size: 11px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; margin: 0 0 24px;">
+            Udaipur Sports Club
+          </p>
+
+          <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin: 0 0 8px; line-height: 1.2;">
+            You're confirmed, ${userName.split(" ")[0]}! 🎉
+          </h1>
+
+          <p style="color: #64748b; font-size: 14px; margin: 0 0 32px;">
+            Your spot${spots > 1 ? `s (${spots})` : ""} ${spots > 1 ? "are" : "is"} locked in. See you there!
+          </p>
+
+          <!-- Event card -->
+          <div style="background: #050A18; border-radius: 16px; padding: 28px; margin-bottom: 28px;">
+            <p style="color: #F59E0B; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 12px;">
+              ${sport}
+            </p>
+            <h2 style="color: white; font-size: 22px; font-weight: 800; margin: 0 0 20px; line-height: 1.2;">
+              ${eventTitle}
+            </h2>
+            <p style="color: #94a3b8; font-size: 14px; margin: 0 0 8px;">📅 ${date} at ${time}</p>
+            <p style="color: #94a3b8; font-size: 14px; margin: 0 0 8px;">📍 ${location}</p>
+            <p style="color: #94a3b8; font-size: 14px; margin: 0 0 8px;">🎟️ ${spots} spot${spots > 1 ? "s" : ""} booked</p>
+            ${!isFree
+              ? `<p style="color: #F59E0B; font-size: 14px; margin: 0 0 0;">💰 ₹${total} total — pay the host on arrival</p>`
+              : `<p style="color: #4ade80; font-size: 14px; margin: 0;">✓ Free event</p>`
+            }
+          </div>
+
+          <!-- CTA -->
+          <a href="${eventUrl}"
+            style="display: block; background: #F59E0B; color: white; text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 15px; text-decoration: none; margin-bottom: 24px;">
+            View Event Details →
+          </a>
+
+          <p style="color: #cbd5e1; font-size: 12px; text-align: center; margin: 0;">
+            Udaipur Sports Club · udaipursportsclub.vercel.app
+          </p>
+
+        </div>
+      </div>
+    `,
+  });
+}
+
 // ── Email: Waitlist confirmation ──────────────────────────────────────
 // Sent when someone joins the waitlist for a full event
 export async function sendWaitlistEmail({

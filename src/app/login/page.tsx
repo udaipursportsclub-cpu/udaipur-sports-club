@@ -33,15 +33,14 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/email-otp/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      const supabase = createClient();
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: { shouldCreateUser: true },
       });
-      const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error || "Could not send code.");
+      if (otpError) {
+        setError(otpError.message || "Could not send code. Try again.");
         setLoading(false);
         return;
       }
@@ -50,7 +49,7 @@ export default function LoginPage() {
       setLoading(false);
       setTimeout(() => otpRefs.current[0]?.focus(), 100);
     } catch {
-      setError("Network error.");
+      setError("Network error. Try again.");
       setLoading(false);
     }
   }
@@ -87,33 +86,20 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/email-otp/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim().toLowerCase(), code }),
+      const supabase = createClient();
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email: email.trim().toLowerCase(),
+        token: code,
+        type: "email",
       });
-      const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error || "Invalid code.");
+      if (verifyError) {
+        setError(verifyError.message || "Invalid or expired code. Try again.");
         setLoading(false);
         return;
       }
 
       setOtpSuccess(true);
-
-      // Create Supabase session via admin magic link
-      const sessionRes = await fetch("/api/auth/email-otp/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
-      });
-      const sessionData = await sessionRes.json();
-      if (sessionData.redirectUrl) {
-        window.location.href = sessionData.redirectUrl;
-        return;
-      }
-
       router.push("/dashboard");
       router.refresh();
     } catch {

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 const MAX_SPOTS = 4;
 
@@ -78,17 +77,13 @@ export default function BookingModal({
 
     setLoading(true);
     try {
-      const supabase = createClient();
-      for (let i = 0; i < spots; i++) {
-        const { error } = await supabase.from("rsvps").insert({
-          event_id:       eventId,
-          user_id:        userId,
-          user_name:      playerNames[i].trim(),
-          user_email:     email.trim(),
-          payment_status: isFree ? "free" : "pending",
-        });
-        if (error) throw error;
-      }
+      const res = await fetch(`/api/events/${eventId}/book`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ playerNames, email: email.trim(), spots, isFree, perPerson }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error || "Something went wrong."); setLoading(false); return; }
       setOpen(false);
       router.refresh();
     } catch {
