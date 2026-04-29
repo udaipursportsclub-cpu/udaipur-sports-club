@@ -21,6 +21,10 @@ export default async function Home() {
   const supabase = await createClient();
   const admin    = createAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
+  const { data: currentProfile } = user
+    ? await supabase.from("profiles").select("role").eq("id", user.id).single()
+    : { data: null };
+  const isAdmin = currentProfile?.role === "admin";
 
   const [
     { count: memberCount },
@@ -148,6 +152,7 @@ export default async function Home() {
       <HeroSlideshow
         slides={heroSlides ?? []}
         rotationSeconds={heroConfig?.rotation_seconds ?? 5}
+        isAdmin={isAdmin}
       >
         {/* Ambient glows — only visible when no photo */}
         {(!heroSlides || heroSlides.length === 0) && <>

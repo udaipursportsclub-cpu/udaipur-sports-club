@@ -7,10 +7,11 @@ type Slide = { id: string; image_url: string };
 type Props = {
   slides: Slide[];
   rotationSeconds: number;
+  isAdmin?: boolean;
   children: React.ReactNode;
 };
 
-export default function HeroSlideshow({ slides, rotationSeconds, children }: Props) {
+export default function HeroSlideshow({ slides, rotationSeconds, isAdmin, children }: Props) {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -38,6 +39,17 @@ export default function HeroSlideshow({ slides, rotationSeconds, children }: Pro
       {/* Overlay — dark gradient so text stays readable */}
       {slides.length > 0 && (
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20" />
+      )}
+
+      {/* Admin settings button — top right, only for admin */}
+      {isAdmin && (
+        <a
+          href="/admin/hero"
+          className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-black/40 hover:bg-black/70 backdrop-blur-sm border border-white/20 text-white/70 hover:text-white text-xs font-bold px-3 py-1.5 rounded-full transition-all"
+        >
+          <span>🖼️</span>
+          <span>Edit Banner</span>
+        </a>
       )}
 
       {/* Dot indicators */}
