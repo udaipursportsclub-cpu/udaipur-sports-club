@@ -12,14 +12,14 @@ export default function NavLogo() {
     <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
       <Image
         src="/logo.svg"
-        alt="Udaipur Sports Club"
+        alt="Warehouse Rental Program"
         width={40}
         height={40}
         className="rounded-full"
         priority
       />
       <span className="text-sm font-black tracking-[0.2em] uppercase text-slate-900 hidden sm:block">
-        USC
+        WH-RENT
       </span>
     </Link>
   );

@@ -13,9 +13,9 @@ import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/",            label: "Home",       icon: "🏠" },
-  { href: "/events",      label: "Events",     icon: "🏅" },
-  { href: "/tournaments", label: "Tourneys",   icon: "🏆" },
-  { href: "/leaderboard", label: "Rankings",   icon: "📊" },
+  { href: "/units",       label: "Units",      icon: "📦" },
+  { href: "/rentals",     label: "Rentals",    icon: "🔑" },
+  { href: "/contracts",   label: "Contracts",  icon: "📜" },
   { href: "/dashboard",   label: "Me",         icon: "👤" },
 ];
 
