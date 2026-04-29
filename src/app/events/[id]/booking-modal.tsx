@@ -29,7 +29,7 @@ type Props = {
 
 export default function BookingModal({
   eventId, eventTitle, date, time, location,
-  spotsLeft, isFree, perPerson, upiId,
+  spotsLeft, isFree, perPerson,
   userId, userName, userEmail, userPhone,
 }: Props) {
   const router  = useRouter();
