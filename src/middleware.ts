@@ -34,8 +34,9 @@ export async function middleware(request: NextRequest) {
             request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({ request });
+          // maxAge of 30 days — keeps users logged in across browser restarts
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, { ...options, maxAge: 60 * 60 * 24 * 30 })
           );
         },
       },

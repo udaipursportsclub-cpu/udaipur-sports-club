@@ -37,12 +37,12 @@ export async function createClient() {
         // Save cookies after login/logout
         setAll(cookiesToSet) {
           try {
+            // 30-day maxAge keeps users logged in across browser restarts
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cookieStore.set(name, value, { ...options, maxAge: 60 * 60 * 24 * 30 })
             );
           } catch {
-            // This is fine — server components can't always set cookies,
-            // and that's handled by the middleware instead
+            // Fine — server components can't always set cookies; middleware handles it
           }
         },
       },
