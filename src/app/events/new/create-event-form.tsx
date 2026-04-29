@@ -33,19 +33,23 @@ export default function CreateEventForm(_props: { userId: string; userName: stri
 
     setQrUploading(true);
     try {
-      const base64 = await new Promise<string>((resolve, reject) => {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve((reader.result as string).split(",")[1]);
+        reader.onload = () => resolve(reader.result as string);
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
-      const body = new URLSearchParams({ key: "6d207e02198a847aa98d0a2a901485a5", source: base64, format: "json" });
-      const res  = await fetch("https://freeimage.host/api/1/upload", { method: "POST", body });
+      const base64   = dataUrl.split(",")[1];
+      const mimeType = dataUrl.split(";")[0].split(":")[1];
+      const res  = await fetch("/api/upload-image", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ base64, mimeType }),
+      });
       const json = await res.json();
-      const url  = json?.image?.url;
-      if (url) {
-        setForm(prev => ({ ...prev, upi_qr_url: url }));
-        setQrPreview(url);
+      if (json.url) {
+        setForm(prev => ({ ...prev, upi_qr_url: json.url }));
+        setQrPreview(json.url);
       } else {
         alert("QR upload failed. Try again.");
       }
