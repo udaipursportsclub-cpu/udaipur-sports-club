@@ -113,6 +113,19 @@ export default async function AdminPage() {
           <span className="text-purple-400/40 group-hover:text-purple-400 transition-colors text-xl">→</span>
         </Link>
 
+        {/* ── HERO BANNER LINK ───────────────────────────────── */}
+        <Link
+          href="/admin/hero"
+          className="flex items-center gap-4 bg-white/[0.03] border border-amber-500/30 hover:border-amber-500/60 rounded-2xl px-6 py-5 transition-all group"
+        >
+          <span className="text-3xl">🖼️</span>
+          <div className="flex-1">
+            <p className="text-lg font-extrabold text-white">Hero Banner</p>
+            <p className="text-sm text-white/40">Upload homepage photos · set auto-rotation speed</p>
+          </div>
+          <span className="text-amber-400/40 group-hover:text-amber-400 transition-colors text-xl">→</span>
+        </Link>
+
         {/* ── FINANCE DASHBOARD LINK ─────────────────────────── */}
         <Link
           href="/admin/finance"

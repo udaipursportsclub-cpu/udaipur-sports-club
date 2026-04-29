@@ -13,6 +13,7 @@ import { getSportEmoji }     from "@/lib/types";
 import { maskName }          from "@/lib/privacy";
 import Link                  from "next/link";
 import AppSwitcher           from "@/components/AppSwitcher";
+import HeroSlideshow         from "@/components/HeroSlideshow";
 
 export const revalidate = 30;
 
@@ -25,10 +26,14 @@ export default async function Home() {
     { count: memberCount },
     { count: eventCount  },
     { count: gameCount   },
+    { data: heroSlides   },
+    { data: heroConfig   },
   ] = await Promise.all([
     admin.from("profiles").select("*", { count: "exact", head: true }),
     admin.from("events").select("*", { count: "exact", head: true }),
     admin.from("rsvps").select("*", { count: "exact", head: true }),
+    admin.from("hero_slides").select("id, image_url").eq("active", true).order("display_order", { ascending: true }),
+    admin.from("hero_config").select("rotation_seconds").eq("id", 1).single(),
   ]);
 
   // Fire all independent queries in parallel
@@ -140,13 +145,17 @@ export default async function Home() {
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Glows */}
-        <div className="absolute top-[-200px] left-[-100px] w-[600px] h-[600px] rounded-full bg-amber-500/8 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[100px] pointer-events-none" />
-        <div className="absolute top-[50%] left-[50%] w-[300px] h-[300px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
+      <HeroSlideshow
+        slides={heroSlides ?? []}
+        rotationSeconds={heroConfig?.rotation_seconds ?? 5}
+      >
+        {/* Ambient glows — only visible when no photo */}
+        {(!heroSlides || heroSlides.length === 0) && <>
+          <div className="absolute top-[-200px] left-[-100px] w-[600px] h-[600px] rounded-full bg-amber-500/8 blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[100px] pointer-events-none" />
+        </>}
 
-        <div className="max-w-6xl mx-auto px-6 pt-16 pb-8 md:pt-24 md:pb-12 relative">
+        <div className="max-w-6xl mx-auto px-6 pt-16 pb-12 md:pt-24 md:pb-16">
           {/* Live badge */}
           <div className="flex items-center gap-2 mb-6">
             <span className="relative flex h-2.5 w-2.5">
@@ -168,7 +177,7 @@ export default async function Home() {
             <span className="text-white">Flex.</span>
           </h1>
 
-          <p className="text-white/50 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium">
+          <p className="text-white/60 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-medium">
             Udaipur&apos;s first sports community.
             Every game counts. Every player ranked.
             Your city, your court, your legacy.
@@ -183,7 +192,7 @@ export default async function Home() {
                   Find a Game →
                 </Link>
                 <Link href="/leaderboard"
-                  className="border border-white/10 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/5">
+                  className="border border-white/20 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/10">
                   See Rankings
                 </Link>
               </>
@@ -194,7 +203,7 @@ export default async function Home() {
                   Login →
                 </Link>
                 <Link href="/login"
-                  className="border border-white/10 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/5">
+                  className="border border-white/20 hover:border-amber-400/50 text-white font-bold px-7 py-4 rounded-full text-sm transition-all hover:bg-white/10">
                   Sign Up
                 </Link>
               </>
@@ -202,7 +211,7 @@ export default async function Home() {
           </div>
 
           {/* Stats bar */}
-          <div className="flex flex-wrap items-center gap-10 mt-16 pt-8 border-t border-white/5">
+          <div className="flex flex-wrap items-center gap-10 mt-16 pt-8 border-t border-white/10">
             {[
               { value: Math.max(memberCount ?? 0, 100), label: "Athletes" },
               { value: Math.max(eventCount ?? 0, 40),   label: "Events" },
@@ -210,12 +219,12 @@ export default async function Home() {
             ].map(s => (
               <div key={s.label}>
                 <p className="text-3xl font-black text-white">{s.value}+</p>
-                <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/40">{s.label}</p>
+                <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-white/50">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </HeroSlideshow>
 
       {/* ── Sections below hero: only for logged-in users ────── */}
       {user && (<>
