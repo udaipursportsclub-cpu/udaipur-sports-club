@@ -206,7 +206,7 @@ export default function LoginPage() {
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50 transition"
                     />
                     <p className="text-[10px] text-white/40 mt-2">
-                      We&apos;ll send a 6-digit login code to your email
+                      We&apos;ll send a 6-digit code — valid for 10 minutes
                     </p>
                   </div>
                   <button
