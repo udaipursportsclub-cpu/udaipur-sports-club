@@ -9,8 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        surface: "var(--surface)",
+        "surface-raised": "var(--surface-raised)",
+        content: "var(--content)",
+        muted: "var(--muted)",
+        accent: "var(--accent)",
+        "accent-on": "var(--accent-on)",
+        border: "var(--border)",
+        amber: "var(--amber)",
       },
     },
   },
