@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+functions/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -23,6 +24,7 @@
 # debug
 npm-debug.log*
 yarn-debug.log*
+firebase-debug.log
 yarn-error.log*
 
 # local env files

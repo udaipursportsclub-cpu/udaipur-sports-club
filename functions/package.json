@@ -1,0 +1,13 @@
+{
+  "name": "functions",
+  "description": "USC Club billing kill-switch",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-functions": "^6.0.0",
+    "googleapis": "^144.0.0"
+  },
+  "private": true
+}
